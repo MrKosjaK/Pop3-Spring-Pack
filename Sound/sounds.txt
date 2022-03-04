@@ -1,0 +1,270 @@
+MUSIC_MENU: 0_idea11.ogg
+MUSIC_GAME: 1_idea13.ogg 2_idea16.ogg 3_idea17.ogg 4_idea19.ogg
+
+# Music for sending followers/fighting.  Must have a matched trio
+MUSIC_FIGHT_START: 1_10a.ogg 1_1a.ogg 1_2a.ogg 1_3a.ogg 1_4a.ogg 1_5a.ogg 1_6a.ogg 1_7a.ogg 1_8a.ogg 1_9a.ogg
+MUSIC_FIGHT:       2_10b.ogg 2_1b.ogg 2_2b.ogg 2_3b.ogg 2_4b.ogg 2_5b.ogg 2_6b.ogg 2_7b.ogg 2_8b.ogg 2_9b.ogg
+MUSIC_FIGHT_END:   3_10c.ogg 3_1c.ogg 2_2b.ogg 3_3c.ogg 3_4c.ogg 3_5c.ogg 3_6c.ogg 3_7c.ogg 3_8c.ogg 3_9c.ogg
+
+# Braves working
+CHOP_WOOD: 15_chop1.wav 16_chop2.wav 17_chop3.wav 18_chop4.wav 19_chop5.wav
+STOMP: 276_stomp.wav 274_stomp2.wav 275_Stomp3.wav 273_Stomp4.wav
+LIFT_WOOD: 15_chop1.wav 16_chop2.wav 17_chop3.wav 18_chop4.wav 19_chop5.wav
+DROP_WOOD: 15_chop1.wav 16_chop2.wav 17_chop3.wav 18_chop4.wav 19_chop5.wav
+CONSTRUCTION: 15_chop1.wav 16_chop2.wav 17_chop3.wav 18_chop4.wav 19_chop5.wav
+BUILD: 68_build1.wav 69_build2.wav 70_build3.wav 71_build4.wav 72_build5.wav
+
+# Wildmen noises
+OH: 255_oh001.wav 256_oh002.wav 257_oh003.wav 258_oh004.wav 259_oh005.wav 260_oh006.wav 261_oh007.wav 262_oh008.wav 263_oh009.wav 264_oh010.wav 265_oh011.wav 266_oh012.wav 267_oh013.wav 268_oh014.wav
+FOOTSTEP: 255_oh001.wav 256_oh002.wav 257_oh003.wav 258_oh004.wav 259_oh005.wav 260_oh006.wav 261_oh007.wav 262_oh008.wav 263_oh009.wav 264_oh010.wav 265_oh011.wav 266_oh012.wav 267_oh013.wav 268_oh014.wav
+EAT: 20_Eat1.wav 21_eat2.wav 22_eat3.wav 23_eat4.wav 24_eat5.wav
+SPLASH: 26_drink1.wav 27_drink2.wav 28_drink3.wav 29_drink4.wav
+WM_EAT2: 343_Wm_eat01.wav 344_Wm_eat02.wav 345_Wm_eat03.wav 346_Wm_eat04.wav
+WM_DRINK2: 339_Wm_drink02.wav 340_Wm_drink03.wav 341_Wm_drink04.wav 342_Wm_drink01.wav
+
+# Follower vocals
+LAND_OOF: 122_v_land01.wav 123_v_land02.wav 124_v_land03.wav 125_v_land04.wav 126_v_land05.wav 127_v_land06.wav 128_v_land07.wav
+DIE: 129_v_die015.wav 130_v_die002.wav 131_v_die003.wav 132_v_die004.wav 133_v_die005.wav 134_v_die006.wav 135_v_die007.wav 136_v_die008.wav 137_v_die009.wav 138_v_die010.wav 139_v_die011.wav 140_v_die012.wav 141_v_die013.wav 142_v_die014.wav 143_v_die001.wav
+ONFIRE: 252_v_onfire01.wav 253_v_onfire02.wav 254_v_onfire03.wav
+INTO_AIR: 393_v_intoair01.wav 394_v_intoair02.wav
+HEADPRAY: 269_v_hdprey01.wav 270_v_hdprey02.wav 271_v_hdprey03.wav 272_v_hdprey04.wav
+NOCANDO: 482_noentry.wav
+# - numbers for 1 brave, 2 braves, 3+ braves
+OK1: 195_v_ok001.wav 192_v_ok002.wav 193_v_ok003.wav 194_v_ok004.wav 191_v_ok005.wav
+OK2: 183_v_ok2_001.wav 184_v_ok2_002.wav
+OK3: 185_v_ok3_001.wav 186_v_ok3_002.wav
+OK99: 185_v_ok3_001.wav 186_v_ok3_002.wav
+BOW: 170_v_bow001.wav 171_v_bow002.wav 172_v_bow003.wav 173_v_bow004.wav 174_v_bow005.wav 175_v_bow006.wav 176_v_bow007.wav
+BOW2: 177_v_bow2_001.wav 178_v_bow2_002.wav 179_v_bow2_003.wav
+BOW3: 180_v_bow3_001.wav 181_v_bow3_002.wav 182_v_bow3_003.wav
+BOW99: 180_v_bow3_001.wav 181_v_bow3_002.wav 182_v_bow3_003.wav
+WAR_LOOP: 84_warloop.wav
+OK1_PRE: 211_v_pre_ok001.wav 212_v_pre_ok002.wav 213_v_pre_ok003.wav 214_v_pre_ok004.wav
+OK2_PRE: 211_v_pre_ok001.wav 212_v_pre_ok002.wav 213_v_pre_ok003.wav 214_v_pre_ok004.wav
+OK3_PRE: 211_v_pre_ok001.wav 212_v_pre_ok002.wav 213_v_pre_ok003.wav 214_v_pre_ok004.wav
+OK99_PRE: 211_v_pre_ok001.wav 212_v_pre_ok002.wav 213_v_pre_ok003.wav 214_v_pre_ok004.wav
+BOW_PRE: 207_v_pre_bow001.wav 208_v_pre_bow002.wav 209_v_pre_bow003.wav 210_v_pre_bow004.wav
+BOW2_PRE: 207_v_pre_bow001.wav 208_v_pre_bow002.wav 209_v_pre_bow003.wav 210_v_pre_bow004.wav
+BOW3_PRE: 207_v_pre_bow001.wav 208_v_pre_bow002.wav 209_v_pre_bow003.wav 210_v_pre_bow004.wav
+BOW99_PRE: 207_v_pre_bow001.wav 208_v_pre_bow002.wav 209_v_pre_bow003.wav 210_v_pre_bow004.wav
+OK1_SPY: 201_v_spy_ok001.wav 202_v_spy_ok002.wav 203_v_spy_ok003.wav 204_v_spy_ok004.wav
+OK2_SPY: 205_v_spy_ok2_001.wav 206_v_spy_ok2_002.wav
+OK3_SPY: 205_v_spy_ok2_001.wav 206_v_spy_ok2_002.wav
+OK99_SPY: 205_v_spy_ok2_001.wav 206_v_spy_ok2_002.wav
+BOW_SPY: 196_v_spy_bow001.wav 197_v_spy_bow002.wav 198_v_spy_bow003.wav
+BOW2_SPY: 199_v_spy_bow2_001.wav 200_v_spy_bow2_002.wav
+BOW3_SPY: 199_v_spy_bow2_001.wav 200_v_spy_bow2_002.wav
+BOW99_SPY: 199_v_spy_bow2_001.wav 200_v_spy_bow2_002.wav
+
+# Blue Shaman vocals
+SHAM_SELECTED: 42_Sv_sel01.wav 41_Sv_sel02.wav
+SHAM_AFFIRM: 491_Sv_yes2.wav 492_Sv_yes3.wav
+SHAM_NOCANDO: 39_Sv_aff01.wav 40_Sv_aff02.wav
+SCREAM: 37_Sv_scrm01.wav 38_Sv_scrm02.wav
+SHAMAN_DIE: 227_Sv_die.wav
+GRUNT: 33_Sv_grnt01.wav 34_Sv_grnt02.wav 35_Sv_grnt03.wav 36_Sv_grnt04.wav
+INTO_WWIND: 452_v_intowind01.wav 453_v_intowind02.wav 454_v_intowind03.wav 455_v_intowind04.wav 456_v_intowind05.wav 457_v_intowind06.wav 458_v_intowind07.wav 459_v_intowind08.wav
+SHAMAN_RETURN: 85_sham_rtn.wav
+SHAM_DANCE: 225_Sv_dance.wav 226_Sv_dance2.wav
+SHAM_CONVERT: 225_Sv_dance.wav 226_Sv_dance2.wav
+SHAM_BURN: 219_Sv_blast.wav 220_Sv_blast2.wav
+SHAM_BLAST: 219_Sv_blast.wav 220_Sv_blast2.wav
+SHAM_LGHTNG: 221_Sv_bolt.wav 222_Sv_bolt2.wav
+SHAM_WIND: 246_Sv_wind.wav 247_Sv_wind2.wav
+SHAM_INSECT: 238_Sv_insect.wav 239_Sv_insect2.wav
+SHAM_INVIS: 240_Sv_invis.wav 241_Sv_invis2.wav
+SHAM_HYPNO: 236_Sv_hypno.wav 237_Sv_hypno2.wav
+SHAM_FSTORM: 232_Sv_fstm.wav 233_Sv_fstm2.wav
+SHAM_GHOST: 234_Sv_ghost.wav 235_Sv_ghost2.wav
+SHAM_ERODE: 228_Sv_erode.wav 229_Sv_erode2.wav
+SHAM_SWAMP: 244_Sv_swamp.wav 245_Sv_swamp2.wav
+SHAM_BRDGE: 223_Sv_bridge.wav 224_Sv_bridge2.wav
+SHAM_ANGEL: 250_Sv_angel2.wav 251_Sv_angel.wav
+SHAM_QUAKE: 242_Sv_quake.wav 243_Sv_quake2.wav
+SHAM_FLATTEN: 230_Sv_flat.wav 231_Sv_flat2.wav
+SHAM_VOLCANO: 248_Sv_volc2.wav 249_Sv_volc.wav
+SHAM_WRATH: 219_Sv_blast.wav 220_Sv_blast2.wav
+SHAM_SHIELD: 0_convert.wav
+
+# Blue preaching
+PREACH: 215_v_pre_pre001.wav 216_v_pre_pre002.wav 217_v_pre_pre003.wav 218_v_pre_pre004.wav
+
+# Red shaman vocals
+ESHAMAN_DIE: 296_En_Sv_die.wav
+ESCREAM: 317_En_Sv_Scrm01.wav 318_En_Sv_Scrm02.wav
+ESHAM_GRUNT: 305_En_Sv_grunt01.wav 306_En_Sv_grunt02.wav 307_En_Sv_grunt03.wav 308_En_Sv_grunt04.wav
+ESHAM_DANCE: 294_En_Sv_dance.wav 295_En_Sv_dance2.wav
+ESHAM_CONVERT: 294_En_Sv_dance.wav 295_En_Sv_dance2.wav
+ESHAM_BURN: 286_En_Sv_blast.wav 287_En_Sv_blast2.wav
+ESHAM_BLAST: 286_En_Sv_blast.wav 287_En_Sv_blast2.wav
+ESHAM_LGHTNG: 290_En_Sv_bolt.wav 291_En_Sv_bolt2.wav
+ESHAM_WIND: 323_En_Sv_wind.wav 324_En_Sv_wind2.wav
+ESHAM_INSECT: 311_En_Sv_insect.wav 312_En_Sv_insect2.wav
+ESHAM_INVIS: 313_En_Sv_invis.wav 314_En_Sv_invis2.wav
+ESHAM_HYPNO: 309_En_Sv_hypno.wav 310_En_Sv_hypno2.wav
+ESHAM_FSTORM: 301_En_Sv_fstm.wav 302_En_Sv_fstm2.wav
+ESHAM_GHOST: 303_En_Sv_ghost.wav 304_En_Sv_ghost2.wav
+ESHAM_ERODE: 297_En_Sv_erode.wav 298_En_Sv_erode2.wav
+ESHAM_SWAMP: 319_En_Sv_swamp.wav 320_En_Sv_swamp2.wav
+ESHAM_BRDGE: 292_En_Sv_bridge.wav 293_En_Sv_bridge2.wav
+ESHAM_ANGEL: 288_En_Sv_angel2.wav 289_En_Sv_angel.wav
+ESHAM_QUAKE: 315_En_Sv_quake.wav 316_En_Sv_quake2.wav
+ESHAM_FLATTEN: 299_En_Sv_flat.wav 300_En_Sv_flat2.wav
+ESHAM_VOLCANO: 321_En_Sv_volc.wav 322_En_Sv_volc2.wav
+ESHAM_WRATH: 286_En_Sv_blast.wav 287_En_Sv_blast2.wav
+ESHAM_SHIELD: 0_convert.wav
+
+# Red preaching
+ENEMY_PREACH: 347_En_v_pre_pre001.wav 348_En_v_pre_pre002.wav 349_En_v_pre_pre003.wav 350_En_v_pre_pre004.wav
+
+# Spell effect sounds
+CONVERT: 0_convert.wav  
+LANDSPLIT: 25_quake.wav
+BUILD_BRIDGE: 76_l_bridge.wav
+HYPNOTISE: 77_hypno.wav
+INVIS: 83_Invis.wav
+INVIS_OFF: 117_Invisoff.wav
+REIN_BUILD: 7_sitespel.wav
+REIN_ROCK: 65_rokrise.wav 66_rokrise2.wav 67_rokrise3.wav
+SP_DANCE: 
+SP_BLAST: 101_blast5.wav 102_blast2.wav 103_blast3.wav 104_blast4.wav 105_blast.wav
+SP_LIGHTNING: 187_Lghtng.wav 188_Lghtng2.wav
+SP_WHIRLWIND: 352_Wind_01.wav 353_Wind_02.wav 354_Wind_03.wav 355_Wind_04.wav
+SP_INSECT: 356_Swarm_04.wav 357_Swarm_02.wav 358_Swarm_03.wav 359_Swarm_01.wav
+SP_INVIS: 2_fire.wav
+SP_HYPNO: 2_fire.wav
+SP_FIRESTORM: 2_fire.wav
+SP_GHOST: 43_ghost.wav
+SP_ERODE: 1_erode.wav
+SP_SWAMP: 111_Swamp06.wav 112_swamp02.wav 113_Swamp03.wav 114_Swamp04.wav 115_Swamp05.wav 116_swamp01.wav
+SP_LND_BRDGE: 480_Landb2.wav 
+SP_ANGEL: 44_angel.wav
+SP_QUAKE: 14_volstart.wav
+SP_FLATTEN: 7_sitespel.wav
+SP_VOLC_START: 14_volstart.wav
+SP_VOLC_RISE: 13_volrise.wav
+SP_WRATH: 2_fire.wav
+EXPLOSION_1: 106_blastexp.wav 107_blastexp2.wav 108_blastexp3.wav 109_blastexp4.wav
+SKY_FIRE: 8_skyfire.wav
+CONVERT_WILD: 78_Conv_bg.wav
+VOLCANO_FIRE: 86_Volcfire.wav
+FIRE_HIT: 3_Fireexp.wav
+SHOT_STANDARD: 7_sitespel.wav
+SHOT_STANDARD_2: 7_sitespel.wav
+SHOT_FIREBALL: 7_sitespel.wav
+SHOT_LIGHTNING: 7_sitespel.wav
+SHOT_S_WARRIOR: 7_sitespel.wav
+SHOT_VOLCANO: 95_Volbrst6.wav 96_volbrst2.wav 97_volbrst3.wav 98_Volbrst4.wav 99_Volbrst5.wav 100_volbrst1.wav
+SHIELD: 392_Shield.wav
+
+# Misc effects
+SET_ALIGHT: 118_Alight04.wav 119_Alight02.wav 120_Alight03.wav 121_Alight01.wav
+FIRE: 367_Fire_01.wav 365_Fire_02.wav 366_Fire_03.wav 364_Fire_04.wav 
+W_SPLASH: 80_w_wtr03.wav 81_w_wtr02.wav 82_w_wtr01.wav
+ROCK_SPLASH: 336_Bouldersplash01.wav 337_Bouldersplash02.wav 338_Bouldersplash03.wav
+BRANCH_BREAK: 466_branch_off01.wav 467_branch_off02.wav 468_Branch_off03.wav 469_Branch_off04.wav
+
+DROWN: 10_V_drwn01.wav 11_V_drwn02.wav 12_V_drwn03.wav
+GHOST_DIE: 87_ghostdi3.wav 88_ghostdi2.wav 89_ghostdie.wav
+TWEETS: 439_tweets.wav
+SHAMKILL_SWIRL: 440_swirl.wav
+SHAMDIE_SWIRL: 451_badswirl.wav
+
+DISCOVERY: 169_discosky.wav
+DISCOVERY_S: 168_discopop.wav
+DISCOVERY_E: 167_discoend.wav
+DISCOBLDG: 435_disco_bldg_path.wav
+DISCOBLDG_S: 438_disco_bldg_pop.wav
+DISCOBLDG_E: 436_disco_bldg_end.wav
+DISCOBLDG_C: 437_disco_bldg_circ.wav
+
+ANGEL_APPEAR: 470_AngelD1.wav 471_AngelD2.wav
+ANGEL_FALL: 472_Angelfall.wav
+ANGEL_LAND: 473_Angelland.wav
+ANGEL_WINGFLAP: 474_AngelWing2.wav
+ANGEL_BLAST: 477_Angelblast.wav
+
+# Building noises
+GUARD_POST: 360_Guard_04.wav 361_Guard_02.wav 362_Guard_03.wav 363_Guard_01.wav
+STONE_HEAD: 398_Stonehead.wav 399_Stonehead2.wav 400_Stonehead3.wav 401_Stonehead4.wav 402_Stonehead5.wav
+ROCK_SINK: 395_roksink.wav 396_roksink2.wav 397_roksink3.wav
+BLDG_ONFIRE: 368_Bldg_fire04.wav 369_Bldg_fire02.wav 370_Bldg_fire03.wav 371_Bldg_fire01.wav
+BLDG_EXPLODE: 93_Wexp2.wav 94_Wexp1.wav
+WOOD_STRESS: 90_Wstress3.wav 91_Wstress2.wav 92_Wstress1.wav
+SHRAPNEL: 4_Shrap01.wav 5_Shrap02.wav 6_Shrap03.wav
+BALLOON_BREAK: 189_bloonpop.wav
+BOAT_BREAK: 190_boatexp.wav
+BALLOON_RIDE: 487_bloonrid_4.wav 488_bloonrid_2.wav 489_bloonrid_3.wav 490_bloonrid_1.wav
+BOAT_RIDE: 483_boatrid_1.wav 484_boatrid_2.wav 485_boatrid_3.wav 486_boatrid_4.wav
+FIGHT_ALARM: 73_fgtalarm.wav
+BIRTH: 351_birth_temp1.wav
+PLACE_AIRSHIP_HUT: 
+PLACE_BOAT_HUT: 475_bell1.wav 476_bell3.wav
+
+# Ambient noises
+SPOT_AMBIENT: 45_amb1001.wav 46_amb1002.wav 47_amb1003.wav 48_amb1004.wav 49_amb1005.wav 50_amb1006.wav 51_amb1007.wav 52_amb1008.wav 53_amb1009.wav 54_amb1010.wav 55_amb1011.wav 56_amb1012.wav 57_amb1013.wav 58_amb1014.wav 59_amb1015.wav 60_amb1016.wav 61_amb1017.wav 62_amb1018.wav 63_amb1019.wav 64_amb1020.wav
+LAND_AMB_LOOP: 150_amb_m1005.wav 151_amb_m1002.wav 152_amb_m1003.wav 153_amb_m1004.wav 154_amb_m1001.wav 
+COAST_AMB_LOOP: 161_amb2006.wav 162_amb2002.wav 163_amb2003.wav 164_amb2004.wav 165_amb2005.wav 166_amb2001.wav
+HIGH_LAND_AMB_LOOP: 155_amb_w1006.wav 156_amb_w1002.wav 157_amb_w1003.wav 158_amb_w1004.wav 159_amb_w1005.wav 160_amb_w1001.wav
+SEA_AMB_LOOP: 332_amb_sea01.wav 333_amb_sea02.wav 334_amb_sea03.wav 335_amb_sea04.wav
+SPACE_AMB_LOOP: 441_spacey10.wav 442_spacey05.wav 443_spacey06.wav 444_spacey07.wav 445_spacey08.wav 446_spacey09.wav 447_spacey04.wav 448_spacey03.wav 449_spacey02.wav 450_spacey01.wav
+SEAGULL_AMBIENT: 279_amb_gull001.wav 280_amb_gull002.wav 281_amb_gull003.wav 282_amb_gull004.wav 283_amb_gull005.wav 284_amb_gull006.wav 285_amb_gull007.wav
+SPACE_AMB: 325_amb_spc007.wav 326_amb_spc002.wav 327_amb_spc003.wav 328_amb_spc004.wav 329_amb_spc005.wav 330_amb_spc006.wav 331_amb_spc001.wav
+SPOT_AMBIENT2: 372_amb4020.wav 373_amb4002.wav 374_amb4003.wav 375_amb4004.wav 376_amb4005.wav 377_amb4006.wav 378_amb4007.wav 379_amb4008.wav 380_amb4009.wav 381_amb4010.wav 382_amb4011.wav 383_amb4012.wav 384_amb4013.wav 385_amb4014.wav 386_amb4015.wav 387_amb4016.wav 388_amb4017.wav 389_amb4018.wav 390_amb4019.wav 391_amb4001.wav
+SPOT_AMBIENT3: 403_amb5001.wav 404_amb5002.wav 405_amb5003.wav 406_amb5004.wav 407_amb5005.wav 408_amb5006.wav 409_amb5007.wav 410_amb5008.wav 411_amb5009.wav 412_amb5010.wav
+HELLLAND_AMB_LOOP: 430_amb_hellm1001.wav 431_amb_hellm1002.wav 432_amb_hellm1003.wav 433_amb_hellm1004.wav 434_amb_hellm1005.wav
+HELLCOAST_AMB_LOOP: 418_ambhell2001.wav 419_ambhell2002.wav 420_ambhell2003.wav 421_ambhell2004.wav 422_ambhell2005.wav 423_ambhell2006.wav
+HELLHIGH_LAND_AMB_LOOP: 424_amb_hellw1006.wav 425_amb_hellw1002.wav 426_amb_hellw1003.wav 427_amb_hellw1004.wav 428_amb_hellw1005.wav 429_amb_hellw1001.wav
+HELLSEA_AMB_LOOP: 413_amb_hellsea01.wav 414_amb_hellsea02.wav 415_amb_hellsea03.wav 416_amb_hellsea04.wav 417_amb_hellsea05.wav
+ICESEA_AMB_LOOP: 460_amb_w2001.wav 461_amb_w2002.wav 462_amb_w2003.wav 463_amb_w2004.wav 464_amb_w2005.wav 465_amb_w2006.wav
+
+# UI sounds
+BLDG_STAMP: 74_bldgstmp.wav
+NOBLDG_STAMP: 75_wrong.wav
+BLDG_ROTATE: 110_rotate.wav
+SELECT_BLDG: 146_Sel_bldg.wav
+SNAPSHOT: 9_Snapshot.wav
+OPT_SELECT: 149_selectfe.wav
+CONFIRM: 79_confirm.wav
+PAGETURN: 144_Pageturn.wav
+ZOOMIN: 148_Zoom_in.wav
+ZOOMOUT: 147_Zoom_out.wav
+SPELL_CLICK: 145_Sel_spel.wav
+BOOKMARK_SET: 478_bookmark_set2.wav
+BOOKMARK_GOTO: 479_bookmark_ret2.wav
+NEWPLAYER: 481_newplayer2.wav
+BEACON: 438_disco_bldg_pop.wav
+
+INFO_BOUNCE: 493_infobnc.wav
+INFO_DROP: 494_infodrp.wav
+
+# Fights:
+PUSH: 0_Punch31.wav 1_Punch21.wav 3_punch5.wav 5_punch3.wav 6_punch2.wav 7_Punch1.wav
+PUNCH: 0_Punch31.wav 1_Punch21.wav 2_Punch11.wav 3_punch5.wav 5_punch3.wav 6_punch2.wav 7_Punch1.wav
+SWORD: 15_swords8.wav 16_swords6.wav 17_swords4.wav 18_swords3.wav 19_swords2.wav 20_swords10.wav 21_swords1.wav
+FLESH_HIT:  22_sw_flsh6.wav 23_sw_flsh5.wav 24_sw_flsh3.wav 25_sw_flsh2.wav 26_sw_flsh1.wav
+CHARGE1: 34_Attk01_c.wav 35_Attk01_b.wav 36_Attk01_a.wav
+CHARGE2: 32_Attk02_c.wav 33_Attk02_b.wav
+CHARGE3: 29_Attk03_c.wav 30_Attk03_b.wav 31_Attk03_a.wav
+CHARGE99: 28_Attk99_a.wav
+FLESH_OUCH:  8_v_hit10.wav 9_v_hit09.wav 10_v_hit08.wav 11_v_hit06.wav 12_v_hit05.wav 13_v_hit02.wav 14_v_hit01.wav
+
+# Unused:
+BEAMDOWN: 
+BEAMUP: 
+CMD_MENU_POPUP: 
+CMD_MENU_HILITE: 
+SELECT_CMD: 
+ACCEPT_CMD: 
+DO_CMDS: 
+BLDG_MENU_POPUP: 
+BLDG_MENU_SPIN: 
+PLACE_BLDG: 
+SELECT_PEEP: 
+GUI_CLICK: 
+OPT_HILITE: 
+PORTAL_GLOW: 
+TREE_GLOW: 
+BUILDING_GLOW: 
+PLANET_WOOSH: 
+CLICK: 
