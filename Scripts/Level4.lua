@@ -208,7 +208,7 @@ function OnTurn()
 
     --Move 10 braves
     Engine:hidePanel();
-    --Engine:addCommand_CinemaRaise(0);
+    Engine:addCommand_CinemaRaise(0);
     Engine:addCommand_SpawnThings(1, 2, T_PERSON, M_PERSON_BRAVE, player_tribe, marker_to_coord2d_centre(0), 2);
     Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(13), 1);
     Engine:addCommand_ClearThingBuf(1, 0);
@@ -421,13 +421,23 @@ function OnTurn()
     FLYBY_SET_EVENT_POS(130, 184, 12*60, 12*7); --MOVE TO BLUE's FRONT
     FLYBY_SET_EVENT_POS(156, 184, 12*66, 12*7); --MOVE TO YELLOW's FRONT
     FLYBY_SET_EVENT_POS(142, 162, 12*72, 12*7); --MOVE TO CYAN's FRONT
+    FLYBY_SET_EVENT_POS(138, 138, (12*156), 96); --MOVE TO CYAN's BASE
 
     FLYBY_SET_EVENT_ANGLE(2047, 11, 96); --MOVE TO TIYAO
     FLYBY_SET_EVENT_ANGLE(256, 103, 96);
     FLYBY_SET_EVENT_ANGLE(0, (12*58) - 4, 96); --MOVE TO FRONT
     FLYBY_SET_EVENT_ANGLE(1800, (12*60) - 4, 96); --MOVE TO BLUE's FRONT
     FLYBY_SET_EVENT_ANGLE(256, (12*66) - 4, 96); --MOVE TO YELLOW's FRONT
-    FLYBY_SET_EVENT_ANGLE(1024, (12*72) - 4, 96); --MOVE TO CYAN's FRONT
+    FLYBY_SET_EVENT_ANGLE(1536, (12*72) - 4, 96); --MOVE TO CYAN's FRONT
+    FLYBY_SET_EVENT_ANGLE(644, (12*82) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(211, (12*92) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(0, (12*102) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(1725, (12*112) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(1325, (12*122) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(925, (12*132) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(525, (12*142) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(125, (12*152) - 4, 96);
+    FLYBY_SET_EVENT_ANGLE(1024, (12*156) - 4, 96);--MOVE TO CYAN's BASE
 
     FLYBY_START();
 
@@ -1012,7 +1022,7 @@ function OnPlayerDeath(pn)
     if (current_game_difficulty == diff_honour) then
       Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
     else
-      Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
+      Engine.DialogObj:queueMessage("Your ally has fallen.", "Mission Failed", 512, true, nil, nil, 128);
     end
     gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
     gns.Flags = gns.Flags | GNS_LEVEL_FAILED;
