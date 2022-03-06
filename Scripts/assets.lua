@@ -79,7 +79,7 @@ end
 --troops of a tribe
 function GetTroops(pn)
 	local sh = 0 if getShaman(0) ~= nil then sh = 1 end
-	return (_gsi.Players[pn].NumPeople-_gsi.Players[pn].NumPeopleOfType[M_PERSON_BRAVE]) - sh
+	return (_gsi.Players[pn].NumPeople - _gsi.Players[pn].NumPeopleOfType[M_PERSON_BRAVE]) - sh
 end
 
 --who has most pop
@@ -103,7 +103,7 @@ function ReadAIAttackers(pn)
 	log_msg(pn,"ATTACKERS:   br: " .. b .. ", wars: " .. w .. ", pr: " .. r .. ", fws: " .. fw .. ", spy: " .. spy .. ", shaman: " .. sh)
 end
 
---read AI % troops to train
+--read AI % troops to train (attr_pref)
 function ReadAITroops(pn)
 	local w,r,fw,spy = READ_CP_ATTRIB(pn,ATTR_PREF_WARRIOR_PEOPLE),READ_CP_ATTRIB(pn,ATTR_PREF_RELIGIOUS_PEOPLE),READ_CP_ATTRIB(pn,ATTR_PREF_SUPER_WARRIOR_PEOPLE),READ_CP_ATTRIB(pn,ATTR_PREF_SPY_PEOPLE)
 	log_msg(pn,"% TROOPS:   wars: " .. w .. ", preachers: " .. r .. ", fws: " .. fw .. ", spy: " .. spy)
@@ -177,11 +177,11 @@ end
 function TurnsToClock(initialCountdown)
   local initialCountdown = tonumber(initialCountdown)
   if initialCountdown <= 0 then
-    return "0";
+    return "00:00:00";
   else
     hours = string.format("%02.f", math.floor(initialCountdown/3600));
     mins = string.format("%02.f", math.floor(initialCountdown/60 - (hours*60)));
     secs = string.format("%02.f", math.floor(initialCountdown - hours*3600 - mins *60));
-    return mins..":"..secs
+    return hours..":"..mins..":"..secs
   end
 end

@@ -65,6 +65,10 @@ if turn() == 0 then
 			me.Flags = me.Flags ~ (1<<16)
 	return true
 	end)
+	SearchMapCells(SQUARE, 0, 0 , 0, world_coord3d_to_map_idx(marker_to_coord3d(130)), function(me)
+			me.Flags = me.Flags ~ (1<<16)
+	return true
+	end)
 	--create the magical artifact that grants factions
 	local factionOrb = createThing(T_EFFECT,10,8,marker_to_coord3d(0),false,false) centre_coord3d_on_block(factionOrb.Pos.D3) ; set_thing_draw_info(factionOrb,TDI_SPRITE_F16_D1_ALPHA, 1417) 
 	factionOrb.u.Effect.Duration = -1 ; factionOrb.DrawInfo.Alpha = -16
@@ -156,7 +160,7 @@ for i = 1,7 do
 		--ATTRIBUTES
 
 		--base
-		WRITE_CP_ATTRIB(i, ATTR_EXPANSION, 30+G_RANDOM(20))
+		WRITE_CP_ATTRIB(i, ATTR_EXPANSION, 12)
 		WRITE_CP_ATTRIB(i, ATTR_HOUSE_PERCENTAGE, 80+G_RANDOM(30))
 		WRITE_CP_ATTRIB(i, ATTR_MAX_BUILDINGS_ON_GO, 3+G_RANDOM(1))
 		STATE_SET(i, TRUE, CP_AT_TYPE_BRING_NEW_PEOPLE_BACK)
@@ -543,7 +547,7 @@ local dialog_msgs = {
   [9] = {"I can feel the fire flowing through my veins... I must use this power to my advantage.","Ikani", 6879, 1, 219},
   [10] = {"My people shall live protected by the rivers... I must use this power to my advantage.","Ikani", 6879, 1, 219},
   [11] = {"Guide us, oh gods of the storm!","Ikani", 6879, 1, 219},
-  [12] = {"Guide us, oh spritirs of the land!","Ikani", 6879, 1, 219},
+  [12] = {"Guide us, oh spirits of the land!","Ikani", 6879, 1, 219},
   [13] = {"Who needs honour when we can fight with the power of death and corruption? ","Ikani", 6879, 1, 219},
   [14] = {"The honourable way of living and fighting... the eagle shall guide us!","Ikani", 6879, 1, 219},
 }
@@ -675,7 +679,7 @@ function OnTurn()
 		FLYBY_START()
 	end
 	if turn() == 1 then
-		--command system stuff
+		command system stuff
 		Engine:addCommand_CinemaRaise(0);
 		--move to first stop and stare at orb
 		Engine:addCommand_MoveThing(Ypreacher.ThingNum, marker_to_coord2d_centre(2), 1);
@@ -1127,6 +1131,7 @@ function OnTurn()
 		SET_MARKER_ENTRY(tribe2,1,58,59,0,2+gameStage,1,0)
 		SET_MARKER_ENTRY(tribe2,2,60,-1,0,2+gameStage,0,1)
 		for i,v in ipairs(AItribes) do
+			if turn() > 1300 then WRITE_CP_ATTRIB(v, ATTR_EXPANSION, math.random(16,24)) end
 			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 60+G_RANDOM(1+5*difficulty())+(difficulty()*10)+(gameStage*(10+difficulty()))) --base size
 			WriteAiTrainTroops(v,9+G_RANDOM(5)+(difficulty()*3)+(gameStage*3),5+G_RANDOM(4)+(difficulty()*3)+(gameStage*2),6+G_RANDOM(5)+(difficulty()*3)+(gameStage*3),0) --(pn,w,r,fw,spy)
 			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 100+(minutes()*2)) --attack stuff
@@ -1473,6 +1478,7 @@ function OnFrame()
 		local R3 = "+  20% firewarrior HP"
 		local R4 = "+  10% warrior HP"
 		local R5 = "-  swarm spell"
+		local R6 = "-  you can not own preachers"
 		PopSetFont(titleFont)
 		LbDraw_Text(middle-32-longestLeftStr-2+math.floor((longestLeftStr)/2)-math.floor(string_width(Ltitle)/2),math.floor(h/4),Ltitle,0)
 		LbDraw_Text(middle+32-2+math.floor((longestRightStr)/2)-math.floor(string_width(Rtitle)/2),math.floor(h/4),Rtitle,0)
@@ -1491,6 +1497,7 @@ function OnFrame()
 		LbDraw_Text(middle+32,math.floor((h/4)+18*4),R3,0)
 		LbDraw_Text(middle+32,math.floor((h/4)+18*5),R4,0)
 		LbDraw_Text(middle+32,math.floor((h/4)+18*7),R5,0)
+		LbDraw_Text(middle+32,math.floor((h/4)+18*8),R6,0)
 	end
 	
 	--honor save timer
@@ -1508,7 +1515,7 @@ function OnFrame()
 	if level >= 1 then
 		--show TAB text
 		PopSetFont(11)
-		local tab = "Press TAB for factions info" ; LbDraw_Text(2,2,tostring(tab),0)
+		local tab = "Press TAB for factions" ; LbDraw_Text(2,2,tostring(tab),0)
 		DrawBox(1,1,4+string_width(tostring(tab)),4+10,0) ; DrawBox(3,3,string_width(tostring(tab)),10,1) ; LbDraw_Text(3,3,tostring(tab),0)
 		--
 		DrawBox(guiW+6,2,box+4,box+4,outBoxClr)--
@@ -1757,6 +1764,10 @@ end
 
 function OnSave(save_data)
 	
+	for i = #tribe2AtkSpells, 1 do
+		save_data:push_int(tribe2AtkSpells[i]);
+	end
+	save_data:push_int(#tribe2AtkSpells)
 	for i = #tribe1AtkSpells, 1 do
 		save_data:push_int(tribe1AtkSpells[i]);
 	end
@@ -1819,6 +1830,10 @@ function OnLoad(load_data)
 	local numSpellsAtk1 = load_data:pop_int();
 	for i = 1, numSpellsAtk1 do
 		 tribe1AtkSpells[i] = load_data:pop_int();
+	end
+	local numSpellsAtk2 = load_data:pop_int();
+	for i = 1, numSpellsAtk2 do
+		 tribe2AtkSpells[i] = load_data:pop_int();
 	end
 	
 	game_loaded = true
