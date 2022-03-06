@@ -90,6 +90,7 @@ local current_game_difficulty = get_game_difficulty();
 local death_stored_mana = 0;
 local death_counter = 0;
 local death_initiated = false;
+local honour_saved_once = false;
 
 --timers
 local BlueAttack1 = CTimer:register();
@@ -107,6 +108,12 @@ function OnSave(save_data)
 
   save_data:push_bool(init);
   save_data:push_bool(death_initiated);
+
+  if (getTurn() >= 12*240 and current_game_difficulty == diff_honour) then
+    honour_saved_once = true;
+  end
+
+  save_data:push_bool(honour_saved_once);
   log("[INFO] Globals saved.")
 
   --Engine save
@@ -120,11 +127,6 @@ function OnSave(save_data)
   YellowAttack2:saveData(save_data);
   YellowAttack3:saveData(save_data);
   log("[INFO] Timers saved.");
-
-  if (current_game_difficulty == diff_honour) then
-    --let's not warn player about playing on honour difficulty.
-    log("WARNING! GAME WAS SAVED ON HONOUR DIFFICULTY, IF YOU'RE READING THIS, KEEP IN MIND, YOU'RE FRICKING DEAD!");
-  end
 end
 
 function OnLoad(load_data)
@@ -145,6 +147,7 @@ function OnLoad(load_data)
   death_stored_mana = load_data:pop_int();
   current_game_difficulty = load_data:pop_int();
 
+  honour_saved_once = load_data:pop_bool();
   death_initiated = load_data:pop_bool();
   init = load_data:pop_bool();
   log("[INFO] Globals loaded.")
@@ -152,8 +155,6 @@ function OnLoad(load_data)
   game_loaded = true;
 
   if (current_game_difficulty == diff_honour) then
-    --this is honour difficulty, play like a man or die.
-    log("WARNING! GAME WAS LOADED IN HONOUR DIFFICULTY! PROCEED TO EXECUTE CHEATER.");
     game_loaded_honour = true;
   end
 end
@@ -408,6 +409,11 @@ function OnTurn()
     Engine:addCommand_QueueMsg("And note, it takes a while for me to actually accumulate enough mana to use one.", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_QueueMsg("Understood.", "Dakini", 48, false, 6903, 1, 245, 12*4);
     Engine:addCommand_QueueMsg("Shaman. <bp> Tiyao will be willing to help your followers by magical shielding them. <bp> Group at least 6 units near her and she'll cast spell on them. <br> Defeat your foes while keeping shamans alive.", "Objective", 256, true, 174, 0, 128, 0);
+
+    if (current_game_difficulty == diff_honour) then
+      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 1);
+    end
+
     Engine:addCommand_SetVar(2, 1, 0);
     -- CUTSCENE PART --
 
@@ -986,7 +992,7 @@ function OnTurn()
       game_loaded = false;
 
       --yep.
-      if (game_loaded_honour) then
+      if (game_loaded_honour and honour_saved_once) then
         game_loaded_honour = false;
         ProcessGlobalSpecialList(player_tribe, PEOPLELIST, function(t)
           damage_person(t, 8, 65535, TRUE);
