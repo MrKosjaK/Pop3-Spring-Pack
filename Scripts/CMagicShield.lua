@@ -91,7 +91,7 @@ function CMagicalShield:render()
   rect.Top = ScreenHeight() >> 5;
   rect.Bottom = rect.Top + 17;
 
-  LbDraw_Rectangle(rect, 184);
+  --LbDraw_Rectangle(rect, 184);
 
   rect2.Left = rect.Left + 4;
   --rect2.Right = rect2.Left + 252;
@@ -111,7 +111,7 @@ function CMagicalShield:render()
   border.Right = border.Left + 1;
   border.Centre = border.Right + 1;
   DrawStretchyButtonBox(rect, border);
-  LbDraw_Rectangle(rect2, 221);
+  LbDraw_Rectangle(rect2, 146);
   LbDraw_Sprite(rect.Left - (spr.Width >> 1) - 8, rect.Top - 4, spr);
 
   for i = 1, self.MaxCharges do
