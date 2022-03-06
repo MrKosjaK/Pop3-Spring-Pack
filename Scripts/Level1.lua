@@ -106,6 +106,7 @@ local cyan_shaman_teleported = false;
 local death_stored_mana = 0;
 local death_counter = 0;
 local death_initiated = false;
+local honour_saved_once = false;
 
 function OnSave(save_data)
   --Globals save
@@ -118,15 +119,16 @@ function OnSave(save_data)
   save_data:push_bool(contributed_shaman);
   save_data:push_bool(cyan_shaman_teleported);
   save_data:push_bool(death_initiated);
+
+  if (getTurn() >= 12*150 and current_game_difficulty == diff_honour) then
+    honour_saved_once = true;
+  end
+
+  save_data:push_bool(honour_saved_once);
   log("[INFO] Globals saved.")
 
   --Engine save
   Engine:saveData(save_data);
-
-  if (current_game_difficulty == diff_honour) then
-    --let's not warn player about playing on honour difficulty.
-    log("WARNING! GAME WAS SAVED ON HONOUR DIFFICULTY, IF YOU'RE READING THIS, KEEP IN MIND, YOU'RE FRICKING DEAD!");
-  end
 end
 
 function OnLoad(load_data)
@@ -139,6 +141,7 @@ function OnLoad(load_data)
   contributed_braves = load_data:pop_int();
   death_counter = load_data:pop_int();
   death_stored_mana = load_data:pop_int();
+  honour_saved_once = load_data:pop_bool();
   death_initiated = load_data:pop_bool();
   cyan_shaman_teleported = load_data:pop_bool();
   contributed_shaman = load_data:pop_bool();
@@ -296,7 +299,7 @@ function OnTurn()
 
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 128, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 0);
-      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, (12*150 - (time_difficulty_offset)));
+      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, (12*150 - (time_difficulty_offset)));
     else
       Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 128, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], (12*150 - (time_difficulty_offset)));
     end
@@ -731,7 +734,7 @@ function OnTurn()
       game_loaded = false;
 
       --yep.
-      if (game_loaded_honour) then
+      if (game_loaded_honour and honour_saved_once) then
         game_loaded_honour = false;
         ProcessGlobalSpecialList(player_tribe, PEOPLELIST, function(t)
           damage_person(t, 8, 65535, TRUE);

@@ -106,6 +106,7 @@ function OnTurn()
     init = false;
 
     SET_USER_VARIABLE_VALUE(TRIBE_RED, POPSCRIPT_USER_DIFFICULTY_INDEX, current_game_difficulty);
+    SET_USER_VARIABLE_VALUE(TRIBE_YELLOW, POPSCRIPT_USER_DIFFICULTY_INDEX, current_game_difficulty);
     SET_USER_VARIABLE_VALUE(TRIBE_GREEN, POPSCRIPT_USER_DIFFICULTY_INDEX, current_game_difficulty);
 
     --take player's ghost army
