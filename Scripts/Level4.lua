@@ -568,7 +568,7 @@ function OnTurn()
             if (not break_now) then
               me.MapWhoList:processList(function(t)
                 if (t.Type == T_PERSON) then
-                  if (t.Owner == player_tribe and (t.Flags3 & TF3_SHIELD_ACTIVE) == 0) then
+                  if (t.Owner == player_tribe and (t.Flags3 & TF3_SHIELD_ACTIVE) == 0 and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON) == 0) then
                     Engine.Magic.Charges = Engine.Magic.Charges - 1;
                     createThing(T_SPELL, M_SPELL_SHIELD, player_ally_tribe, t.Pos.D3, false, false);
                     break_now = true;
