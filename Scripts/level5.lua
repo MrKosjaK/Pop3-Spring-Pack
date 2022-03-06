@@ -147,38 +147,63 @@ end
 function CatchJewels()
 	local sh = getShaman(0)
 	if sh ~= nil then
-		ProcessGlobalTypeList(T_EFFECT,function(Jewel)
-			if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
-				if get_world_dist_xz(sh.Pos.D2,Jewel.Pos.D2) < 128+64 then
-					jewels = jewels + 1
-					local num = Jewel.DrawInfo.DrawNum
-					if num == 1744 then j1 = 1 elseif num == 1745 then j2 = 1 elseif num == 1746 then j3 = 1 elseif num == 1747 then j4 = 1 elseif
-					num == 1748 then j5 = 1 elseif num == 1749 then j6 = 1 elseif num == 1750 then j7 = 1 elseif num == 1751 then j8 = 1 end
-					Jewel.DrawInfo.DrawNum = 683
-					move_thing_within_mapwho(Jewel,marker_to_coord3d(37))
-					queue_sound_event(nil, SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
+		if IS_SHAMAN_IN_AREA(0,4,3) == 0 then
+			ProcessGlobalTypeList(T_EFFECT,function(Jewel)
+				if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
+					if get_world_dist_xz(sh.Pos.D2,Jewel.Pos.D2) < 256 then
+						jewels = jewels + 1
+						local num = Jewel.DrawInfo.DrawNum
+						if num == 1744 then j1 = 1 elseif num == 1745 then j2 = 1 elseif num == 1746 then j3 = 1 elseif num == 1747 then j4 = 1 elseif
+						num == 1748 then j5 = 1 elseif num == 1749 then j6 = 1 elseif num == 1750 then j7 = 1 elseif num == 1751 then j8 = 1 end
+						Jewel.DrawInfo.DrawNum = 683
+						move_thing_within_mapwho(Jewel,marker_to_coord3d(37))
+						queue_sound_event(nil, SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
+					end
 				end
-			end
-		return true end)
+			return true end)
+		end
 	end
 end
 
 function MoveJewels()
-	ProcessGlobalTypeList(T_EFFECT,function(Jewel)
-		if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
-			if rnd() > 70 then createThing(T_EFFECT,M_EFFECT_LIGHTNING_STRAND,8,Jewel.Pos.D3,false,false) end
-			if up == 1 then Jewel.Pos.D3.Ypos = Jewel.Pos.D3.Ypos + 6 else Jewel.Pos.D3.Ypos = Jewel.Pos.D3.Ypos - 6 end
+	if devil == 0 then
+		ProcessGlobalTypeList(T_EFFECT,function(Jewel)
+			if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
+				if rnd() > 70 then createThing(T_EFFECT,M_EFFECT_LIGHTNING_STRAND,8,Jewel.Pos.D3,false,false) end
+				if up == 1 then Jewel.Pos.D3.Ypos = Jewel.Pos.D3.Ypos + 6 else Jewel.Pos.D3.Ypos = Jewel.Pos.D3.Ypos - 6 end
+			end
+		return true end)
+		if turn() % 24 == 0 and turn() > 0 then
+			if up == 0 then up = 1 else up = 0 end
 		end
-	return true end)
-	if turn() % 24 == 0 and turn() > 0 then
-		if up == 0 then up = 1 else up = 0 end
+	end
+end
+
+function PlaceJewels()
+	if devil == 0 then
+		if IS_SHAMAN_IN_AREA(0,4,2) == 1 then
+			ProcessGlobalTypeList(T_EFFECT,function(Jewel)
+				if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum == 683 then
+					if j1 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(13)) Jewel.DrawInfo.DrawNum = 1744 j1 = 2 
+					elseif j2 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(14)) Jewel.DrawInfo.DrawNum = 1745 j2 = 2 
+					elseif j3 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(15)) Jewel.DrawInfo.DrawNum = 1746 j3 = 2 
+					elseif j4 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(16)) Jewel.DrawInfo.DrawNum = 1747 j4 = 2 
+					elseif j5 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(17)) Jewel.DrawInfo.DrawNum = 1748 j5 = 2 
+					elseif j6 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(18)) Jewel.DrawInfo.DrawNum = 1749 j6 = 2 
+					elseif j7 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(19)) Jewel.DrawInfo.DrawNum = 1750 j7 = 2 
+					elseif j8 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(20)) Jewel.DrawInfo.DrawNum = 1751 j8 = 2 end
+					centre_coord3d_on_block(Jewel.Pos.D3)
+					queue_sound_event(nil, SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
+				end
+			return true end)
+		end
 	end
 end
 
 
 function OnTurn()
 
-	MoveJewels()
+	MoveJewels() ; PlaceJewels()
 	if every2Pow(3) then
 		if devil == 0 then
 			CatchJewels()
@@ -250,7 +275,30 @@ function OnFrame()
 	local middle = math.floor ((w)/2)
 	local middle2 = math.floor((w+guiW)/2)
 	local box = math.floor(h/16)
+	local box2 = math.floor(h/24)
+	local offset = 8
 	
+	if devil == 0 then
+		--collected
+		if j1 > 0 then LbDraw_ScaledSprite(guiW+4+(box*0)+(offset*0),4,get_sprite(0,1744),box,box) end
+		if j2 > 0 then LbDraw_ScaledSprite(guiW+4+(box*1)+(offset*1),4,get_sprite(0,1745),box,box) end
+		if j3 > 0 then LbDraw_ScaledSprite(guiW+4+(box*2)+(offset*2),4,get_sprite(0,1746),box,box) end
+		if j4 > 0 then LbDraw_ScaledSprite(guiW+4+(box*3)+(offset*3),4,get_sprite(0,1747),box,box) end
+		if j5 > 0 then LbDraw_ScaledSprite(guiW+4+(box*4)+(offset*4),4,get_sprite(0,1748),box,box) end
+		if j6 > 0 then LbDraw_ScaledSprite(guiW+4+(box*5)+(offset*5),4,get_sprite(0,1749),box,box) end
+		if j7 > 0 then LbDraw_ScaledSprite(guiW+4+(box*6)+(offset*6),4,get_sprite(0,1750),box,box) end
+		if j8 > 0 then LbDraw_ScaledSprite(guiW+4+(box*7)+(offset*7),4,get_sprite(0,1751),box,box) end
+		--placed
+		if j1 > 1 then LbDraw_ScaledSprite(guiW+4+(box*0)+(offset*0),4,get_sprite(0,38),box2,box2) end
+		if j2 > 1 then LbDraw_ScaledSprite(guiW+4+(box*1)+(offset*1),4,get_sprite(0,38),box2,box2) end
+		if j3 > 1 then LbDraw_ScaledSprite(guiW+4+(box*2)+(offset*2),4,get_sprite(0,38),box2,box2) end
+		if j4 > 1 then LbDraw_ScaledSprite(guiW+4+(box*3)+(offset*3),4,get_sprite(0,38),box2,box2) end
+		if j5 > 1 then LbDraw_ScaledSprite(guiW+4+(box*4)+(offset*4),4,get_sprite(0,38),box2,box2) end
+		if j6 > 1 then LbDraw_ScaledSprite(guiW+4+(box*5)+(offset*5),4,get_sprite(0,38),box2,box2) end
+		if j7 > 1 then LbDraw_ScaledSprite(guiW+4+(box*6)+(offset*6),4,get_sprite(0,38),box2,box2) end
+		if j8 > 1 then LbDraw_ScaledSprite(guiW+4+(box*7)+(offset*7),4,get_sprite(0,38),box2,box2) end
+		--DrawBox(guiW+4+(box*00)+(offset*00),4,box,box,1) --nah
+	end
 	
 end
 
