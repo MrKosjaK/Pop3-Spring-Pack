@@ -105,6 +105,19 @@ local prison_info = {
 }
 
 function OnSave(save_data)
+  --globals save
+  save_data:push_bool(init);
+  save_data:push_int(current_game_difficulty);
+  log("[INFO] Globals saved.");
+
+  --prisons save
+  for i = #prisons_on_level, 1, -1 do
+    prisons_on_level[i]:saveData(save_data);
+  end
+
+  save_data:push_int(#prisons_on_level);
+  log("[INFO] Prisons saved.");
+
   --Engine save
   Engine:saveData(save_data);
 end
@@ -112,6 +125,20 @@ end
 function OnLoad(load_data)
   --Engine
   Engine:loadData(load_data);
+
+  local prison_count = load_data:pop_int();
+
+  for i = 1, prison_count do
+    local t_prison = CPrisonThing:createPrison();
+    t_prison:loadData(load_data);
+    table.insert(prisons_on_level, t_prison);
+  end
+
+  log("[INFO] Prisons loaded.");
+
+  init = load_data:pop_bool();
+  current_game_difficulty = load_data:pop_int();
+  log("[INFO] Globals loaded.")
 
   game_loaded = true;
 end
