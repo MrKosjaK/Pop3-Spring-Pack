@@ -85,6 +85,25 @@ local init = true;
 local current_game_difficulty = get_game_difficulty();
 local prisons_on_level = {};
 
+--prison yields info
+local prison_info = {
+    --MARKER, BRAVES, WARS, FWS, PRIESTS
+    { 4, 0, 2, 2, 1 },
+    { 5, 0, 0, 0, 4 },
+    { 6, 5, 0, 0, 0 },
+    { 7, 0, 2, 0, 0 },
+    { 8, 0, 1, 0, 1 },
+    { 9, 0, 1, 1, 1 },
+    { 10, 2, 0, 2, 0},
+    { 11, 0, 1, 1, 0},
+    { 12, 5, 0, 0, 0},
+    { 13, 0, 3, 0, 0},
+    { 14, 0, 0, 3, 0},
+    { 15, 2, 2, 2, 0},
+    { 16, 0, 0, 4, 1},
+    { 17, 2, 1, 0, 0}
+}
+
 function OnSave(save_data)
   --Engine save
   Engine:saveData(save_data);
@@ -101,24 +120,22 @@ function OnTurn()
   if (init) then
     init = false
 
+    set_players_allied(ai_tribe_1, ai_tribe_2);
+    set_players_allied(ai_tribe_2, ai_tribe_1);
+
     set_correct_gui_menu();
 
-    ProcessGlobalTypeList(T_BUILDING, function(t)
-      if (t.Model == M_BUILDING_SPY_TRAIN) then
-        if (t.Owner == ai_tribe_1 or t.Owner == ai_tribe_2) then
-          local to_prison = CPrisonThing:createPrison();
-          to_prison:setCoord(t.Pos.D3);
-          to_prison:setYields(player_tribe, 1, 1, 1, 1);
-          to_prison:setProxy(t.ThingNum);
-          t.Move.BldgDrawNum = 160;
-          t.DrawInfo.DrawNum = 160;
-          t.Flags2 = t.Flags2 | TF2_DONT_DRAW_IN_WORLD_VIEW;
-          table.insert(prisons_on_level, to_prison);
-          return true;
-        end
-      end
-      return true;
-    end);
+    for i,data in ipairs(prison_info) do
+      local pick_owner = {ai_tribe_1, ai_tribe_2};
+      local bldg = CREATE_THING_WITH_PARAMS5(T_BUILDING, M_BUILDING_SPY_TRAIN, pick_owner[G_RANDOM(#pick_owner)+1], marker_to_coord3d(data[1]), G_RANDOM(4), 0, S_BUILDING_STAND, 160, 0);
+      bldg.Flags2 = bldg.Flags2 | TF2_DONT_DRAW_IN_WORLD_VIEW;
+
+      local prison_thing = CPrisonThing:createPrison();
+      prison_thing:setYields(player_tribe, data[2], data[3], data[4], data[5]);
+      prison_thing:setCoord(bldg.Pos.D3);
+      prison_thing:setProxy(bldg.ThingNum);
+      table.insert(prisons_on_level, prison_thing);
+    end
   else
     for i,Prison in ipairs(prisons_on_level) do
       if (not Prison:process()) then
