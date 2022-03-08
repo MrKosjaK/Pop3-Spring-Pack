@@ -187,6 +187,6 @@ function TurnsToClock(initialCountdown)
 end
 --------------------------------------------------------------------------------------------------------------------------------------------
 --debug
-function log(msg)
+function LOG(msg)
 	log_msg(8,"turn: " .. turn() .. "  : " .. tostring(msg))
 end

@@ -208,7 +208,7 @@ function CatchJewels()
 		if IS_SHAMAN_IN_AREA(0,4,3) == 0 then
 			if j1 ~= 1 and j2 ~= 1 and j3 ~= 1 and j4 ~= 1 and j5 ~= 1 and j6 ~= 1 and j7 ~= 1 and j8 ~= 1 then
 				ProcessGlobalTypeList(T_EFFECT,function(Jewel)
-					if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
+					if Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
 						if get_world_dist_xz(sh.Pos.D2,Jewel.Pos.D2) < 256 then
 							jewels = jewels + 1
 							local num = Jewel.DrawInfo.DrawNum
@@ -228,7 +228,7 @@ end
 function MoveJewels()
 	if devil == 0 then
 		ProcessGlobalTypeList(T_EFFECT,function(Jewel)
-			if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
+			if Jewel.Model == 10 and Jewel.DrawInfo.DrawNum > 1743 then
 				if rnd() > 70 then createThing(T_EFFECT,M_EFFECT_LIGHTNING_STRAND,8,Jewel.Pos.D3,false,false) end
 				if up == 1 then Jewel.Pos.D3.Ypos = Jewel.Pos.D3.Ypos + 6 else Jewel.Pos.D3.Ypos = Jewel.Pos.D3.Ypos - 6 end
 			end
@@ -243,7 +243,7 @@ function PlaceJewels()
 	if devil == 0 then
 		if IS_SHAMAN_IN_AREA(0,4,2) == 1 then
 			ProcessGlobalTypeList(T_EFFECT,function(Jewel)
-				if Jewel.Type == T_EFFECT and Jewel.Model == 10 and Jewel.DrawInfo.DrawNum == 683 then
+				if Jewel.Model == 10 and Jewel.DrawInfo.DrawNum == 683 then
 					if j1 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(13)) Jewel.DrawInfo.DrawNum = 1744 j1 = 2 
 					elseif j2 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(14)) Jewel.DrawInfo.DrawNum = 1745 j2 = 2 
 					elseif j3 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(15)) Jewel.DrawInfo.DrawNum = 1746 j3 = 2 
@@ -253,7 +253,8 @@ function PlaceJewels()
 					elseif j7 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(19)) Jewel.DrawInfo.DrawNum = 1750 j7 = 2 
 					elseif j8 == 1 then move_thing_within_mapwho(Jewel,marker_to_coord3d(20)) Jewel.DrawInfo.DrawNum = 1751 j8 = 2 end
 					centre_coord3d_on_block(Jewel.Pos.D3)
-					queue_sound_event(nil, SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
+					createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(37),false,false)
+					queue_sound_event(nil, SND_EVENT_ROCK_SINK, SEF_FIXED_VARS)
 				end
 			return true end)
 		end
@@ -624,7 +625,7 @@ function OnKeyDown(key)
 		sti[19].AvailableSpriteIdx = 1768]]
 	end
 	if key == LB_KEY_1 then
-		log(getShaman(0).State .. "    " .. getShaman(0).SubState)
+		LOG(getShaman(0).State .. "    " .. getShaman(0).SubState)
 		--flashes = turn() + 60 jewels = -3
 		--getShaman(0).State = 10 getShaman(0).SubState = 3
 		--[[ProcessGlobalSpecialListAll(0, function(targ)
