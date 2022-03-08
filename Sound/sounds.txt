@@ -250,7 +250,7 @@ CHARGE99: 28_Attk99_a.wav
 FLESH_OUCH:  8_v_hit10.wav 9_v_hit09.wav 10_v_hit08.wav 11_v_hit06.wav 12_v_hit05.wav 13_v_hit02.wav 14_v_hit01.wav
 
 # Unused:
-BEAMDOWN: 
+BEAMDOWN: ZdemonScream.wav
 BEAMUP: 
 CMD_MENU_POPUP: 
 CMD_MENU_HILITE: 

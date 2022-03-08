@@ -679,7 +679,7 @@ function OnTurn()
 		FLYBY_START()
 	end
 	if turn() == 1 then
-		command system stuff
+		--command system stuff
 		Engine:addCommand_CinemaRaise(0);
 		--move to first stop and stare at orb
 		Engine:addCommand_MoveThing(Ypreacher.ThingNum, marker_to_coord2d_centre(2), 1);

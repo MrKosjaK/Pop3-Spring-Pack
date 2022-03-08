@@ -185,3 +185,8 @@ function TurnsToClock(initialCountdown)
     return hours..":"..mins..":"..secs
   end
 end
+--------------------------------------------------------------------------------------------------------------------------------------------
+--debug
+function log(msg)
+	log_msg(8,"turn: " .. turn() .. "  : " .. tostring(msg))
+end
