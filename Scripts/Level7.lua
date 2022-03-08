@@ -84,6 +84,7 @@ end
 local init = true;
 local current_game_difficulty = get_game_difficulty();
 local prisons_on_level = {};
+local torch_fire_process = {};
 
 --prison yields info
 local prison_info = {
@@ -104,6 +105,8 @@ local prison_info = {
     { 17, 2, 1, 0, 0}
 }
 
+local torch_positions = { 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34};
+
 function OnSave(save_data)
   --globals save
   save_data:push_bool(init);
@@ -118,6 +121,13 @@ function OnSave(save_data)
   save_data:push_int(#prisons_on_level);
   log("[INFO] Prisons saved.");
 
+  for i = #torch_fire_process, 1, -1 do
+    save_data:push_int(torch_fire_process[i].ThingNum);
+  end
+
+  save_data:push_int(#torch_fire_process);
+  log("[INFO] Torches saved.");
+
   --Engine save
   Engine:saveData(save_data);
 end
@@ -126,6 +136,15 @@ function OnLoad(load_data)
   --Engine
   Engine:loadData(load_data);
 
+  --torch load
+  local torch_count = load_data:pop_int();
+
+  for i = 1, torch_count do
+    table.insert(torch_fire_process, GetThing(load_data:pop_int()));
+  end
+  log("[INFO] Torches loaded.");
+
+  --prison load
   local prison_count = load_data:pop_int();
 
   for i = 1, prison_count do
@@ -152,6 +171,7 @@ function OnTurn()
 
     set_correct_gui_menu();
 
+    --spawn prisons.
     for i,data in ipairs(prison_info) do
       local pick_owner = {ai_tribe_1, ai_tribe_2};
       local bldg = CREATE_THING_WITH_PARAMS5(T_BUILDING, M_BUILDING_SPY_TRAIN, pick_owner[G_RANDOM(#pick_owner)+1], marker_to_coord3d(data[1]), G_RANDOM(4), 0, S_BUILDING_STAND, 160, 0);
@@ -163,7 +183,23 @@ function OnTurn()
       prison_thing:setProxy(bldg.ThingNum);
       table.insert(prisons_on_level, prison_thing);
     end
+
+    --spawn torches
+    for i,marker in ipairs(torch_positions) do
+      local torch = createThing(T_SCENERY, M_SCENERY_TOP_LEVEL_SCENERY, 8, marker_to_coord3d_centre(marker), false, false);
+      createThing(T_GENERAL, M_GENERAL_LIGHT, 8, marker_to_coord3d_centre(marker), false, false);
+      set_thing_draw_info(torch, TDI_OBJECT_GENERIC, 161);
+      table.insert(torch_fire_process, torch);
+    end
   else
+    --animate torches
+    for i,t_thing in ipairs(torch_fire_process) do
+      t_thing.DrawInfo.FrameNum = t_thing.DrawInfo.FrameNum + 1;
+      if (t_thing.DrawInfo.FrameNum >= 9) then
+        t_thing.DrawInfo.FrameNum = 0;
+      end
+    end
+    --process prisons
     for i,Prison in ipairs(prisons_on_level) do
       if (not Prison:process()) then
         table.remove(prisons_on_level, i);
