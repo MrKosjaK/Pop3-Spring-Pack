@@ -39,7 +39,7 @@ local pp = {
   [4] = getPlayer(4),
   [5] = getPlayer(5),
   [6] = getPlayer(6),
-  [7] = getPlayer(7),
+  [7] = getPlayer(7)
 };
 
 --these always have to be set on script load. (DISABLE!!)
@@ -191,6 +191,58 @@ function OnTurn()
       set_thing_draw_info(torch, TDI_OBJECT_GENERIC, 161);
       table.insert(torch_fire_process, torch);
     end
+
+    --blue
+    computer_init_player(pp[ai_tribe_1]);
+    computer_dont_sort_people_into_sensible_houses(pp[ai_tribe_1]);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_CONSTRUCT_BUILDING);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_AUTO_ATTACK);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_TRAIN_PEOPLE);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_POPULATE_DRUM_TOWER);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_DEFEND);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_DEFEND_BASE);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_SUPER_DEFEND);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_HOUSE_A_PERSON);
+    STATE_SET(ai_tribe_1, FALSE, CP_AT_TYPE_MED_MAN_GET_WILD_PEEPS);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_USE_PREACHER_FOR_DEFENCE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_BUILDINGS_ON_GO, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_HOUSE_PERCENTAGE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_TRAINS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_TRAINS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_TRAIN_AT_ONCE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_ATTACK_PERCENTAGE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_DEFENSIVE_ACTIONS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_RETREAT_VALUE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_BASE_UNDER_ATTACK_RETREAT, 0);
+
+    --yellow
+    computer_init_player(pp[ai_tribe_2]);
+    computer_dont_sort_people_into_sensible_houses(pp[ai_tribe_2]);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_CONSTRUCT_BUILDING);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_AUTO_ATTACK);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_TRAIN_PEOPLE);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_POPULATE_DRUM_TOWER);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_DEFEND);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_DEFEND_BASE);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_SUPER_DEFEND);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_HOUSE_A_PERSON);
+    STATE_SET(ai_tribe_2, FALSE, CP_AT_TYPE_MED_MAN_GET_WILD_PEEPS);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_USE_PREACHER_FOR_DEFENCE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_BUILDINGS_ON_GO, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_HOUSE_PERCENTAGE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_TRAINS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_TRAINS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_TRAIN_AT_ONCE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_ATTACKS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_ATTACK_PERCENTAGE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_DEFENSIVE_ACTIONS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_RETREAT_VALUE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_BASE_UNDER_ATTACK_RETREAT, 0);
   else
     --animate torches
     for i,t_thing in ipairs(torch_fire_process) do
