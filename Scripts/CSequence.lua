@@ -53,7 +53,8 @@ CMD_TYPE = {
   ["ADD_THINGS"] = 18,
   ["CMD_ATTACK_AREA"] = 19,
   ["BREAK_ALLY"] = 20,
-  ["CAST_SPELL"] = 21
+  ["CAST_SPELL"] = 21,
+  ["CMD_PATROL_2P"] = 22
 };
 
 CSequence = {};
@@ -500,6 +501,49 @@ function CSequence:processCmd()
 
       self.WaitCount = cmd.CmdWaitCount;
       table.remove(self.Commands, 1);
+    elseif (cmd.CmdType == CMD_TYPE["CMD_PATROL_2P"]) then
+      if (cmd.CmdTargetCoord ~= nil and cmd.CmdEndCoord ~= nil) then
+        local cmd_1 = Commands.new();
+        local cmd_2 = Commands.new();
+        local cti = CmdTargetInfo.new();
+
+        cti.TIdxSize.MapIdx = world_coord2d_to_map_idx(cmd.CmdTargetCoord);
+        cti.TargetCoord = cmd.CmdTargetCoord;
+        cti.TIdxSize.CellsX = cmd.CmdRadius;
+        cti.TIdxSize.CellsZ = cmd.CmdRadius;
+        local flags = 0;
+        flags = flags | CMD_FLAG_CONTINUE_CMD;
+        update_cmd_list_entry(cmd_1, CMD_GUARD_AREA_PATROL, cti, flags);
+
+        cti.TIdxSize.MapIdx = world_coord2d_to_map_idx(cmd.CmdEndCoord);
+        cti.TargetCoord = cmd.CmdEndCoord;
+        cti.TIdxSize.CellsX = 0;
+        cti.TIdxSize.CellsZ = 0;
+
+        update_cmd_list_entry(cmd_2, CMD_GUARD_AREA_PATROL, cti, flags);
+
+        for j,tidx in ipairs(self.ThingBuffers[cmd.CmdSpawnThingBufIdx]) do
+          local t = GetThing(tidx);
+
+          if (t ~= nil) then
+            if (t.Type == T_PERSON) then
+              t.Flags = t.Flags | TF_RESET_STATE;
+              remove_all_persons_commands(t);
+
+              if (cmd_1.CommandType ~= CMD_NONE) then
+                add_persons_command(t, cmd_1, 0);
+              end
+
+              if (cmd_2.CommandType ~= CMD_NONE) then
+                add_persons_command(t, cmd_2, 1);
+              end
+            end
+          end
+        end
+      end
+
+      self.WaitCount = cmd.CmdWaitCount;
+      table.remove(self.Commands, 1);
     elseif (cmd.CmdType == CMD_TYPE["CMD_BUILD_BLDG"]) then
       if (cmd.CmdTargetCoord ~= nil) then
         local me_ec = world_coord2d_to_map_ptr(cmd.CmdTargetCoord);
@@ -651,7 +695,7 @@ function CSequence:processCmd()
               if (count > 0) then return true; else break_now = true; return false; end
             end);
           end
-          
+
           if (break_now) then return false; end
           return true;
         end);
@@ -877,6 +921,25 @@ function CSequence:addCommand_PatrolArea(_thingBufferIdx, _targetCoord, _radius,
   cmd.CmdTargetCoord = Coord2D.new();
   cmd.CmdTargetCoord.Xpos = _targetCoord.Xpos;
   cmd.CmdTargetCoord.Zpos = _targetCoord.Zpos;
+
+  cmd.CmdSpawnThingBufIdx = _thingBufferIdx or nil;
+  cmd.CmdRadius = _radius or 0;
+
+  cmd.CmdWaitCount = _waitCount or 0;
+
+  table.insert(self.Commands, cmd);
+end
+
+function CSequence:addCommand_Patrol2P(_thingBufferIdx, _c2d_1, _c2d_2, _radius, _waitCount)
+  local cmd = CSeqCommand:createCmd(CMD_TYPE["CMD_PATROL_2P"]);
+
+  cmd.CmdTargetCoord = Coord2D.new();
+  cmd.CmdTargetCoord.Xpos = _c2d_1.Xpos;
+  cmd.CmdTargetCoord.Zpos = _c2d_1.Zpos;
+
+  cmd.CmdEndCoord = Coord2D.new();
+  cmd.CmdEndCoord.Xpos = _c2d_2.Xpos;
+  cmd.CmdEndCoord.Zpos = _c2d_2.Zpos;
 
   cmd.CmdSpawnThingBufIdx = _thingBufferIdx or nil;
   cmd.CmdRadius = _radius or 0;
