@@ -456,13 +456,13 @@ function OnTurn()
           end);
         end
       end
+    end
 
-      if (Engine:getVar(6) == 1) then
-        Engine:setVar(6, 2);
-        bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 944;
-        gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
-        gns.Flags = gns.Flags | GNS_LEVEL_COMPLETE;
-      end
+    if (Engine:getVar(6) == 1) then
+      Engine:setVar(6, 2);
+      bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 944;
+      gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
+      gns.Flags = gns.Flags | GNS_LEVEL_COMPLETE;
     end
 
     --animate torches
