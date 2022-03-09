@@ -29,6 +29,7 @@ include("CPrisonThing.lua");
 local gs = gsi();
 local gns = gnsi();
 local spell_const = spells_type_info();
+local bldg_const = building_type_info();
 
 --player pointers
 local pp = {
@@ -45,6 +46,7 @@ local pp = {
 --these always have to be set on script load. (DISABLE!!)
 spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_OFF;
 spell_const[M_SPELL_GHOST_ARMY].NetworkOnly = 1;
+bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
 
 --disable wins on this level
 gns.GameParams.Flags2 = gns.GameParams.Flags2 | GPF2_GAME_NO_WIN;
@@ -113,7 +115,7 @@ function OnSave(save_data)
   save_data:push_bool(init);
   save_data:push_int(current_game_difficulty);
 
-  if (getTurn() >= 12*240 and current_game_difficulty == diff_honour) then
+  if (getTurn() >= 12*90 and current_game_difficulty == diff_honour) then
     honour_saved_once = true;
   end
 
@@ -245,18 +247,86 @@ function OnTurn()
     Engine:addCommand_SpawnThings(2, 5, T_PERSON, M_PERSON_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(36), 24);
     Engine:addCommand_QueueMsg("Matak!", "Warrior", 12, false, 1774, 0, 245, 12);
-    Engine:addCommand_QueueMsg("Your tribesmen are in trouble!", "Warrior", 36, false, 1774, 0, 245, 12*6);
+    Engine:addCommand_QueueMsg("Your tribesmen are in trouble!", "Warrior", 36, false, 1774, 0, 245, 12*1);
 
     --while text is being print, let's patrol enemy stuff
     Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(40), 1, 0);
     Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(38), marker_to_coord2d_centre(39), 4, 0);
     Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(43), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(41), marker_to_coord2d_centre(42), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_RELIGIOUS, ai_tribe_1, marker_to_coord2d_centre(44), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(45), marker_to_coord2d_centre(46), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 2, T_PERSON, M_PERSON_WARRIOR, ai_tribe_2, marker_to_coord2d_centre(47), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(48), marker_to_coord2d_centre(49), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 2, T_PERSON, M_PERSON_WARRIOR, ai_tribe_2, marker_to_coord2d_centre(50), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(48), marker_to_coord2d_centre(51), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 2, T_PERSON, M_PERSON_WARRIOR, ai_tribe_2, marker_to_coord2d_centre(52), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(53), marker_to_coord2d_centre(49), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_RELIGIOUS, ai_tribe_2, marker_to_coord2d_centre(54), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(55), marker_to_coord2d_centre(56), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_RELIGIOUS, ai_tribe_2, marker_to_coord2d_centre(72), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(57), marker_to_coord2d_centre(58), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_2, marker_to_coord2d_centre(61), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(59), marker_to_coord2d_centre(60), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_2, marker_to_coord2d_centre(62), 1, 0);
+    Engine:addCommand_PatrolArea(5, marker_to_coord2d_centre(62), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(63), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(64), marker_to_coord2d_centre(65), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(68), 1, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(67), marker_to_coord2d_centre(66), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 5, T_PERSON, M_PERSON_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(69), 2, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(70), marker_to_coord2d_centre(71), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_2, marker_to_coord2d_centre(73), 2, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(74), marker_to_coord2d_centre(75), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(44), 2, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(45), marker_to_coord2d_centre(46), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_RELIGIOUS, ai_tribe_1, marker_to_coord2d_centre(76), 2, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(77), marker_to_coord2d_centre(78), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_SUPER_WARRIOR, ai_tribe_1, marker_to_coord2d_centre(79), 2, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(80), marker_to_coord2d_centre(81), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
+
+    Engine:addCommand_AddThings(5, 3, T_PERSON, M_PERSON_RELIGIOUS, ai_tribe_1, marker_to_coord2d_centre(82), 2, 0);
+    Engine:addCommand_Patrol2P(5, marker_to_coord2d_centre(83), marker_to_coord2d_centre(84), 4, 0);
+    Engine:addCommand_ClearThingBuf(5, 0);
     --end of patrolling
 
-    Engine:addCommand_QueueMsg("What has happened?", "Matak", 36, false, 6943, 1, 229, 12*4);
+    Engine:addCommand_QueueMsg("What is this trouble?", "Matak", 36, false, 6943, 1, 229, 12*4);
     Engine:addCommand_QueueMsg("They... *inhales* ", "Warrior", 12, false, 1774, 0, 245, 12*2);
-    Engine:addCommand_QueueMsg("They captured them and are holding hostage!", "Warrior", 48, false, 1774, 0, 245, 12*6);
-    Engine:addCommand_QueueMsg("Spread all around like an enslacement camp!", "Warrior", 48, false, 1774, 0, 245, 12*6);
+    Engine:addCommand_QueueMsg("They are holding them imprisoned!", "Warrior", 48, false, 1774, 0, 245, 12*6);
+    Engine:addCommand_QueueMsg("Spread all around like an enslavement camp!", "Warrior", 48, false, 1774, 0, 245, 12*6);
     Engine:addCommand_QueueMsg("My people! This is unacceptable...", "Matak", 36, false, 6943, 1, 229, 12*4);
     Engine:addCommand_QueueMsg("Warrior, please, deliver my message to Tiyao, that i'm in a need of reinforcements. <br> We're going after Ikani's and Chumara's heads!", "Matak", 36, false, 6943, 1, 229, 12*7);
     Engine:addCommand_QueueMsg("I bow down before you, almighty Matak, and will promise to deliver the message to Tiyao! <br> If you allow me, i'll hurry right now!", "Warrior", 48, false, 1774, 0, 245, 12*15);
@@ -348,15 +418,49 @@ function OnTurn()
       if (Engine:getVar(2) == 0) then
         if (get_world_dist_xyz(s.Pos.D3, marker_to_coord3d_centre(8)) < 512*5) then
           Engine:setVar(2, 1);
-          Engine:addCommand_QueueMsg("Is this weird building... a prison?", "Matak", 48, false, 6943, 1, 229, 12);
+          Engine:addCommand_QueueMsg("Is this weird building... a prison?", "Matak", 24, false, 6943, 1, 229, 12);
         end
       end
 
       if (Engine:getVar(3) == 0) then
         if (get_world_dist_xyz(s.Pos.D3, marker_to_coord3d_centre(37)) < 512*5) then
           Engine:setVar(3, 1);
-          Engine:addCommand_QueueMsg("I can sense my followers here! We're going to free you!", "Matak", 48, false, 6943, 1, 229, 12);
+          Engine:addCommand_QueueMsg("I can sense my followers here! We're going to free you!", "Matak", 24, false, 6943, 1, 229, 12);
         end
+      end
+
+      if (Engine:getVar(4) == 0) then
+        if (get_world_dist_xyz(s.Pos.D3, marker_to_coord3d_centre(85)) < 512*3) then
+          Engine:setVar(4, 1);
+          Engine:addCommand_QueueMsg("We've reached our destination. Tiyao, i'm counting on you.", "Matak", 24, false, 6943, 1, 229, 12);
+        end
+      end
+
+      if (Engine:getVar(4) == 1) then
+        --teleport matak's shaman
+        if (Engine:getVar(5) == 0) then
+          local port_me = marker_to_elem_ptr(35);
+          port_me.MapWhoList:processList(function(t)
+            if (t.Type == T_PERSON and t.Owner == player_tribe and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON) == 0) then
+              if (t.Model == M_PERSON_MEDICINE_MAN) then
+                Engine:setVar(5, 1);
+                createThing(T_EFFECT, M_EFFECT_SPHERE_EXPLODE_1, 8, t.Pos.D3, false, false);
+                Engine:addCommand_ClearThingBuf(1, 12*2)
+                Engine:addCommand_QueueMsg("Well done shaman!", "Mission Complete", 512, true, nil, nil, 128, 0);
+                Engine:addCommand_SetVar(6, 1, 0);
+                delete_thing_type(t);
+                return false;
+              end
+            end
+            return true;
+          end);
+        end
+      end
+
+      if (Engine:getVar(6) == 1) then
+        Engine:setVar(6, 2);
+        gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
+        gns.Flags = gns.Flags | GNS_LEVEL_COMPLETE;
       end
     end
 
@@ -388,6 +492,7 @@ function OnTurn()
           return true;
         end);
 
+        bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 944;
         exit();
       end
     end
