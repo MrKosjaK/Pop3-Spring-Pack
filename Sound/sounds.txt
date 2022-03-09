@@ -251,7 +251,7 @@ FLESH_OUCH:  8_v_hit10.wav 9_v_hit09.wav 10_v_hit08.wav 11_v_hit06.wav 12_v_hit0
 
 # Unused:
 BEAMDOWN: ZdemonScream.wav
-BEAMUP: 
+BEAMUP: Zscream1.wav Zscream2.wav Zscream3.wav Zscream4.wav Zscream5.wav
 CMD_MENU_POPUP: 
 CMD_MENU_HILITE: 
 SELECT_CMD: 

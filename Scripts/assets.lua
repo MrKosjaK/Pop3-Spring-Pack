@@ -127,6 +127,7 @@ function WriteAiTrainTroops(pn,w,r,fw,spy)
 	WRITE_CP_ATTRIB(pn, ATTR_PREF_SPY_PEOPLE, spy)
 end
 --------------------------------------------------------------------------------------------------------------------------------------------
+--flags
 function EnableFlag(_f1, _f2)
     if (_f1 & _f2 == 0) then
         _f1 = _f1 | _f2
@@ -138,6 +139,16 @@ function DisableFlag(_f1, _f2)
         _f1 = _f1 ~ _f2
     end
     return _f1
+end
+
+--win/lose levels
+function WIN()
+	gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN
+	gns.Flags = gns.Flags | GNS_LEVEL_COMPLETE
+end
+function LOSE()
+	gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN
+	gns.Flags = gns.Flags | GNS_LEVEL_FAILED
 end
 --------------------------------------------------------------------------------------------------------------------------------------------
 PThing = {}

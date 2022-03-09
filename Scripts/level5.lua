@@ -40,6 +40,8 @@ computer_init_player(_gsi.Players[tribe2])
 computer_init_player(_gsi.Players[tribe3])
 computer_init_player(_gsi.Players[tribe4])
 local AItribes = {TRIBE_CYAN,TRIBE_PINK,TRIBE_BLACK,TRIBE_ORANGE}
+gns.GameParams.Flags2 = gns.GameParams.Flags2 | GPF2_GAME_NO_WIN
+gns.GameParams.Flags3 = gns.GameParams.Flags3 & ~GPF3_NO_GAME_OVER_PROCESS
 for i = 1,7 do
 	for j = 1,7 do
 		set_players_allied(i,j) set_players_allied(j,i)
@@ -67,6 +69,7 @@ local devilProgress = 0
 local lateSpeech = 0
 local cinemaEnd = 0
 local flashes = 0
+local win = 0
 --stuff at start only
 if turn() == 0 then
 	--white ground cemetery
@@ -77,16 +80,24 @@ if turn() == 0 then
 		end)
 	end
 	--create jewels
-	local possibleJewelMk = {21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36} --{21,22,23,24,25,26,27,28}
+	local staticJewelMk = {21,22,23,24,25,26,27}
+	local possibleJewelMk = {28,29,30,31}
 	local Jsprite = 1744
-	for i = 1,8 do
-		local idx = math.random(1,#possibleJewelMk)
-		local mk = possibleJewelMk[idx]
+	for i = 1,7 do
+		local idx = math.random(1,#staticJewelMk)
+		local mk = staticJewelMk[idx]
 		local jewel = createThing(T_EFFECT,10,8,marker_to_coord3d(mk),false,false) centre_coord3d_on_block(jewel.Pos.D3) ; set_thing_draw_info(jewel,TDI_SPRITE_F1_D1, Jsprite) 
 		jewel.u.Effect.Duration = -1 ; jewel.DrawInfo.Alpha = -16 jewel.Flags2 = EnableFlag(jewel.Flags2, TF2_DONT_DRAW_IN_WORLD_VIEW)
-		table.remove(possibleJewelMk,idx) --log_msg(8,"placed jewel in marker: " .. mk)
-		Jsprite = Jsprite + 1
+		if mk ~= 21 or mk ~= 26 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(mk),false,false) end
+		table.remove(staticJewelMk,idx) ; Jsprite = Jsprite + 1
 	end
+	local jewel = createThing(T_EFFECT,10,8,marker_to_coord3d( possibleJewelMk[math.random(1,#possibleJewelMk)]),false,false) centre_coord3d_on_block(jewel.Pos.D3) ; set_thing_draw_info(jewel,TDI_SPRITE_F1_D1, Jsprite) 
+	jewel.u.Effect.Duration = -1 ; jewel.DrawInfo.Alpha = -16 jewel.Flags2 = EnableFlag(jewel.Flags2, TF2_DONT_DRAW_IN_WORLD_VIEW)
+	--braves
+	Brave1 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(39),false,false)
+	Brave2 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(40),false,false)
+	Brave3 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(41),false,false)
+	Brave4 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(42),false,false)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 include("CSequence.lua");
@@ -95,11 +106,21 @@ local dialog_msgs = {
   [0] = {"I can feel a dark mist flowing through my veins... I sense the ultimate power is close! <br> With the jewels reunited and the curse unleashed, all i have to do is neil before the gargoyle once i sacrifice my entire tribe. I must get rid of any love or compassion left in me, if i am to be worthy of this power.", "Ikani", 6881, 1, 219},
   [1] = {"To unleash the dark power upon Ikani, she must sacrifice her humanity - to do so, neil before the garoyle once all your tribe's followers are dead, and you have no completed huts. <br> (you can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
   [2] = {"...! <br> ... Did you hear that?!... It sounded like...", "villager #1", 1769, 0, 138},
-  [3] = {"The earthquake were the first warning, and now the scream... It has happened. The curse has been unleashed, once again... It was that intruder, the Ikani!", "villager #2", 1770, 0, 146},
+  [3] = {"The earthquakes were the first warnings... and now that scream... I fear it has happened: The curse has been unleashed, once again, after so many centuries... We failed to protect the jewels... The culprit was that intruder, the Ikani!", "villager #2", 1770, 0, 146},
   [4] = {"! <br> We are all doomed! But there is hope - the curse will be lifted and abandon the host if it senses sign of life on the planet. <br> As long as one of us is alive by the end of the hunt, Ikani will perish. ", "Preacher #1", 1771, 0, 212},
   [5] = {"Don't bother engaging, she's currently immortal and unstoppable - run... run and hide! We stand no chance at war, but time is against her.", "villager #3", 1772, 0, 175},
   [6] = {"What have you done, Ikani...", "Tiyao", 6883, 2, 146},
-  [7] = {"Yes... If i knew it felt like this, i would have killed my whole tribe long ago... Now, prepare to die.", "Dark-Ikani", 1773, 0, 216},
+  [7] = {"Yesss... If i knew it felt this way, i would have killed my whole tribe long ago... Now, prepare to die.", "Dark-Ikani", 1773, 0, 216},
+  [8] = {"...................... <br> ... I can still hear the sound of pulsating hearts in this world... I failed to kill every remaining living thing...", "Dark-Ikani", 1775, 0, 216},
+  [9] = {"Beautiful... Not a remaining living thing in this planet... This world is mine!", "Dark-Ikani", 1773, 0, 216},
+  [10] = {"About 2000 years ago, on this very planet, a tragedy took place. <br> All the community leaders gathered and planned a hunt on a villager, who was suspected of witchcraft.", "Ikani", 6881, 1, 219},
+  [11] = {"They were supposed to enter her home and arrest her the following day. But the villagers, tempered in anger, disobeyed the orders and secretly went to her place, that same night, burning the house to the ground.", "Ikani", 6881, 1, 219},
+  [12] = {"Little they knew at the time, for the witch was not home - but instead, all her 8 daughters, who were fated to burn on their sleep.", "Ikani", 6881, 1, 219},
+  [13] = {"Once the witch arrived home and came across the ashes of her daughters, sorrow, pain and revenge took over, and she conjured a curse so powerful that all her enemies wish they were never born.", "Ikani", 6881, 1, 219},
+  [14] = {"First, she forged 8 jewels from the ashes of each daughter, and scattered them around the planet, granting them eternal rest.", "Ikani", 6881, 1, 219},
+  [15] = {"Then, she pacted with a god of death, who granted her ultimate powers - powers which she used to hunt and kill every person, until no one was left alive. Then, she killed herself to pay the price.", "Ikani", 6881, 1, 219},
+  [16] = {"Legend says the witch will once again reincarnate, when all the 8 daughters get reunited at the cemetery - to take revenge and hunt any living creature, once again.", "Ikani", 6881, 1, 219},
+  [17] = {"This tree marks the place where their house was burnt. <br> But this is just a legend - probably a tale to scare the children at night...", "Ikani", 6881, 1, 219},
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -112,6 +133,12 @@ end
 
 function DevilMode()
 	local sh = getShaman(0)
+	--screams
+	if everySeconds(15 + math.random(10,25)) then
+		if rnd() > 20 then
+			queue_sound_event(nil, SND_EVENT_BEAMUP, SEF_FIXED_VARS)
+		end
+	end
 	if turn() % (16-difficulty()*3) == 0 then
 		if sh ~= nil then
 			--remove devil progress
@@ -136,7 +163,7 @@ function DevilMode()
 				return true end)
 			return true end)
 			--refill spells (remove aod volc)
-			set_player_cannot_cast(M_SPELL_ANGEL_OF_DEATH, 0) set_player_cannot_cast(M_SPELL_VOLCANO, 0) set_player_cannot_cast(M_SPELL_HYPNOTISM, 0)
+			set_player_cannot_cast(M_SPELL_ANGEL_OF_DEATH, 0) set_player_cannot_cast(M_SPELL_VOLCANO, 0) set_player_cannot_cast(M_SPELL_HYPNOTISM, 0) set_player_cannot_cast(M_SPELL_CONVERT_WILD, 0)
 			createThing(T_EFFECT,M_EFFECT_FILL_ONE_SHOTS,0,marker_to_coord3d(66),false,false)
 		end
 	end
@@ -262,7 +289,7 @@ function PlaceJewels()
 end
 
 function InvokeGargoyle()
-	if devil == 0 then
+	if devil == 0 and IS_PLAYER_IN_WORLD_VIEW() == false then
 		if jewels == 8 and IS_SHAMAN_IN_AREA(0,4,3) == 1 then
 			if j1+j2+j3+j4+j5+j6+j7+j8 == 16 then
 				createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(37),false,false)
@@ -302,17 +329,116 @@ function CrazyJewels()
 end
 
 function PrayGargoyle()
-	if devil == 0 and IS_SHAMAN_IN_AREA(0,4,3) == 1 then
+	--[[if devil == 0 and IS_SHAMAN_IN_AREA(0,4,3) == 1 then
 		if getShaman(0) ~= nil then
-			getShaman(0).State = 9
+			if jewels < 0 then
+				getShaman(0).State = 4
+			else
+				getShaman(0).State = 4
+			end
 		end
-	end
+	end]]
 end
 
 
 
 function OnTurn() 															--log("flashes " .. flashes .. "   jewels " .. jewels)
-	if cinemaEnd == turn() and cinemaEnd ~= 0 then 
+	if turn() == 10 then
+		FLYBY_CREATE_NEW()
+		FLYBY_ALLOW_INTERRUPT(FALSE)
+
+		--start
+		FLYBY_SET_EVENT_POS(62, 4, 1, 144)
+		FLYBY_SET_EVENT_ANGLE(250, 1, 12*4)
+		
+		FLYBY_SET_EVENT_POS(42, 244, 144+2, 12*8)
+		FLYBY_SET_EVENT_ANGLE(215, 144+2, 12*4)
+		
+		FLYBY_SET_EVENT_POS(50, 242, 246, 12*6)
+		FLYBY_SET_EVENT_ANGLE(1760, 246, 12*3)
+		
+		FLYBY_SET_EVENT_POS(38, 248, 320, 12*4)
+		FLYBY_SET_EVENT_ZOOM (50,320,12*4)
+		
+		FLYBY_SET_EVENT_POS(40, 234, 400, 12*4)
+		FLYBY_SET_EVENT_ANGLE(1600, 400, 12*2)
+		
+		FLYBY_SET_EVENT_POS(44, 232, 450, 12*14)
+		FLYBY_SET_EVENT_ANGLE(0, 450, 12*3)
+		
+		FLYBY_SET_EVENT_POS(46, 230, 740, 12*3)
+		FLYBY_SET_EVENT_ANGLE(1750, 740, 12*2)
+
+		FLYBY_SET_EVENT_POS(60, 216, 800, 12*10)
+		
+		FLYBY_SET_EVENT_POS(62, 214, 933, 12*10)
+		
+		FLYBY_SET_EVENT_POS(66, 214, 1060, 12*18)
+		FLYBY_SET_EVENT_ANGLE(750, 1060, 12*8)
+		
+		FLYBY_SET_EVENT_POS(64, 214, 1278, 12*3)
+		
+		FLYBY_SET_EVENT_POS(64, 216, 1316, 12*1)
+
+
+		FLYBY_START()
+	end
+	if turn() == 54 then
+		--command system stuff
+		Engine:addCommand_CinemaRaise(0);
+		Engine:hidePanel()
+		--start of story
+		Engine:addCommand_MoveThing(Brave1.ThingNum, marker_to_coord2d_centre(39), 1);
+		Engine:addCommand_MoveThing(Brave2.ThingNum, marker_to_coord2d_centre(39), 1);
+		Engine:addCommand_MoveThing(Brave3.ThingNum, marker_to_coord2d_centre(39), 1);
+		Engine:addCommand_MoveThing(Brave4.ThingNum, marker_to_coord2d_centre(39), 1);
+		Engine:addCommand_AngleThing(getShaman(0).ThingNum, 1800, 2);
+		Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 24, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 12*12);
+		Engine:addCommand_MoveThing(Brave1.ThingNum, marker_to_coord2d_centre(32), 1);
+		Engine:addCommand_MoveThing(Brave2.ThingNum, marker_to_coord2d_centre(32), 1);
+		Engine:addCommand_MoveThing(Brave3.ThingNum, marker_to_coord2d_centre(32), 1);
+		Engine:addCommand_MoveThing(Brave4.ThingNum, marker_to_coord2d_centre(32), 1);
+		Engine:addCommand_MoveThing(getShaman(0).ThingNum, marker_to_coord2d_centre(32), 44);
+		Engine:addCommand_AngleThing(getShaman(0).ThingNum, 1500, 8);
+		Engine:addCommand_QueueMsg(dialog_msgs[11][1], dialog_msgs[11][2], 24, false, dialog_msgs[11][3], dialog_msgs[11][4], dialog_msgs[11][5], 12*14);
+		--move people to zone2
+		Engine:addCommand_MoveThing(Brave1.ThingNum, marker_to_coord2d_centre(43), 1);
+		Engine:addCommand_MoveThing(Brave2.ThingNum, marker_to_coord2d_centre(43), 1);
+		Engine:addCommand_MoveThing(Brave3.ThingNum, marker_to_coord2d_centre(43), 1);
+		Engine:addCommand_MoveThing(Brave4.ThingNum, marker_to_coord2d_centre(43), 1);
+		Engine:addCommand_MoveThing(getShaman(0).ThingNum, marker_to_coord2d_centre(44), 72);
+		Engine:addCommand_QueueMsg(dialog_msgs[12][1], dialog_msgs[12][2], 24, false, dialog_msgs[12][3], dialog_msgs[12][4], dialog_msgs[12][5], 12*12);
+		Engine:addCommand_AngleThing(getShaman(0).ThingNum, 1500, 6);
+		Engine:addCommand_AngleThing(Brave1.ThingNum, 500, 1);
+		Engine:addCommand_AngleThing(Brave2.ThingNum, 500, 1);
+		Engine:addCommand_AngleThing(Brave3.ThingNum, 500, 1);
+		Engine:addCommand_AngleThing(Brave4.ThingNum, 500, 3);
+		Engine:addCommand_QueueMsg(dialog_msgs[13][1], dialog_msgs[13][2], 24, false, dialog_msgs[13][3], dialog_msgs[13][4], dialog_msgs[13][5], 12*14);
+		--shaman moves closer alone
+		Engine:addCommand_MoveThing(getShaman(0).ThingNum, marker_to_coord2d_centre(45), 6);
+		Engine:addCommand_QueueMsg(dialog_msgs[14][1], dialog_msgs[14][2], 24, false, dialog_msgs[14][3], dialog_msgs[14][4], dialog_msgs[14][5], 12*5);
+		Engine:addCommand_QueueMsg(dialog_msgs[15][1], dialog_msgs[15][2], 24, false, dialog_msgs[15][3], dialog_msgs[15][4], dialog_msgs[15][5], 12*20);
+		Engine:addCommand_AngleThing(getShaman(0).ThingNum, 1750, 2);
+		Engine:addCommand_MoveThing(Brave1.ThingNum, marker_to_coord2d_centre(33), 1);
+		Engine:addCommand_MoveThing(Brave2.ThingNum, marker_to_coord2d_centre(33), 1);
+		Engine:addCommand_MoveThing(Brave3.ThingNum, marker_to_coord2d_centre(33), 1);
+		Engine:addCommand_MoveThing(Brave4.ThingNum, marker_to_coord2d_centre(33), 12);
+		Engine:addCommand_QueueMsg(dialog_msgs[16][1], dialog_msgs[16][2], 24, false, dialog_msgs[16][3], dialog_msgs[16][4], dialog_msgs[16][5], 12*12);
+		--move very close to cemetery
+		Engine:addCommand_MoveThing(getShaman(0).ThingNum, marker_to_coord2d_centre(35), 6);
+		Engine:addCommand_MoveThing(Brave1.ThingNum, marker_to_coord2d_centre(34), 1);
+		Engine:addCommand_MoveThing(Brave2.ThingNum, marker_to_coord2d_centre(34), 1);
+		Engine:addCommand_MoveThing(Brave3.ThingNum, marker_to_coord2d_centre(34), 1);
+		Engine:addCommand_MoveThing(Brave4.ThingNum, marker_to_coord2d_centre(34), 36);
+		Engine:addCommand_AngleThing(getShaman(0).ThingNum, 666, 4);
+		Engine:addCommand_AngleThing(Brave1.ThingNum, 666, 2);
+		Engine:addCommand_AngleThing(Brave2.ThingNum, 666, 5);
+		Engine:addCommand_AngleThing(Brave3.ThingNum, 666, 2);
+		Engine:addCommand_AngleThing(Brave4.ThingNum, 666, 3);
+		Engine:addCommand_QueueMsg(dialog_msgs[17][1], dialog_msgs[17][2], 24, false, dialog_msgs[17][3], dialog_msgs[17][4], dialog_msgs[17][5], 12*10);
+		Engine:addCommand_CinemaHide(16);
+		Engine:addCommand_ShowPanel(12*2);
+	elseif cinemaEnd == turn() and cinemaEnd ~= 0 then
 		Engine:addCommand_CinemaHide(15);
 		--Engine:addCommand_ShowPanel(12*2);
 	elseif turn() == cinemaEnd+128 and cinemaEnd ~= 0 and devil == 0 then
@@ -333,6 +459,8 @@ function OnTurn() 															--log("flashes " .. flashes .. "   jewels " .. 
 			log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
 		end
 		if devil == 1 then
+			--spells remove
+			set_player_cannot_cast(M_SPELL_ANGEL_OF_DEATH, 0) set_player_cannot_cast(M_SPELL_VOLCANO, 0) set_player_cannot_cast(M_SPELL_HYPNOTISM, 0) set_player_cannot_cast(M_SPELL_CONVERT_WILD, 0)
 			--reset devil sky, bank and spells sprites
 			change_sprite_bank(0,1) ; draw_sky_clr_overlay(0,-1)
 			for i = 2,17 do
@@ -365,7 +493,7 @@ function OnTurn() 															--log("flashes " .. flashes .. "   jewels " .. 
 			end
 			sti[19].AvailableSpriteIdx = 1768
 		end
-	elseif jewels == -4 then
+	elseif jewels == -4 and win == 0 then
 		if flashes - turn() == -122 then
 			Engine:addCommand_QueueMsg(dialog_msgs[2][1], dialog_msgs[2][2], 36, false, dialog_msgs[2][3], dialog_msgs[2][4], dialog_msgs[2][5], 12*2)
 		end
@@ -435,6 +563,25 @@ function OnTurn() 															--log("flashes " .. flashes .. "   jewels " .. 
 	if every2Pow(3) then
 		if devil == 0 then
 			CatchJewels()
+		else
+			if win == 0 and (GetPop(0) == 0 or devilProgress < 1) then
+				win = -1 ; devilProgress = 0 ; devil = -1 
+				if getShaman(0) ~= nil then
+					local pit = createThing(T_EFFECT,M_EFFECT_LAVA_FLOW,8,getShaman(0).Pos.D3,false,false) centre_coord3d_on_block(pit.Pos.D3)
+					getShaman(0).State = 3 --dying
+				end
+				queue_sound_event(nil, SND_EVENT_SHAMDIE_SWIRL, SEF_FIXED_VARS)
+				TRIGGER_LEVEL_LOST()
+				Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 66, false, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 12*4)
+			else
+				if GetPop(4) + GetPop(5) + GetPop(6) + GetPop(7) == 0 then
+					if win == 0 then
+						win = 1
+						WIN()
+						Engine:addCommand_QueueMsg(dialog_msgs[9][1], dialog_msgs[9][2], 66, false, dialog_msgs[9][3], dialog_msgs[9][4], dialog_msgs[9][5], 12*4)
+					end
+				end
+			end
 		end
 	end
 
@@ -459,6 +606,12 @@ function OnCreateThing(t)
 			if (v == pos) then
 				t.Model = M_SPELL_NONE
 			end
+		end
+	end
+	
+	if devil == 1 and win == 0 then
+		if t.Type == T_EFFECT and t.Model == 30 then
+			t.DrawInfo.Alpha = 3
 		end
 	end
 end
@@ -554,13 +707,11 @@ function OnFrame()
 		DrawBox(guiW + 16,h-4-barThickness,barpercent,barThickness,1)
 		LbDraw_ScaledSprite(guiW + 2,h-4-barThickness-math.floor(box2/1.5),get_sprite(1,math.random(7119,7131)),box2,box2)
 	end
-	
 end
 
 
-
 function OnSave(save_data)
-
+	save_data:push_int(win)
 	save_data:push_int(flashes)
 	save_data:push_int(cinemaEnd)
 	save_data:push_int(lateSpeech)
@@ -601,6 +752,7 @@ function OnLoad(load_data)
 	lateSpeech = load_data:pop_int()
 	cinemaEnd = load_data:pop_int()
 	flashes = load_data:pop_int()
+	win = load_data:pop_int()
 	
 	game_loaded = true
 end
@@ -608,38 +760,9 @@ end
 import(Module_Helpers)
 function OnKeyDown(key)
 	if key == LB_KEY_J then
-		--[[if getShaman(0) ~= nil then
-			getShaman(0).u.Pers.MaxLife = 6666 
-			getShaman(0).u.Pers.Life = 6666
-			getShaman(0).Flags3 = EnableFlag(getShaman(0).Flags3, TF3_BLOODLUST_ACTIVE)
-			--getShaman(0).Flags3 = EnableFlag(getShaman(0).Flags3, TF3_SHIELD_ACTIVE)
-		end
-		change_sprite_bank(0,1)
-		devil = 1
-		jewels = -4
-		devilProgress = 1024
-		draw_sky_clr_overlay(0,-1)
-		for i = 2,17 do
-			sti[i].AvailableSpriteIdx = 1750+i
-		end
-		sti[19].AvailableSpriteIdx = 1768]]
+		devil = 1 devilProgress = 1024
 	end
 	if key == LB_KEY_1 then
-		LOG(getShaman(0).State .. "    " .. getShaman(0).SubState)
-		--flashes = turn() + 60 jewels = -3
-		--getShaman(0).State = 10 getShaman(0).SubState = 3
-		--[[ProcessGlobalSpecialListAll(0, function(targ)
-			if targ.Type == T_PERSON and targ.Owner == 0 and targ.Model == M_PERSON_MEDICINE_MAN then
-				if (targ.State == 17) or (targ.State == 19) then log("hi")
-					--local cmd = get_thing_curr_cmd_list_ptr(targ)
-					--if (cmd ~= nil) then
-						--if (cmd.CommandType == CMD_ATTACK_AREA_2) or (cmd.CommandType == CMD_ATTACK_TARGET) then
-							get_thing_curr_cmd_list_ptr(targ).CommandType = CMD_HEAD_PRAY log("hi")
-						--end
-					--end
-				end
-			end
-		return true
-		end)]]
+		LOG("hi")
 	end
 end
