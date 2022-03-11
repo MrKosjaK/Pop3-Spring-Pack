@@ -109,6 +109,9 @@ local prison_info = {
 }
 
 local torch_positions = { 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34};
+local trigger_events = {
+
+}
 
 function OnSave(save_data)
   --globals save
@@ -341,6 +344,22 @@ function OnTurn()
     Engine:addCommand_QueueMsg("Shaman. Destroy prisons which contain your followers, they'll be happy to take revenge on Ikani and Chumara. <br> Reach the portal on other side of world to advance. <br> Your shaman must stay alive.", "Objective", 256, true, 174, 0, 128, 0);
 
     --CUTSCENE :D :D :D
+    --FLYBY D: D: D:
+    FLYBY_CREATE_NEW();
+    FLYBY_ALLOW_INTERRUPT(FALSE);
+
+    FLYBY_SET_EVENT_POS(200, 234, 12, 96); -- MOVE TO FRONT
+    FLYBY_SET_EVENT_POS(196, 234, 108, 96); -- MOVE TO WARRIOR
+    FLYBY_SET_EVENT_POS(214, 222, 12*47, 96); -- MOVE TO PORTAL
+    FLYBY_SET_EVENT_POS(200, 234, 12*54, 96); -- MOVE TO PORTAL
+
+    FLYBY_SET_EVENT_ANGLE(222, 24, 96);
+    FLYBY_SET_EVENT_ANGLE(611, 136, 128);
+    FLYBY_SET_EVENT_ANGLE(1051, (12*47)+12, 96);
+    FLYBY_SET_EVENT_ANGLE(1531, (12*54)+12, 96);
+
+    FLYBY_START();
+    --FLYBY :D :D :D
 
     --blue
     computer_init_player(pp[ai_tribe_1]);
@@ -463,6 +482,52 @@ function OnTurn()
       bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 944;
       gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
       gns.Flags = gns.Flags | GNS_LEVEL_COMPLETE;
+    end
+
+    if ((getTurn() & (1 << 5)-1) == 0) then
+      --blue warrior train
+      if (Engine:getVar(7) == 0) then
+        if (pp[ai_tribe_1].NumBuiltOrPartBuiltBuildingsOfType[M_BUILDING_WARRIOR_TRAIN] == 0) then
+          Engine:setVar(7, 1);
+          TRIGGER_THING(86);
+          createThing(T_EFFECT, M_EFFECT_EARTHQUAKE, 8, MAP_XZ_2_WORLD_XYZ(32, 228), false, false);
+        end
+      end
+
+      --yellow temple
+      if (Engine:getVar(8) == 0) then
+        if (pp[ai_tribe_2].NumBuiltOrPartBuiltBuildingsOfType[M_BUILDING_TEMPLE] == 0) then
+          Engine:setVar(8, 1);
+          TRIGGER_THING(87);
+          createThing(T_EFFECT, M_EFFECT_EARTHQUAKE, 8, MAP_XZ_2_WORLD_XYZ(32, 228), false, false);
+        end
+      end
+
+      --left side island
+      if (Engine:getVar(7) == 1 and Engine:getVar(9) == 0) then
+        if (IS_BUILDING_NEAR(ai_tribe_2, M_BUILDING_DRUM_TOWER, 82, 34, 6) == 0) then
+          Engine:setVar(9, 1);
+          TRIGGER_THING(89);
+          createThing(T_EFFECT, M_EFFECT_EARTHQUAKE, 8, MAP_XZ_2_WORLD_XYZ(32, 228), false, false);
+        end
+      end
+
+      --top left island
+      if (Engine:getVar(8) == 1 and Engine:getVar(10) == 0) then
+        if (IS_BUILDING_NEAR(ai_tribe_2, M_BUILDING_TEPEE, 114, 150, 5) == 0) then
+          Engine:setVar(10, 1);
+          TRIGGER_THING(88);
+          createThing(T_EFFECT, M_EFFECT_EARTHQUAKE, 8, MAP_XZ_2_WORLD_XYZ(32, 228), false, false);
+        end
+      end
+
+      if (Engine:getVar(11) == 0) then
+        if (IS_BUILDING_NEAR(ai_tribe_1, M_BUILDING_SPY_TRAIN, 120, 220, 1) == 0 and IS_BUILDING_NEAR(ai_tribe_2, M_BUILDING_SPY_TRAIN, 120, 220, 1) == 0) then
+          TRIGGER_THING(91);
+          Engine:setVar(11, 1);
+          createThing(T_EFFECT, M_EFFECT_EARTHQUAKE, 8, MAP_XZ_2_WORLD_XYZ(32, 228), false, false);
+        end
+      end
     end
 
     --animate torches
