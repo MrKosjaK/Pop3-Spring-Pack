@@ -33,6 +33,10 @@ local spell_const = spells_type_info();
 spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_OFF;
 spell_const[M_SPELL_GHOST_ARMY].NetworkOnly = 1;
 
+--enable wins
+gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
+gns.GameParams.Flags3 = gns.GameParams.Flags3 & ~GPF3_NO_GAME_OVER_PROCESS;
+
 --features
 enable_feature(F_SUPER_WARRIOR_NO_AMENDMENT); --fix fws not shooting
 enable_feature(F_MINIMAP_ENEMIES); --who the hell plays with minimap off?
