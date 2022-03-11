@@ -1,1 +1,12 @@
-finish spring - 11/03/2022 - MrKosjaK
+Level 7:
+  - Finish difficulty scaling
+  - Slightly better AI on Veteran+ difficulty
+  - Fog of war reveals for newly risen stone heads and portal
+  - Notification for playing on Honour difficulty
+
+Level 10:
+  - Decorate level with trees
+  - Populate level with wilds
+  - Cutscene & Flyby
+  - Stone heads with w/e have to think of.
+  - Ending cutscene mentioning siberia
