@@ -96,6 +96,41 @@ function GetPopLeader()
 	
 	return tribeWinning
 end
+
+--copy c3d
+function CopyC3d(c3d)
+	local nc3d = Coord3D.new()
+	nc3d.Xpos = c3d.Xpos
+	nc3d.Ypos = c3d.Ypos
+	nc3d.Zpos = c3d.Zpos
+	return nc3d
+end
+
+--thing X coord
+function ThingX(thing)
+	if thing ~= nil then
+		local pos = MapPosXZ.new() 
+		pos.Pos = world_coord3d_to_map_idx(thing.Pos.D3)	
+		return pos.XZ.X
+	end
+end
+--thing Z coord
+function ThingZ(thing)
+	if thing ~= nil then
+		local pos = MapPosXZ.new() 
+		pos.Pos = world_coord3d_to_map_idx(thing.Pos.D3)	
+		return pos.XZ.Z
+	end
+end
+
+--zoom to thing
+function ZoomThing(thing,angle)
+	if thing ~= nil then
+		local pos = MapPosXZ.new() 
+		pos.Pos = world_coord3d_to_map_idx(thing.Pos.D3)	
+		ZOOM_TO(pos.XZ.X,pos.XZ.Z,angle)
+	end
+end
 --------------------------------------------------------------------------------------------------------------------------------------------
 --read AI attacking troops (attr_away)
 function ReadAIAttackers(pn)

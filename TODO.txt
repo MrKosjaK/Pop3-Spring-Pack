@@ -1,3 +1,7 @@
+Level 5:
+  - Hide panel (when loading game in first cinematic) - curr not working :rage:
+  - Tests
+
 Level 7:
   - Finish difficulty scaling
   - Slightly better AI on Veteran+ difficulty
