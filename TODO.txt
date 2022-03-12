@@ -3,10 +3,7 @@ Level 5:
   - Tests
 
 Level 7:
-  - Finish difficulty scaling
-  - Slightly better AI on Veteran+ difficulty
-  - Fog of war reveals for newly risen stone heads and portal
-  - Notification for playing on Honour difficulty
+  - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still hard i'll do it)
 
 Level 10:
   - Decorate level with trees

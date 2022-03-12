@@ -343,6 +343,28 @@ function OnTurn()
 
     Engine:addCommand_QueueMsg("Shaman. Destroy prisons which contain your followers, they'll be happy to take revenge on Ikani and Chumara. <br> Reach the portal on other side of world to advance. <br> Your shaman must stay alive.", "Objective", 256, true, 174, 0, 128, 0);
 
+    if (current_game_difficulty == diff_honour) then
+      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
+    end
+
+    if (current_game_difficulty >= diff_experienced) then
+      --single patrols
+      -- MARKERS: 92-136
+      local choose = {M_PERSON_WARRIOR, M_PERSON_SUPER_WARRIOR};
+      local owner_choose = {ai_tribe_1, ai_tribe_2};
+      local multiplier = current_game_difficulty; if (multiplier > 2) then multiplier = 2; end
+
+      if (current_game_difficulty >= diff_veteran) then
+        choose = {M_PERSON_WARRIOR, M_PERSON_SUPER_WARRIOR, M_PERSON_RELIGIOUS};
+      end
+
+      for i = 92, 136 do
+        Engine:addCommand_SpawnThings(6, multiplier, T_PERSON, choose[G_RANDOM(#choose)+1], owner_choose[G_RANDOM(#owner_choose)+1], marker_to_coord2d_centre(i), 0);
+        Engine:addCommand_PatrolArea(6, marker_to_coord2d_centre(i), 0);
+        Engine:addCommand_ClearThingBuf(6, 0);
+      end
+    end
+
     --CUTSCENE :D :D :D
     --FLYBY D: D: D:
     FLYBY_CREATE_NEW();
@@ -561,6 +583,16 @@ function OnTurn()
         bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 944;
         exit();
       end
+    end
+  end
+end
+
+function OnPlayerDeath(pn)
+  if (pn == player_tribe) then
+    if (current_game_difficulty == diff_honour) then
+      Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
+    else
+      Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
     end
   end
 end
