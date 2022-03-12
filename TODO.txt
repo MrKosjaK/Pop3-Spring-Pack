@@ -6,8 +6,7 @@ Level 7:
   - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still hard i'll do it)
 
 Level 10:
-  - Decorate level with trees
   - Populate level with wilds
   - Cutscene & Flyby
-  - Stone heads with w/e have to think of.
+  - Fill stone heads with something
   - Ending cutscene mentioning siberia
