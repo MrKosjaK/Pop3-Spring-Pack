@@ -279,7 +279,7 @@ local Engine = CSequence:createNew();
 local dialog_msgs = {
   [0] = {"I can feel a dark mist flowing through my veins... I sense the ultimate power is close! <br> With the jewels reunited and the curse unleashed, all i have to do is neil before the gargoyle once i sacrifice my entire tribe. I must get rid of any love or compassion left in me, if i am to be worthy of this power.", "Ikani", 6881, 1, 219},
   [1] = {"To unleash the dark power upon Ikani, she must sacrifice her humanity - to do so, neil before the garoyle once all your tribe's followers are dead, and you have no completed huts. <br> (you can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
-  [2] = {".......! <br> ....... Did you hear that?!....... It sounded like.......", "villager #1", 1769, 0, 138},
+  [2] = {"Huh!?..........! <br> .......... Did you hear that?!.......... It sounded like........... like.....", "villager #1", 1769, 0, 138},
   [3] = {"The earthquakes were the first warnings... and now that scream... I fear it has happened: The curse has been unleashed, once again, after so many centuries... We failed to protect the jewels... The culprit was that intruder, the Ikani!", "villager #2", 1770, 0, 146},
   [4] = {"(!) <br> We are all doomed! But there is hope - the curse will be lifted and abandon the host if it senses sign of life on the planet. <br> As long as one of us is alive by the end of the hunt, Ikani will perish. ", "Preacher #1", 1771, 0, 212},
   [5] = {"Don't bother engaging, she's currently immortal and unstoppable - run... run and hide! We stand no chance at war, but time is against her.", "villager #3", 1772, 0, 175},
@@ -295,17 +295,18 @@ local dialog_msgs = {
   [15] = {"Then, she pacted with a god of death, who granted her ultimate powers - powers which she used to hunt and kill every person, until no one was left alive. Then, she killed herself to pay the price.", "Ikani", 6881, 1, 219},
   [16] = {"Legend says the witch will once again reincarnate, when all the 8 daughters get reunited at the place they got murdered - to take revenge and hunt any living creature, once more.", "Ikani", 6881, 1, 219},
   [17] = {"This tree marks the place where their house was burnt. <br> But this is just a legend - probably a tale to scare the children at night...", "Ikani", 6881, 1, 219},
-  [18] = {"Is that... maybe not all parts of the tale were made up...", "Ikani", 6881, 1, 219},
+  [18] = {"Is that... i should collect it.", "Ikani", 6881, 1, 219},
   [19] = {"Only the shaman can collect jewels, and only one jewel at a time can be carried - they are to be disposed at the cemetery - the location where, according to the legend, the witch's house was burned.", "Info", 173, 0, 160},
   [20] = {"The land is weeping... One of the witch's daughters is once again reunited at the place where she met her grim end... I must find the others.", "Ikani", 6881, 1, 219},
-  [21] = {"Justice will be done.", "Dark-Ikani", 1773, 0, 216},
+  [21] = {"Justice shall be done.", "Dark-Ikani", 1773, 0, 216},
   [22] = {"All for my daughters...", "Dark-Ikani", 1773, 0, 216},
   [23] = {"Everyone shall feel the pain that i felt that day...", "Dark-Ikani", 1773, 0, 216},
   [24] = {"You can run, but you can not hide.", "Dark-Ikani", 1773, 0, 216},
   [25] = {"Tonight, every last of you shall see how it feels to see your loved ones being murdered.", "Dark-Ikani", 1773, 0, 216},
   [26] = {"The dark mist flows through me. My heart has stopped beating, and my flesh is rotting.", "Dark-Ikani", 1773, 0, 216},
   [27] = {"Come before me, and accept your fate.", "Dark-Ikani", 1773, 0, 216},
-  [28] = {"Tribes started repopulating this world, centuries after the tragedy. I sense four allied tribes live in harmony, but they are not too welcoming, and i'm afraid we've been spotted...", "Ikani", 6881, 1, 219}
+  [28] = {"Tribes started repopulating this world, centuries after the tragedy. I sense four allied tribes live in harmony, but they are not too welcoming, and i'm afraid we've been spotted...", "Ikani", 6881, 1, 219},
+  [29] = {"The gods guide me... I can sense the location to most of the witch's daughters... <br> It could be a good idea to fortify out defenses, and later use my spells and troops to breach into the enemy's settlements, to steal the jewels. Ghost armies could also be excellent distractions, or even used for scouting.", "Ikani", 6881, 1, 219}
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -517,6 +518,30 @@ end
 
 
 function OnTurn()
+	if game_loaded then
+		game_loaded = false
+		--if turn() > 54 and turn() < 1230 then Engine:hidePanel() end
+		--if cinemaEnd > turn() and cinemaEnd ~= 0 then Engine:hidePanel() end
+		if devil == 1 then
+			--spells remove
+			set_player_cannot_cast(M_SPELL_ANGEL_OF_DEATH, 0) set_player_cannot_cast(M_SPELL_VOLCANO, 0) set_player_cannot_cast(M_SPELL_HYPNOTISM, 0) set_player_cannot_cast(M_SPELL_CONVERT_WILD, 0)
+			--reset devil sky, bank and spells sprites
+			change_sprite_bank(0,1) ; draw_sky_clr_overlay(0,-1)
+			for i = 2,17 do
+				sti[i].AvailableSpriteIdx = 1750+i
+			end
+			sti[19].AvailableSpriteIdx = 1768
+		end
+		--kill honor loads
+		if (difficulty() == 3) and turn() > honorSaveTurnLimit and honorSaveTurnLimit ~= -1 then
+			ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
+				damage_person(t, 8, 20000, TRUE)
+				return true
+			end)
+			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(0)
+			log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
+		end
+	end
 	if turn() == 10 then
 		FLYBY_CREATE_NEW()
 		FLYBY_ALLOW_INTERRUPT(FALSE)
@@ -680,29 +705,6 @@ function OnTurn()
 		Engine.DialogObj:processQueue();
 		Engine:processCmd();
 	end
-	if game_loaded then
-		game_loaded = false
-		--kill honor loads
-		if (difficulty() == 3) and turn() > honorSaveTurnLimit and honorSaveTurnLimit ~= -1 then
-			ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
-				damage_person(t, 8, 20000, TRUE)
-				return true
-			end)
-			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(0)
-			log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
-		end
-		if turn() > 54 and turn() < 1230 then Engine:hidePanel() end
-		if devil == 1 then
-			--spells remove
-			set_player_cannot_cast(M_SPELL_ANGEL_OF_DEATH, 0) set_player_cannot_cast(M_SPELL_VOLCANO, 0) set_player_cannot_cast(M_SPELL_HYPNOTISM, 0) set_player_cannot_cast(M_SPELL_CONVERT_WILD, 0)
-			--reset devil sky, bank and spells sprites
-			change_sprite_bank(0,1) ; draw_sky_clr_overlay(0,-1)
-			for i = 2,17 do
-				sti[i].AvailableSpriteIdx = 1750+i
-			end
-			sti[19].AvailableSpriteIdx = 1768
-		end
-	end
 	if jewels == -3 then
 		if flashes > turn() then
 			DESELECT_ALL_PEOPLE(0)
@@ -838,11 +840,20 @@ function OnTurn()
 	end
 	
 	--"we've been spotted..."
-	if turn() == 2000 then
+	if turn() == 2700 then
 		Engine:addCommand_QueueMsg(dialog_msgs[28][1], dialog_msgs[28][2], 36, false, dialog_msgs[28][3], dialog_msgs[28][4], dialog_msgs[28][5], 12*3)
+	elseif turn() == 2200 then
+		--"fortify..."
+		Engine:addCommand_QueueMsg(dialog_msgs[29][1], dialog_msgs[29][2], 36, false, dialog_msgs[29][3], dialog_msgs[29][4], dialog_msgs[29][5], 12*3)
 	end
 	
 	if every2Pow(3) then
+		--kill ghost shamans
+		ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
+			if t.Model == M_PERSON_MEDICINE_MAN and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON > 0) then
+				damage_person(t, 8, 20000, TRUE) LOG("killed")
+			end
+		return true end)
 		--give invi for experienced if 1 jewel left
 		if difficulty() == 1 and placedJewels >= 7 then
 			set_player_can_cast(M_SPELL_INVISIBILITY, 0)
@@ -1317,12 +1328,12 @@ function SendMiniAttack(attacker)
 			if _gsi.Players[target].NumBuildings > 0 then
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*128) - (gameStage*64),false)
+					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(1800) - (difficulty()*256) - (gameStage*128),false)
 					--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
 				elseif _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-						IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*128) - (gameStage*64),false)
+						IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(1800) - (difficulty()*256) - (gameStage*128),false)
 						--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 					end
 				else
@@ -1331,7 +1342,7 @@ function SendMiniAttack(attacker)
 			else
 				if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*128) - (gameStage*64),false)
+					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(1800) - (difficulty()*256) - (gameStage*128),false)
 					--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 				else
 					IncrementAtkVar(attacker,turn() + 555, false)
@@ -1587,7 +1598,7 @@ function OnFrame()
 	--honor save timer
 	if turn() < honorSaveTurnLimit and turn() > 1600 and difficulty() == 3 then
 		PopSetFont(3)
-		local hstl = "WARNING (honour mode): You are able to save the game before the timer ends, to avoid rewatching the intro     "
+		local hstl = "WARNING (honour mode): You can save, to avoid rewatching the intro   "
 		LbDraw_Text(math.floor(w-2-(string_width("77:77:77 ")+string_width(tostring(hstl)))),2,tostring(hstl),0)
 		LbDraw_Text(math.floor(w-2-(string_width("77:77:77 "))),2,tostring(TurnsToClock(math.floor((honorSaveTurnLimit-turn())/12))),0)
 	end
@@ -1661,10 +1672,12 @@ function OnSave(save_data)
 	end
 	save_data:push_int(#tribe4AtkSpells)
 	
-	save_data:push_int(Brave1.ThingNum)
-	save_data:push_int(Brave2.ThingNum)
-	save_data:push_int(Brave3.ThingNum)
-	save_data:push_int(Brave4.ThingNum)
+	if turn() < 1600 then
+		save_data:push_int(Brave1.ThingNum)
+		save_data:push_int(Brave2.ThingNum)
+		save_data:push_int(Brave3.ThingNum)
+		save_data:push_int(Brave4.ThingNum)
+	end
 	save_data:push_int(honorSaveTurnLimit)
 	save_data:push_int(tribe1Atk1)
 	save_data:push_int(tribe1MiniAtk1)
@@ -1702,6 +1715,7 @@ function OnSave(save_data)
 end
 
 function OnLoad(load_data)
+	game_loaded = true
 	Engine:loadData(load_data)
 	ground = load_data:pop_int()
 	devil = load_data:pop_int()
@@ -1736,10 +1750,12 @@ function OnLoad(load_data)
 	tribe1MiniAtk1 = load_data:pop_int()
 	tribe1Atk1 = load_data:pop_int()
 	honorSaveTurnLimit = load_data:pop_int()
-	Brave4 = GetThing(load_data:pop_int())
-	Brave3 = GetThing(load_data:pop_int())
-	Brave2 = GetThing(load_data:pop_int())
-	Brave1 = GetThing(load_data:pop_int())
+	if turn() < 1600 then
+		Brave4 = GetThing(load_data:pop_int())
+		Brave3 = GetThing(load_data:pop_int())
+		Brave2 = GetThing(load_data:pop_int())
+		Brave1 = GetThing(load_data:pop_int())
+	end
 	
 	local numSpellsAtk4 = load_data:pop_int();
 	for i = 1, numSpellsAtk4 do
@@ -1758,18 +1774,4 @@ function OnLoad(load_data)
 		 tribe1AtkSpells[i] = load_data:pop_int();
 	end
 	
-	
-	game_loaded = true
-end
-
-import(Module_Helpers)
-function OnKeyDown(key)
-	if key == LB_KEY_J then
-		--devil = 1 devilProgress = 1024
-		LOG(jewels) LOG(turn()) LOG(honorSaveTurnLimit)
-	end
-	if key == LB_KEY_1 then
-		LOG("hi") --jewels = 8
-		--j1,j2,j3,j4,j5,j6,j7,j8 = 2,2,2,2,2,2,2,2
-	end
 end
