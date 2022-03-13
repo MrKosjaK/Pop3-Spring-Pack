@@ -34,14 +34,51 @@ local tribe1 = TRIBE_YELLOW
 computer_init_player(_gsi.Players[tribe1])
 local AItribes = {TRIBE_YELLOW}
 --
-		--invi -> (healing balm): units in a 3x3 area get healed for 1/3 their max hp
-		--swamp -> (seed of life): casts a seed that rises a tree and creates a wildman
-local balm = M_SPELL_INVISIBILITY
-local seed = M_SPELL_SWAMP
+local balm = M_SPELL_INVISIBILITY --(healing balm): units in a 3x3 area get healed for 1/3 their max hp
+local seed = M_SPELL_SWAMP --(seed of life): casts a seed that rises a tree and creates a wildman
 local balmCDR = -1
 local seedCDR = -1
 local balmC3D = 0
 local seedC3D = 0
+local replace1 = -1
+local replace2 = -1
+local bard = 0
+
+botSpells = {M_SPELL_CONVERT_WILD,
+             M_SPELL_BLAST,
+             M_SPELL_LAND_BRIDGE,
+             M_SPELL_LIGHTNING_BOLT,
+             M_SPELL_INSECT_PLAGUE,
+             M_SPELL_INVISIBILITY,
+             --M_SPELL_GHOST_ARMY,
+             M_SPELL_SWAMP,
+             M_SPELL_HYPNOTISM,
+             M_SPELL_WHIRLWIND,
+             M_SPELL_EROSION,
+             M_SPELL_EARTHQUAKE,
+             M_SPELL_FIRESTORM,
+             M_SPELL_SHIELD,
+             --M_SPELL_FLATTEN,
+             M_SPELL_VOLCANO,
+             M_SPELL_ANGEL_OF_DEATH
+}
+botBldgs = {M_BUILDING_TEPEE,
+            M_BUILDING_DRUM_TOWER,
+            M_BUILDING_WARRIOR_TRAIN,
+            M_BUILDING_TEMPLE,
+            M_BUILDING_SUPER_TRAIN,
+            --M_BUILDING_SPY_TRAIN,
+			--M_BUILDING_BOAT_HUT_1,
+            M_BUILDING_AIRSHIP_HUT_1
+}
+for t,w in ipairs (AItribes) do
+	for k,v in ipairs(botSpells) do
+		set_player_can_cast(v, w)
+	end
+	for k,v in ipairs(botBldgs) do
+		set_player_can_build(v, w)
+	end
+end
 --sti[balm].Cost = 10000
 sti[balm].OneOffMaximum = 3
 sti[balm].WorldCoordRange = 4096
@@ -124,7 +161,7 @@ end
 
 
 
-function OnTurn()
+function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	--balm spell
 	if balmCDR > 0 then 
 		balmCDR = balmCDR - 1
@@ -159,9 +196,45 @@ function OnTurn()
 			return true end)
 		end
 	return true end)
+	if every2Pow(4) then
+		if bard >= 3 and bard < 9 then
+			bard = bard + 1
+			if bard == 9 then
+				queue_sound_event(nil,SND_EVENT_DISCOVERY_START, SEF_FIXED_VARS)
+				set_player_can_cast(seed, player) set_player_can_cast(balm, player)
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[balm] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[balm] & 240
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[balm] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[balm] | 2
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[seed] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[seed] & 240
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[seed] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[seed] | 2
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] & 240
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] | 2
+				FLASH_BUTTON(27,1) --FLASH_BUTTON(22,1)
+			end
+		end
+	end
+	if turn() == 1 then
+		local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
+		local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) centre_coord3d_on_block(bf.Pos.D3) bf.u.Effect.Duration = 12*50
+	end
 end
 
 function OnCreateThing(t)
+	--2 new spells
+	if bard > 0 and bard < 3 then
+		if (t.Type == T_SPELL) then
+			--replace1 = t.Model
+			local g = createThing(T_EFFECT,M_EFFECT_ORBITER,8,t.Pos.D3,false,false)
+			if getShaman(player) ~= nil then
+				createThing(T_EFFECT,58,8,getShaman(player).Pos.D3,false,false)
+			end
+			set_player_cannot_cast(t.Model, player)
+			bard = bard+1
+			queue_sound_event(nil,SND_EVENT_DISCOVERY_END, SEF_FIXED_VARS)
+			if bard == 3 then
+				createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(1),false,false)
+			end
+		end
+	end
 	--healing balm (invisibility)
 	if (t.Type == T_SPELL) and (t.Model == balm) then
 		t.Model = M_SPELL_NONE
@@ -185,5 +258,33 @@ end
 
 
 
+function OnSave(save_data)
+	save_data:push_int(bard)
+	save_data:push_int(balmCDR)
+	save_data:push_int(seedCDR)
+	save_data:push_int(replace1)
+	save_data:push_int(replace2)
+	Engine:saveData(save_data)
+end
 
+function OnLoad(load_data)
+	game_loaded = true
+	Engine:loadData(load_data)
+	replace2 = load_data:pop_int()
+	replace1 = load_data:pop_int()
+	seedCDR = load_data:pop_int()
+	balmCDR = load_data:pop_int()
+	bard = load_data:pop_int()
+end
 
+import(Module_Helpers)
+function OnKeyDown(k)
+    if (k == LB_KEY_1) then
+		bard = 1
+		local fullspells = {2,3,4,5,6,8,10,11,12,14,15,19}
+		for k,v in ipairs(fullspells) do
+			set_player_can_cast(v, player)
+		end
+		set_player_cannot_cast(6, player) set_player_cannot_cast(11, player) set_player_cannot_cast(9, player) set_player_cannot_cast(12, player) set_player_cannot_cast(15, player)
+	end
+end
