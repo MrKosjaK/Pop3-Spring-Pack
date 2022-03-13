@@ -10,3 +10,6 @@ Level 10:
   - Cutscene & Flyby
   - Fill stone heads with something
   - Ending cutscene mentioning siberia
+
+General:
+  - change strings back to normal on all levels (ones we edited)

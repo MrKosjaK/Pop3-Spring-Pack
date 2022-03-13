@@ -670,25 +670,25 @@ function OnTurn()
 		end
 		--add some braves and troops if easier diffs
 		if difficulty() == 0 then
-			for i = 1,7 do createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(0),false,false) end
-			for i = 1,7 do createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
-			for i = 1,7 do createThing(T_PERSON,M_PERSON_SUPER_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
-			for i = 1,7 do createThing(T_PERSON,M_PERSON_RELIGIOUS,0,marker_to_coord3d(math.random(39,42)),false,false) end
-		elseif difficulty() == 1 then
 			for i = 1,6 do createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(0),false,false) end
 			for i = 1,6 do createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
 			for i = 1,6 do createThing(T_PERSON,M_PERSON_SUPER_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
 			for i = 1,6 do createThing(T_PERSON,M_PERSON_RELIGIOUS,0,marker_to_coord3d(math.random(39,42)),false,false) end
-		elseif difficulty() == 2 then
+		elseif difficulty() == 1 then
 			for i = 1,5 do createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(0),false,false) end
 			for i = 1,5 do createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
 			for i = 1,5 do createThing(T_PERSON,M_PERSON_SUPER_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
 			for i = 1,5 do createThing(T_PERSON,M_PERSON_RELIGIOUS,0,marker_to_coord3d(math.random(39,42)),false,false) end
-		else
+		elseif difficulty() == 2 then
 			for i = 1,4 do createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(0),false,false) end
 			for i = 1,4 do createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
 			for i = 1,4 do createThing(T_PERSON,M_PERSON_SUPER_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
-			for i = 1,4 do createThing(T_PERSON,M_PERSON_RELIGIOUS,0,marker_to_coord3d(math.random(39,42)),false,false) end	
+			for i = 1,4 do createThing(T_PERSON,M_PERSON_RELIGIOUS,0,marker_to_coord3d(math.random(39,42)),false,false) end
+		else
+			for i = 1,3 do createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(0),false,false) end
+			for i = 1,3 do createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
+			for i = 1,3 do createThing(T_PERSON,M_PERSON_SUPER_WARRIOR,0,marker_to_coord3d(math.random(39,42)),false,false) end
+			for i = 1,3 do createThing(T_PERSON,M_PERSON_RELIGIOUS,0,marker_to_coord3d(math.random(39,42)),false,false) end	
 		end
 		--add some pop and fog reveals if lower diffs
 		local d = difficulty()
