@@ -32,6 +32,7 @@ local spell_const = spells_type_info();
 --these always have to be set on script load. (DISABLE GHOSTS!)
 spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_OFF;
 spell_const[M_SPELL_GHOST_ARMY].NetworkOnly = 1;
+bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
 
 --enable wins
 gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;

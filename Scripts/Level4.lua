@@ -45,6 +45,7 @@ local pp = {
 --these always have to be set on script load.
 spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_NORMAL;
 spell_const[M_SPELL_GHOST_ARMY].NetworkOnly = 0;
+bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
 
 --disable wins on this level
 gns.GameParams.Flags2 = gns.GameParams.Flags2 | GPF2_GAME_NO_WIN;

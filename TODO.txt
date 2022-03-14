@@ -13,3 +13,12 @@ Level 10:
 
 General:
   - change strings back to normal on all levels (ones we edited)
+
+
+SPELLS CONSTANTS DEFAULT
+spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_OFF;
+spell_const[M_SPELL_GHOST_ARMY].NetworkOnly = 1;
+
+BUILDING CONSTANTS DEFAULT
+bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
+
