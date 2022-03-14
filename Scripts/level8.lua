@@ -103,7 +103,6 @@ sti[balm].OneOffMaximum = 3
 sti[balm].WorldCoordRange = 4096
 sti[balm].CursorSpriteNum = 162
 sti[balm].ToolTipStrIdx = 687
---sti[balm].ToolTipStrIdxLSME = 687
 sti[balm].AvailableSpriteIdx = 1776
 sti[balm].NotAvailableSpriteIdx = 1780
 sti[balm].ClickedSpriteIdx = 1778
@@ -113,7 +112,6 @@ sti[seed].OneOffMaximum = 2
 sti[seed].WorldCoordRange = 2048+1024
 sti[seed].CursorSpriteNum = 163
 sti[seed].ToolTipStrIdx = 688
---sti[seed].ToolTipStrIdxLSME = 688
 sti[seed].AvailableSpriteIdx = 1777
 sti[seed].NotAvailableSpriteIdx = 1781
 sti[seed].ClickedSpriteIdx = 1779
@@ -127,7 +125,7 @@ function BalmSpell(pn,c3d)
 			me.MapWhoList:processList( function (h)
 				if (h.Owner == pn) and (h.Type == T_PERSON) and (h.Model < 8) and (h.u.Pers.Life < h.u.Pers.MaxLife) then
 					local hp = h.u.Pers.Life
-					local give = math.floor(h.u.Pers.MaxLife/3) LOG(hp) LOG(give)
+					local give = math.floor(h.u.Pers.MaxLife/3)
 					if hp + give > h.u.Pers.MaxLife then
 						h.u.Pers.Life = h.u.Pers.MaxLife
 						a = 1
@@ -135,7 +133,6 @@ function BalmSpell(pn,c3d)
 						h.u.Pers.Life = hp + give
 						a = 1
 					end
-					LOG(h.u.Pers.Life)
 					local sp = createThing(T_EFFECT,60,8,h.Pos.D3,false,false) centre_coord3d_on_block(sp.Pos.D3) sp.u.Effect.Duration = 12
 				end
 			return true end)
@@ -153,6 +150,7 @@ function SeedSpell(pn,c3d)
 	if seedC3D ~= nil then
 		SearchMapCells(SQUARE, 0, 0 , 0, world_coord3d_to_map_idx(c3d), function(me)
 			if (is_map_elem_sea_or_coast(me) == 0) then
+				createThing(T_EFFECT,M_EFFECT_WW_DUST,8,c3d,false,false)
 				if is_map_cell_obstacle_free(world_coord3d_to_map_idx(c3d)) == 1 and is_cell_too_steep_for_building(world_coord3d_to_map_idx(c3d),4) == 0 then
 					if is_building_on_map_cell(world_coord3d_to_map_idx(c3d)) == 0 then
 						if is_map_cell_a_building_belonging_to_player(world_coord3d_to_map_idx(c3d),7) == 0 and is_map_cell_a_building_belonging_to_player(world_coord3d_to_map_idx(c3d),3) == 0 then
