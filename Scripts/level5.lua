@@ -870,7 +870,7 @@ function OnTurn()
 		--kill ghost shamans
 		ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
 			if t.Model == M_PERSON_MEDICINE_MAN and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON > 0) then
-				damage_person(t, 8, 20000, TRUE) LOG("killed")
+				damage_person(t, 8, 20000, TRUE)
 			end
 		return true end)
 		--give invi for experienced if 1 jewel left

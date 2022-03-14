@@ -422,4 +422,19 @@ function OnKeyDown(k)
 		end
 		set_player_cannot_cast(6, player) set_player_cannot_cast(11, player) set_player_cannot_cast(9, player) set_player_cannot_cast(12, player) set_player_cannot_cast(15, player)
 	end
+	if k == LB_KEY_J then
+		for i = 2,15 do
+			createThing(T_EFFECT,M_EFFECT_SMOKE_CLOUD_CONSTANT,8,marker_to_coord3d(i),false,false)
+			createThing(T_EFFECT,M_EFFECT_SMOKE_CLOUD,8,marker_to_coord3d(i),false,false)
+		end
+		DELETE_SMOKE_STUFF(24, 244,0)
+		SearchMapCells(SQUARE, 0, 0, 1, world_coord3d_to_map_idx(marker_to_coord3d(3)), function(me)
+			me.MapWhoList:processList( function (t)
+				if t.Type ~= T_PERSON then
+					delete_thing_type(t)
+				end
+			return true end)
+		return true end)
+		createThing(T_EFFECT,M_EFFECT_BLDG_DAMAGED_SMOKE,8,marker_to_coord3d(2),false,false)
+	end
 end
