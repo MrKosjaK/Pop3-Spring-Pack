@@ -27,7 +27,26 @@ _gnsi = gnsi()
 _gsi = gsi()
 sti = spells_type_info()
 tmi = thing_move_info()
+bti = building_type_info()
 include("assets.lua")
+--------------------
+sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
+sti[M_SPELL_GHOST_ARMY].NetworkOnly = 1
+sti[M_SPELL_INVISIBILITY].OneOffMaximum = 4
+sti[M_SPELL_INVISIBILITY].WorldCoordRange = 4096
+sti[M_SPELL_INVISIBILITY].CursorSpriteNum = 45
+sti[M_SPELL_INVISIBILITY].ToolTipStrIdx = 818
+sti[M_SPELL_INVISIBILITY].AvailableSpriteIdx = 359
+sti[M_SPELL_INVISIBILITY].NotAvailableSpriteIdx = 377
+sti[M_SPELL_INVISIBILITY].ClickedSpriteIdx = 395
+sti[M_SPELL_SWAMP].OneOffMaximum = 4
+sti[M_SPELL_SWAMP].WorldCoordRange = 4096
+sti[M_SPELL_SWAMP].CursorSpriteNum = 53
+sti[M_SPELL_SWAMP].ToolTipStrIdx = 823
+sti[M_SPELL_SWAMP].AvailableSpriteIdx = 364
+sti[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
+sti[M_SPELL_SWAMP].ClickedSpriteIdx = 400
+bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
 --------------------
 local tribe1 = TRIBE_RED
 local tribe2 = TRIBE_BLACK

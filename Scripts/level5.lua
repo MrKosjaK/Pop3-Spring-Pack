@@ -27,9 +27,26 @@ _gnsi = gnsi()
 _gsi = gsi()
 sti = spells_type_info()
 tmi = thing_move_info()
+bti = building_type_info()
 include("assets.lua")
 change_sprite_bank(0,0)
 set_level_type(10) --A
+--------------------
+sti[M_SPELL_INVISIBILITY].OneOffMaximum = 4
+sti[M_SPELL_INVISIBILITY].WorldCoordRange = 4096
+sti[M_SPELL_INVISIBILITY].CursorSpriteNum = 45
+sti[M_SPELL_INVISIBILITY].ToolTipStrIdx = 818
+sti[M_SPELL_INVISIBILITY].AvailableSpriteIdx = 359
+sti[M_SPELL_INVISIBILITY].NotAvailableSpriteIdx = 377
+sti[M_SPELL_INVISIBILITY].ClickedSpriteIdx = 395
+sti[M_SPELL_SWAMP].OneOffMaximum = 4
+sti[M_SPELL_SWAMP].WorldCoordRange = 4096
+sti[M_SPELL_SWAMP].CursorSpriteNum = 53
+sti[M_SPELL_SWAMP].ToolTipStrIdx = 823
+sti[M_SPELL_SWAMP].AvailableSpriteIdx = 364
+sti[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
+sti[M_SPELL_SWAMP].ClickedSpriteIdx = 400
+bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
 --------------------
 local tribe1 = TRIBE_CYAN
 local tribe2 = TRIBE_PINK
@@ -859,7 +876,8 @@ function OnTurn()
 			set_player_can_cast(M_SPELL_INVISIBILITY, 0)
 		end
 		if teach == 0 and jewels == 0 then
-			if (IS_SHAMAN_IN_AREA(0,21,3) == 1) or (IS_SHAMAN_IN_AREA(0,26,3) == 1) and (getShaman(0).Flags2 & TF2_THING_IS_A_GHOST_PERSON == 0) then
+			if (IS_SHAMAN_IN_AREA(0,21,3) == 1) --or (IS_SHAMAN_IN_AREA(0,26,3) == 1 or ) 
+			and (getShaman(0).Flags2 & TF2_THING_IS_A_GHOST_PERSON == 0) then
 				Engine:addCommand_QueueMsg(dialog_msgs[18][1], dialog_msgs[18][2], 36, false, dialog_msgs[18][3], dialog_msgs[18][4], dialog_msgs[18][5], 12*10)
 				teach = 1
 			end
