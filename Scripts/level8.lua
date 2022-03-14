@@ -62,6 +62,14 @@ local seedC3D = 0
 local replace1 = -1
 local replace2 = -1
 local bard = 0
+local game_loaded = false
+local honorSaveTurnLimit = 1600 +12*20
+local gameStage = 0
+--atk turns
+tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250
+tribe1MiniAtk1 = 3800 - difficulty()*50
+tribe1AtkSpells = {M_SPELL_LIGHTNING_BOLT,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND}
+tribe1NavStress = 0
 
 botSpells = {M_SPELL_CONVERT_WILD,
              M_SPELL_BLAST,
@@ -98,6 +106,7 @@ for t,w in ipairs (AItribes) do
 		set_player_can_build(v, w)
 	end
 end
+
 --sti[balm].Cost = 10000
 sti[balm].OneOffMaximum = 3
 sti[balm].WorldCoordRange = 4096
@@ -115,6 +124,30 @@ sti[seed].ToolTipStrIdx = 688
 sti[seed].AvailableSpriteIdx = 1777
 sti[seed].NotAvailableSpriteIdx = 1781
 sti[seed].ClickedSpriteIdx = 1779
+--
+-------------------------------------------------------------------------------------------------------------------------------------------------
+include("CSequence.lua");
+local Engine = CSequence:createNew();
+local dialog_msgs = {
+  [0] = {"... <br> Is this the place, Tiyao?", "Ikani", 6881, 1, 219},
+  [1] = {"It is, indeed. Congratulations, shaman. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your choice was to become... a bard.", "Info", 173, 0, 160},
+  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create life... or to restore it.", "villager #1", 1769, 0, 138},
+  [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "villager #2", 1770, 0, 146},
+  [4] = {"I must go now. Your trials for the bard magic begin here. I wish you all the best.", "Preacher #1", 1771, 0, 212},
+  [5] = {"...", "villager #3", 1772, 0, 175},
+  [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "Echoed Voice", 6883, 2, 146},
+  [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "Echoed Voice", 6883, 2, 146},
+  [8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "INFO", 6883, 2, 146},
+  [9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall concede you with the rest of the knowledge and magic.", "Echoed Voice", 6883, 2, 146},
+  [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive.", "INFO", 1772, 0, 175},
+}
+--for scaling purposes
+local user_scr_height = ScreenHeight();
+local user_scr_width = ScreenWidth();
+if (user_scr_height > 600) then
+  Engine.DialogObj:setFont(3);
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------
 
 function BalmSpell(pn,c3d)
 	if balmC3D ~= nil then
@@ -179,6 +212,18 @@ end
 
 
 function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
+	if game_loaded then
+		game_loaded = false
+	end
+	if turn() == 24 then
+		Engine:hidePanel()
+		Engine:addCommand_CinemaRaise(0)
+		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*12);
+	else
+		Engine.DialogObj:processQueue();
+		Engine:processCmd();
+	end
+	
 	--balm spell
 	if balmCDR > 0 then 
 		balmCDR = balmCDR - 1
@@ -235,6 +280,53 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	end
 end
 
+
+
+function OnFrame()
+  --for cinematics
+  if (gns.Flags3 & GNS3_INGAME_OPTIONS == 0) then
+    local gui_width = GFGetGuiWidth();
+
+    Engine.CinemaObj:renderView();
+
+    Engine.DialogObj:setDimensions(ScreenWidth() >> 1, Engine.DialogObj.DialogHeight);
+    --rescaling
+    if (ScreenHeight() ~= user_scr_height) then
+      user_scr_height = ScreenHeight();
+      Engine.DialogObj:setFont(4);
+      if (user_scr_height > 600) then
+        Engine.DialogObj:setFont(3);
+      end
+      if (Engine.DialogObj.MsgCache ~= nil) then
+        Engine.DialogObj:formatString(Engine.DialogObj.MsgCache);
+      end
+    end
+
+    if (ScreenWidth() ~= user_scr_width) then
+      user_scr_width = ScreenWidth();
+      if (Engine.DialogObj.MsgCache ~= nil) then
+        Engine.DialogObj:formatString(Engine.DialogObj.MsgCache);
+      end
+    end
+
+    Engine.DialogObj:setPosition((math.floor(ScreenWidth() / 2) - math.floor(Engine.DialogObj.DialogWidth / 2)) + math.floor(gui_width / 2), ScreenHeight() - Engine.DialogObj.DialogHeight - (ScreenHeight() >> 4));
+
+    Engine.DialogObj:renderDialog();
+  end
+------------------  
+	local w = ScreenWidth()
+	local h = ScreenHeight()
+	local guiW = GFGetGuiWidth()
+	local middle = math.floor ((w)/2)
+	local middle2 = math.floor((w+guiW)/2)
+	local box = math.floor(h/20)
+	local box2 = math.floor(h/26)
+	local offset = 8
+	local b2 = math.floor(box2/2)
+	
+end
+
+
 function OnCreateThing(t)
 	--2 new spells
 	if bard > 0 and bard < 3 then
@@ -284,6 +376,15 @@ end
 
 
 function OnSave(save_data)
+	for i = #tribe1AtkSpells, 1 do
+		save_data:push_int(tribe1AtkSpells[i])
+	end
+	save_data:push_int(#tribe1AtkSpells)
+	save_data:push_int(honorSaveTurnLimit)
+	save_data:push_int(gameStage)
+	save_data:push_int(tribe1Atk1)
+	save_data:push_int(tribe1MiniAtk1)
+	save_data:push_int(tribe1NavStress)
 	save_data:push_int(bard)
 	save_data:push_int(balmCDR)
 	save_data:push_int(seedCDR)
@@ -300,6 +401,15 @@ function OnLoad(load_data)
 	seedCDR = load_data:pop_int()
 	balmCDR = load_data:pop_int()
 	bard = load_data:pop_int()
+	tribe1NavStress = load_data:pop_int()
+	tribe1MiniAtk1 = load_data:pop_int()
+	tribe1Atk1 = load_data:pop_int()
+	gameStage = load_data:pop_int()
+	honorSaveTurnLimit = load_data:pop_int()
+	local numSpellsAtk1 = load_data:pop_int();
+	for i = 1, numSpellsAtk1 do
+		 tribe1AtkSpells[i] = load_data:pop_int();
+	end
 end
 
 import(Module_Helpers)

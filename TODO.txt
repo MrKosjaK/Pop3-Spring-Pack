@@ -1,6 +1,7 @@
 Level 5:
   - Hide panel (when loading game in first cinematic) - curr not working :rage:
   - Tests (diffs 1,2,3)
+  - Fix "<br>" on villager message
 
 Level 7:
   - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still hard i'll do it)
