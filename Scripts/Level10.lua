@@ -136,6 +136,85 @@ end
 function OnTurn()
   if (init) then
     init = false;
+
+    set_players_allied(ai_tribe_1, ai_tribe_2);
+    set_players_allied(ai_tribe_2, ai_tribe_1);
+
+    set_players_allied(player_tribe, player_ally_tribe);
+    set_players_allied(player_ally_tribe, player_tribe);
+
+    set_correct_gui_menu();
+
+    --delete initial brave lol
+    ProcessGlobalSpecialList(player_tribe, PEOPLELIST, function(t)
+      delete_thing_type(t);
+      return true;
+    end)
+
+    --portals (decor)
+    local p1 = createThing(T_SCENERY, M_SCENERY_TOP_LEVEL_SCENERY, TRIBE_HOSTBOT, marker_to_coord3d_centre(0), false, false);
+    set_map_elem_object_shadow(world_coord2d_to_map_ptr(p1.Pos.D2), 8);
+    set_square_map_params(world_coord2d_to_map_idx(p1.Pos.D2), 2, TRUE);
+    p1.DrawInfo.DrawNum = 158;
+    p1.DrawInfo.DrawTableIdx = 2;
+    p1.DrawInfo.Flags = p1.DrawInfo.Flags | DF_POINTABLE;
+    p1.AngleXZ = 512;
+
+    set_player_reinc_site_off(pp[player_tribe]);
+    mark_reincarnation_site_mes(gs.Players[player_tribe].ReincarnSiteCoord, OWNER_NONE, UNMARK);
+
+    -- ITS TALE TIME
+
+    Engine:hidePanel();
+    Engine:addCommand_CinemaRaise(0);
+
+    Engine:addCommand_SpawnThings(1, 1, T_PERSON, M_PERSON_MEDICINE_MAN, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(1), 12);
+    Engine:addCommand_SpawnThings(2, 10, T_PERSON, M_PERSON_BRAVE, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(2), 8);
+    Engine:addCommand_SpawnThings(3, 4, T_PERSON, M_PERSON_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 8);
+    Engine:addCommand_SpawnThings(3, 4, T_PERSON, M_PERSON_SUPER_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 8);
+    Engine:addCommand_SpawnThings(3, 4, T_PERSON, M_PERSON_RELIGIOUS, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 12);
+    Engine:addCommand_QueueMsg("This is...", "Matak", 36, false, 6943, 1, 229, 12);
+    Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(4), 12*5);
+    Engine:addCommand_QueueMsg("Canyon?", "Matak", 36, false, 6943, 1, 229, 12*4);
+    Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(4), 0);
+    Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(4), 0);
+    Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(5), 12*5);
+    Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(7), 0);
+    Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(8), 0);
+    Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(6), 12*12);
+
+    Engine:addCommand_QueueMsg("Maybe we can setup a temporary base here?", "Matak", 36, false, 6943, 1, 229, 12*4);
+
+    Engine:addCommand_CinemaHide(15);
+    Engine:addCommand_ShowPanel(12*2);
+
+    if (current_game_difficulty == diff_honour) then
+      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
+    end
+
+    -- A LITTLE LORE NOW, A LOTTA TALE LATER
+
+    --SCP FLYBY INITIATE.
+    FLYBY_CREATE_NEW();
+    FLYBY_ALLOW_INTERRUPT(TRUE);
+
+    --FLYBY_SET_EVENT_POS(200, 234, 12, 96); -- MOVE TO FRONT
+    --FLYBY_SET_EVENT_POS(196, 234, 108, 96); -- MOVE TO WARRIOR
+    --FLYBY_SET_EVENT_POS(214, 222, 12*47, 96); -- MOVE TO PORTAL
+    --FLYBY_SET_EVENT_POS(200, 234, 12*54, 96); -- MOVE TO PORTAL
+
+    --FLYBY_SET_EVENT_ANGLE(222, 24, 96);
+    --FLYBY_SET_EVENT_ANGLE(611, 136, 128);
+    --FLYBY_SET_EVENT_ANGLE(1051, (12*47)+12, 96);
+    --FLYBY_SET_EVENT_ANGLE(1531, (12*54)+12, 96);
+
+    --FLYBY_START();
+    --SCP FLYBY TERMINATE.
   else
 
     Engine:process();
