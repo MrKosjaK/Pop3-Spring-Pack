@@ -157,6 +157,7 @@ local cinemaEnd = 0
 local flashes = 0
 local win = 0
 local teach = 0
+local hiddenJ = 200
 --
 for i = 4,7 do
 	--if (i == tribe1) or (i == tribe2) then
@@ -282,7 +283,8 @@ if turn() == 0 then
 	for i = 22,27 do
 		if i ~= 26 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false) end
 	end
-	local jewel = createThing(T_EFFECT,10,8,marker_to_coord3d( possibleJewelMk[math.random(1,#possibleJewelMk)]),false,false) centre_coord3d_on_block(jewel.Pos.D3) ; set_thing_draw_info(jewel,TDI_SPRITE_F1_D1, Jsprite) 
+	hiddenJ = possibleJewelMk[math.random(1,#possibleJewelMk)]
+	local jewel = createThing(T_EFFECT,10,8,marker_to_coord3d(hiddenJ),false,false) centre_coord3d_on_block(jewel.Pos.D3) ; set_thing_draw_info(jewel,TDI_SPRITE_F1_D1, Jsprite) 
 	jewel.u.Effect.Duration = -1 ; jewel.DrawInfo.Alpha = -16 jewel.Flags2 = EnableFlag(jewel.Flags2, TF2_DONT_DRAW_IN_WORLD_VIEW)
 	--braves
 	Brave1 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(39),false,false)
@@ -876,7 +878,8 @@ function OnTurn()
 			set_player_can_cast(M_SPELL_INVISIBILITY, 0)
 		end
 		if teach == 0 and jewels == 0 then
-			if (IS_SHAMAN_IN_AREA(0,21,3) == 1) --or (IS_SHAMAN_IN_AREA(0,26,3) == 1 or ) 
+			if (IS_SHAMAN_IN_AREA(0,21,3) == 1) or (IS_SHAMAN_IN_AREA(0,26,3) == 1) or (IS_SHAMAN_IN_AREA(0,22,3) == 1) or (IS_SHAMAN_IN_AREA(0,23,3) == 1)
+			or (IS_SHAMAN_IN_AREA(0,24,3) == 1) or (IS_SHAMAN_IN_AREA(0,25,3) == 1) or (IS_SHAMAN_IN_AREA(0,27,3) == 1) or (IS_SHAMAN_IN_AREA(0,hiddenJ,3) == 1)
 			and (getShaman(0).Flags2 & TF2_THING_IS_A_GHOST_PERSON == 0) then
 				Engine:addCommand_QueueMsg(dialog_msgs[18][1], dialog_msgs[18][2], 36, false, dialog_msgs[18][3], dialog_msgs[18][4], dialog_msgs[18][5], 12*10)
 				teach = 1
@@ -1710,6 +1713,7 @@ function OnSave(save_data)
 	save_data:push_int(tribe4MiniAtk1)
 	save_data:push_int(tribe4NavStress)
 	save_data:push_int(gameStage)
+	save_data:push_int(hiddenJ)
 	save_data:push_int(teach)
 	save_data:push_int(win)
 	save_data:push_int(flashes)
@@ -1754,6 +1758,7 @@ function OnLoad(load_data)
 	flashes = load_data:pop_int()
 	win = load_data:pop_int()
 	teach = load_data:pop_int()
+	hiddenJ = load_data:pop_int()
 	gameStage = load_data:pop_int()
 	tribe4NavStress = load_data:pop_int()
 	tribe4MiniAtk1 = load_data:pop_int()
