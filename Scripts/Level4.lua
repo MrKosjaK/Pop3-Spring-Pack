@@ -846,7 +846,7 @@ function OnTurn()
 
         if (Engine:getVar(1) == 2) then
           if (BlueAttack2:process() and current_game_difficulty >= diff_experienced) then
-            if (getShaman(ai_tribe_1) ~= nil and pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 3) then
+            if (IS_SHAMAN_AVAILABLE_FOR_ATTACK(ai_tribe_1) > 0 and pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 3) then
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 10 + G_RANDOM(50));
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 1);
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 0);
@@ -967,7 +967,7 @@ function OnTurn()
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, 10);
             end
           elseif (YellowAttack3:process() and current_game_difficulty >= diff_experienced) then
-            if (getShaman(ai_tribe_2) ~= nil) then
+            if (IS_SHAMAN_AVAILABLE_FOR_ATTACK(ai_tribe_2) > 0) then
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, 0 + (current_game_difficulty * 10));
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, 1);
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, 0);

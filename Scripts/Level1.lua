@@ -587,7 +587,7 @@ function OnTurn()
           end
         elseif (getTurn() % (1222 << 1) == 0) then
           if (current_game_difficulty >= diff_experienced) then
-            if (getShaman(ai_tribe_2) ~= nil and MANA(ai_tribe_2) >= SPELL_COST(M_SPELL_BLAST) * 3) then
+            if (IS_SHAMAN_AVAILABLE_FOR_ATTACK(ai_tribe_2) > 0 and MANA(ai_tribe_2) >= SPELL_COST(M_SPELL_BLAST) * 3) then
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, 1);
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, 0);
               WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, 0);
@@ -683,7 +683,7 @@ function OnTurn()
       if (Engine:getVar(1) == 1) then
         if (getTurn() % (1001 << 1) == 0) then
           if (current_game_difficulty >= diff_experienced) then
-            if (getShaman(ai_tribe_1) ~= nil and MANA(ai_tribe_1) >= SPELL_COST(M_SPELL_INSECT_PLAGUE) * 2) then
+            if (IS_SHAMAN_AVAILABLE_FOR_ATTACK(ai_tribe_1) > 0 and MANA(ai_tribe_1) >= SPELL_COST(M_SPELL_INSECT_PLAGUE) * 2) then
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 1);
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 0);
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 0);
