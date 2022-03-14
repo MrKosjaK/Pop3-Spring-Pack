@@ -214,7 +214,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	end
 	if turn() == 1 then
 		local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
-		local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) centre_coord3d_on_block(bf.Pos.D3) bf.u.Effect.Duration = 12*50
+		local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = 12*50 centre_coord3d_on_block(bf.Pos.D3)
 	end
 end
 
@@ -238,6 +238,7 @@ function OnCreateThing(t)
 	--healing balm (invisibility)
 	if (t.Type == T_SPELL) and (t.Model == balm) then
 		t.Model = M_SPELL_NONE
+		queue_sound_event(nil,SND_EVENT_SELECT_CMD, SEF_FIXED_VARS)
 		balmCDR = 8
 		balmC3D = CopyC3d(t.Pos.D3)
 		local shots = GET_NUM_ONE_OFF_SPELLS(t.Owner,balm)
@@ -247,6 +248,7 @@ function OnCreateThing(t)
 	--seed of life (swamp)
 	if (t.Type == T_SPELL) and (t.Model == seed) then
 		t.Model = M_SPELL_NONE
+		queue_sound_event(nil,SND_EVENT_ACCEPT_CMD, SEF_FIXED_VARS)
 		seedCDR = 8
 		seedC3D = CopyC3d(t.Pos.D3)
 		local shots = GET_NUM_ONE_OFF_SPELLS(t.Owner,seed)
@@ -256,6 +258,12 @@ function OnCreateThing(t)
 end
 
 
+function OnSoundEvent(t_thing, event, flags) 
+  if (event == SND_EVENT_SHAM_INVIS) or (event == SND_EVENT_SHAM_SWAMP) then
+    --log_msg(8, string.format("Event: %i, Flags: %i", event, flags))
+    return 1
+  end
+end
 
 
 function OnSave(save_data)

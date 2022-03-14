@@ -254,8 +254,8 @@ BEAMDOWN: ZdemonScream.wav
 BEAMUP: Zscream1.wav Zscream2.wav Zscream3.wav Zscream4.wav Zscream5.wav
 CMD_MENU_POPUP: Zbalm.wav
 CMD_MENU_HILITE: 
-SELECT_CMD: 
-ACCEPT_CMD: 
+SELECT_CMD: Zbalm1.wav Zbalm2.wav
+ACCEPT_CMD: Zseed1.wav Zseed2.wav
 DO_CMDS: 
 BLDG_MENU_POPUP: 
 BLDG_MENU_SPIN: 
