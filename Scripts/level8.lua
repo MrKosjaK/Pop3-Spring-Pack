@@ -28,24 +28,32 @@ _gsi = gsi()
 sti = spells_type_info()
 tmi = thing_move_info()
 bti = building_type_info()
+ency = encyclopedia_info()
+ency[27].StrId = 1010
+ency[32].StrId = 1015
+ency[22].StrId = 1005
 include("assets.lua")
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
 sti[M_SPELL_GHOST_ARMY].NetworkOnly = 1
-sti[M_SPELL_INVISIBILITY].OneOffMaximum = 4
-sti[M_SPELL_INVISIBILITY].WorldCoordRange = 4096
-sti[M_SPELL_INVISIBILITY].CursorSpriteNum = 45
-sti[M_SPELL_INVISIBILITY].ToolTipStrIdx = 818
-sti[M_SPELL_INVISIBILITY].AvailableSpriteIdx = 359
-sti[M_SPELL_INVISIBILITY].NotAvailableSpriteIdx = 377
-sti[M_SPELL_INVISIBILITY].ClickedSpriteIdx = 395
-sti[M_SPELL_SWAMP].OneOffMaximum = 4
-sti[M_SPELL_SWAMP].WorldCoordRange = 4096
-sti[M_SPELL_SWAMP].CursorSpriteNum = 53
-sti[M_SPELL_SWAMP].ToolTipStrIdx = 823
-sti[M_SPELL_SWAMP].AvailableSpriteIdx = 364
-sti[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
-sti[M_SPELL_SWAMP].ClickedSpriteIdx = 400
+local balm = M_SPELL_INVISIBILITY --(healing balm): units in a 3x3 area get healed for 1/3 their max hp
+local seed = M_SPELL_SWAMP --(seed of life): casts a seed that rises a tree and creates a wildman
+--sti[balm].Cost = 10000
+sti[balm].OneOffMaximum = 3
+sti[balm].WorldCoordRange = 4096
+sti[balm].CursorSpriteNum = 162
+sti[balm].ToolTipStrIdx = 687
+sti[balm].AvailableSpriteIdx = 1776
+sti[balm].NotAvailableSpriteIdx = 1780
+sti[balm].ClickedSpriteIdx = 1778
+--sti[seed].Cost = 10000
+sti[seed].OneOffMaximum = 2
+sti[seed].WorldCoordRange = 2048+1024
+sti[seed].CursorSpriteNum = 163
+sti[seed].ToolTipStrIdx = 688
+sti[seed].AvailableSpriteIdx = 1777
+sti[seed].NotAvailableSpriteIdx = 1781
+sti[seed].ClickedSpriteIdx = 1779
 bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
 --------------------
 local player = TRIBE_ORANGE
@@ -53,8 +61,7 @@ local tribe1 = TRIBE_YELLOW
 computer_init_player(_gsi.Players[tribe1])
 local AItribes = {TRIBE_YELLOW}
 --
-local balm = M_SPELL_INVISIBILITY --(healing balm): units in a 3x3 area get healed for 1/3 their max hp
-local seed = M_SPELL_SWAMP --(seed of life): casts a seed that rises a tree and creates a wildman
+
 local balmCDR = -1
 local seedCDR = -1
 local balmC3D = 0
@@ -66,6 +73,11 @@ local game_loaded = false
 local honorSaveTurnLimit = 1600 +12*20
 local gameStage = 0
 local lbLock = 0
+if turn() == 0 then
+	set_player_reinc_site_off(getPlayer(4))
+	Csh = createThing(T_PERSON,M_PERSON_MEDICINE_MAN,4,marker_to_coord3d(16),false,false)
+	--DEFEND_SHAMEN(1,4)
+end
 --atk turns
 tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250
 tribe1MiniAtk1 = 3800 - difficulty()*50
@@ -107,35 +119,18 @@ for t,w in ipairs (AItribes) do
 		set_player_can_build(v, w)
 	end
 end
-
---sti[balm].Cost = 10000
-sti[balm].OneOffMaximum = 3
-sti[balm].WorldCoordRange = 4096
-sti[balm].CursorSpriteNum = 162
-sti[balm].ToolTipStrIdx = 687
-sti[balm].AvailableSpriteIdx = 1776
-sti[balm].NotAvailableSpriteIdx = 1780
-sti[balm].ClickedSpriteIdx = 1778
---
---sti[seed].Cost = 10000
-sti[seed].OneOffMaximum = 2
-sti[seed].WorldCoordRange = 2048+1024
-sti[seed].CursorSpriteNum = 163
-sti[seed].ToolTipStrIdx = 688
-sti[seed].AvailableSpriteIdx = 1777
-sti[seed].NotAvailableSpriteIdx = 1781
-sti[seed].ClickedSpriteIdx = 1779
+set_players_allied(7,4) set_players_allied(4,7)
 --
 -------------------------------------------------------------------------------------------------------------------------------------------------
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"... <br> Is this the place, Tiyao?", "Ikani", 6881, 1, 219},
-  [1] = {"It is, indeed. Congratulations, shaman. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your choice was to become... a bard.", "Info", 173, 0, 160},
-  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create life... or to restore it.", "villager #1", 1769, 0, 138},
-  [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "villager #2", 1770, 0, 146},
-  [4] = {"I must go now. Your trials for the bard magic begin here. I wish you all the best.", "Preacher #1", 1771, 0, 212},
-  [5] = {"...", "villager #3", 1772, 0, 175},
+  [0] = {"... <br> Is this the place, Tiyao?", "Nomel", 6939, 2, 138},
+  [1] = {"It is, indeed. Congratulations, shaman. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your choice was to become... a bard.", "Tiyao", 6883, 2, 146},
+  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create life... or to restore it.", "Tiyao", 6883, 2, 146},
+  [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
+  [4] = {"I must go now. Your trials for the bard magic begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
+  [5] = {"...", "Nomel", 6939, 2, 138},
   [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "Echoed Voice", 6883, 2, 146},
   [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "Echoed Voice", 6883, 2, 146},
   [8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "INFO", 6883, 2, 146},
@@ -459,8 +454,14 @@ function OnKeyDown(k)
 		return true end)
 		createThing(T_EFFECT,M_EFFECT_BLDG_DAMAGED_SMOKE,8,marker_to_coord3d(2),false,false)
 	end
-	--test sounds
-	if k == LB_KEY_S then
-		queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
+	
+	--test
+	if k == LB_KEY_A then
+		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
+		--DEFEND_SHAMEN(1,1)
+		--[[ency[22].StrId = 689
+		ency[27].StrId = 690
+		ency[32].StrId = 691]]
+		--ms_script_create_msg_information(sti[M_SPELL_INVISIBILITY].ToolTipStrIdx)
 	end
 end

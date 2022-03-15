@@ -22,6 +22,7 @@ General:
 
 
 bldg_const = building_type_info();
+local ency = encyclopedia_info();
 
 
 SPELLS CONSTANTS DEFAULT
@@ -44,4 +45,9 @@ spell_const[M_SPELL_SWAMP].ClickedSpriteIdx = 400
 
 BUILDING CONSTANTS DEFAULT
 bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
+
+ECNYCLOPEDIA DEFAULT
+ency[27].StrId = 690
+ency[32].StrId = 691
+ency[22].StrId = 692
 

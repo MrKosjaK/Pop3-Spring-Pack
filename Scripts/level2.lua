@@ -28,6 +28,10 @@ _gsi = gsi()
 sti = spells_type_info()
 tmi = thing_move_info()
 bti = building_type_info()
+ency = encyclopedia_info()
+ency[27].StrId = 690
+ency[32].StrId = 691
+ency[22].StrId = 692
 include("assets.lua")
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
