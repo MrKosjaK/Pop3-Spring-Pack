@@ -61,7 +61,6 @@ local tribe1 = TRIBE_YELLOW
 computer_init_player(_gsi.Players[tribe1])
 local AItribes = {TRIBE_YELLOW}
 --
-
 local balmCDR = -1
 local seedCDR = -1
 local balmC3D = 0
@@ -77,6 +76,8 @@ if turn() == 0 then
 	set_player_reinc_site_off(getPlayer(4))
 	Csh = createThing(T_PERSON,M_PERSON_MEDICINE_MAN,4,marker_to_coord3d(16),false,false)
 	--DEFEND_SHAMEN(1,4)
+	local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
+	local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = 12*120 centre_coord3d_on_block(bf.Pos.D3)
 end
 --atk turns
 tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250
@@ -125,18 +126,18 @@ set_players_allied(7,4) set_players_allied(4,7)
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"... <br> Is this the place, Tiyao?", "Nomel", 6939, 2, 138},
-  [1] = {"It is, indeed. Congratulations, shaman. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your choice was to become... a bard.", "Tiyao", 6883, 2, 146},
-  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create life... or to restore it.", "Tiyao", 6883, 2, 146},
+  [0] = {"This planet looks dull. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
+  [1] = {"It is, indeed. You must be congratulated. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your decision was to become... a bard.", "Tiyao", 6883, 2, 146},
+  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create life... or to restore life.", "Tiyao", 6883, 2, 146},
   [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
   [4] = {"I must go now. Your trials for the bard magic begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
   [5] = {"...", "Nomel", 6939, 2, 138},
-  [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "Echoed Voice", 6883, 2, 146},
-  [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "Echoed Voice", 6883, 2, 146},
-  [8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "INFO", 6883, 2, 146},
-  [9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall concede you with the rest of the knowledge and magic.", "Echoed Voice", 6883, 2, 146},
-  [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive.", "INFO", 1772, 0, 175},
-  [11] = {"Bards have a strong connection with the earth. Although they can not charge land spells with mana, killing enemies will eventually earn the shaman free shots of this spells.", "villager #3", 1772, 0, 175},
+  [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "Echoed Voice", 1783, 0, 225},
+  [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "Echoed Voice", 1783, 0, 225},
+  [8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "Info", 173, 0, 160},
+  [9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall concede you with the rest of the knowledge and magic.", "Echoed Voice", 1783, 0, 225},
+  [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive.", "Info", 173, 0, 160},
+  [11] = {"Bards have a strong connection with the earth. Although they can not charge land spells with mana, killing enemies will eventually earn the shaman free shots of this spells.", "Info", 173, 0, 160},
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -212,15 +213,91 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	if game_loaded then
 		game_loaded = false
 	end
+	if turn() == 10 then
+		--[[FLYBY_CREATE_NEW()
+		FLYBY_ALLOW_INTERRUPT(FALSE)
+
+		--start
+		FLYBY_SET_EVENT_POS(32, 224, 1, 40)
+		FLYBY_SET_EVENT_ANGLE(1500, 1, 30)
+		
+		FLYBY_SET_EVENT_POS(38, 224, 56, 130)
+		FLYBY_SET_EVENT_ANGLE(500, 57, 50)
+		
+		FLYBY_SET_EVENT_POS(60, 224, 192, 150)
+		FLYBY_SET_EVENT_ANGLE(502, 193, 30)
+		
+		FLYBY_SET_EVENT_POS(34, 224, 344, 50)
+		FLYBY_SET_EVENT_ANGLE(1500, 344, 50)
+		
+		FLYBY_SET_EVENT_POS(44, 214, 400, 150)
+		FLYBY_SET_EVENT_ANGLE(650, 401, 48)
+		FLYBY_SET_EVENT_ZOOM (-60,400,48)
+		
+		FLYBY_SET_EVENT_POS(18, 242, 555, 50)
+		FLYBY_SET_EVENT_ANGLE(200, 555, 48)
+		FLYBY_SET_EVENT_ZOOM (-10,555,48)
+		
+		FLYBY_SET_EVENT_POS(20, 240, 612, 50)
+		FLYBY_SET_EVENT_ANGLE(100, 613, 48)
+		
+		FLYBY_START()]]
+	end
 	if turn() == 24 then
-		--Engine:hidePanel()
-		--Engine:addCommand_CinemaRaise(0)
-		--Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*12);
+		Engine:hidePanel()
+		Engine:addCommand_CinemaRaise(0)
+		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1500, 36);
+		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*1);
+		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(21), 1);
+		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1500, 30);
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(22), 12);
+		Engine:addCommand_QueueMsg(dialog_msgs[1][1], dialog_msgs[1][2], 24, false, dialog_msgs[1][3], dialog_msgs[1][4], dialog_msgs[1][5], 1);
+		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(23), 84);
+		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(24), 36);
+		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1600, 2);
+		Engine:addCommand_QueueMsg(dialog_msgs[2][1], dialog_msgs[2][2], 24, false, dialog_msgs[2][3], dialog_msgs[2][4], dialog_msgs[2][5], 8);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 600, 24);
+		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1650, 36);
+		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(25), 108);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 1100, 12);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 1800, 8);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 600, 4);
+		Engine:addCommand_QueueMsg(dialog_msgs[3][1], dialog_msgs[3][2], 24, false, dialog_msgs[3][3], dialog_msgs[3][4], dialog_msgs[3][5], 60);
+		Engine:addCommand_QueueMsg(dialog_msgs[4][1], dialog_msgs[4][2], 24, false, dialog_msgs[4][3], dialog_msgs[4][4], dialog_msgs[4][5], 120);
+		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(27), 64);
+		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1880, 24);
+		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 750, 38);
+		Engine:addCommand_QueueMsg(dialog_msgs[5][1], dialog_msgs[5][2], 24, false, dialog_msgs[5][3], dialog_msgs[5][4], dialog_msgs[5][5], 28);
+		--front of bard's hut
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(5), 118);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 0, 12);
+		Engine:addCommand_QueueMsg(dialog_msgs[5][1], dialog_msgs[5][2], 12, false, dialog_msgs[5][3], dialog_msgs[5][4], dialog_msgs[5][5], 16);
+		--inside hut
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(30), 48);
+		Engine:addCommand_QueueMsg(dialog_msgs[6][1], dialog_msgs[6][2], 36, false, dialog_msgs[6][3], dialog_msgs[6][4], dialog_msgs[6][5], 16);
+		Engine:addCommand_QueueMsg(dialog_msgs[7][1], dialog_msgs[7][2], 36, false, dialog_msgs[7][3], dialog_msgs[7][4], dialog_msgs[7][5], 200);
+		Engine:addCommand_CinemaHide(1);
+		Engine:addCommand_ShowPanel(1);
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(10), 84);
+		Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 96, true, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 16);
 	else
 		Engine.DialogObj:processQueue();
 		Engine:processCmd();
 	end
-	
+	if turn() == 740 then
+		createThing(T_EFFECT,M_EFFECT_ORBITER,8,getShaman(4).Pos.D3,false,false)
+		delete_thing_type(getShaman(4))
+		queue_sound_event(nil,SND_EVENT_HYPNOTISE, SEF_FIXED_VARS)
+	elseif turn() == 960 then
+		queue_sound_event(nil,SND_EVENT_BLDG_ROTATE, SEF_FIXED_VARS)
+	elseif turn() == 1217 then
+		queue_sound_event(nil,SND_EVENT_BLDG_ROTATE, SEF_FIXED_VARS)
+		local t = {2,3,4,5,7,8,10,13,14,16,17,19}
+		for i = 1,#t do
+			GIVE_ONE_SHOT(t[i],player)
+		end
+		bard = 1
+	end
 	--balm spell
 	if balmCDR > 0 then 
 		balmCDR = balmCDR - 1
@@ -256,6 +333,10 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		end
 	return true end)
 	if every2Pow(4) then
+		--remove seed flash
+		if _gsi.Players[player].SpellsCast[seed] > 0 and _gsi.Players[player].SpellsCast[seed] < 3 then
+			FLASH_BUTTON(27,0)
+		end
 		if bard >= 3 and bard < 9 then
 			bard = bard + 1
 			if bard == 9 then
@@ -284,10 +365,6 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 				queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
 			end
 		end
-	end
-	if turn() == 1 then
-		local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
-		local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = 12*50 centre_coord3d_on_block(bf.Pos.D3)
 	end
 end
 
@@ -342,7 +419,7 @@ function OnCreateThing(t)
 	--2 new spells
 	if bard > 0 and bard < 3 then
 		if (t.Type == T_SPELL) then
-			--replace1 = t.Model
+			if bard == 1 then replace1 = t.Model else replace2 = t.Model end
 			local g = createThing(T_EFFECT,M_EFFECT_ORBITER,8,t.Pos.D3,false,false)
 			if getShaman(player) ~= nil then
 				createThing(T_EFFECT,58,8,getShaman(player).Pos.D3,false,false)
@@ -352,6 +429,26 @@ function OnCreateThing(t)
 			queue_sound_event(nil,SND_EVENT_DISCOVERY_END, SEF_FIXED_VARS)
 			if bard == 3 then
 				createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(1),false,false)
+				Engine:addCommand_QueueMsg(dialog_msgs[9][1], dialog_msgs[9][2], 36, false, dialog_msgs[9][3], dialog_msgs[9][4], dialog_msgs[9][5], 130);
+				Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 36, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 12);
+				local t = {2,3,4,5,7,8,10,13,14,16,17,19}
+				for i = 1,#t do
+					if t[i] ~= replace1 and t[i] ~= replace2 then
+						set_player_can_cast(t[i],player)
+						if t[i] == 17 then
+							_gsi.ThisLevelInfo.PlayerThings[player].SpellsNotCharging = DisableFlag(_gsi.ThisLevelInfo.PlayerThings[player].SpellsNotCharging, (1 << (t[i] - 1)))
+						else
+							_gsi.ThisLevelInfo.PlayerThings[player].SpellsNotCharging = EnableFlag(_gsi.ThisLevelInfo.PlayerThings[player].SpellsNotCharging, (1 << (t[i] - 1)))
+						end
+					end
+				end
+				local t = {2,3,4,5,7,8,10,13,14,16,17,19}
+				for i = 1,#t do
+					if t[i] ~= 17 then
+						_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[t[i]] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[t[i]] & 240
+						_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[t[i]] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[t[i]] | 0
+					end
+				end
 			end
 		end
 	end
@@ -463,5 +560,6 @@ function OnKeyDown(k)
 		ency[27].StrId = 690
 		ency[32].StrId = 691]]
 		--ms_script_create_msg_information(sti[M_SPELL_INVISIBILITY].ToolTipStrIdx)
+		LOG(turn())
 	end
 end
