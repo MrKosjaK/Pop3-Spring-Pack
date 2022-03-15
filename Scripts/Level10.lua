@@ -213,6 +213,8 @@ function OnTurn()
     Engine:addCommand_CinemaHide(15);
     Engine:addCommand_ShowPanel(12*2);
 
+    Engine:addCommand_QueueMsg("Shaman. Build a base before exploring area around. You never know if there's enemy hiding in fog. <br> Build at least 5 huts. <br> Build at least 3 towers. <br> Build at least one of any training schools.", "Objective", 256, true, 174, 0, 128, 0);
+
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
     end
@@ -223,21 +225,51 @@ function OnTurn()
     FLYBY_CREATE_NEW();
     FLYBY_ALLOW_INTERRUPT(TRUE);
 
-    --FLYBY_SET_EVENT_POS(200, 234, 12, 96); -- MOVE TO FRONT
-    --FLYBY_SET_EVENT_POS(196, 234, 108, 96); -- MOVE TO WARRIOR
-    --FLYBY_SET_EVENT_POS(214, 222, 12*47, 96); -- MOVE TO PORTAL
-    --FLYBY_SET_EVENT_POS(200, 234, 12*54, 96); -- MOVE TO PORTAL
+    FLYBY_SET_EVENT_POS(42, 252, 12, 60);
+    FLYBY_SET_EVENT_POS(52, 4, 72, 60);
+    FLYBY_SET_EVENT_POS(60, 18, 132, 96);
+    FLYBY_SET_EVENT_POS(76, 46, 224, 96);
 
-    --FLYBY_SET_EVENT_ANGLE(222, 24, 96);
-    --FLYBY_SET_EVENT_ANGLE(611, 136, 128);
-    --FLYBY_SET_EVENT_ANGLE(1051, (12*47)+12, 96);
-    --FLYBY_SET_EVENT_ANGLE(1531, (12*54)+12, 96);
+    FLYBY_SET_EVENT_ANGLE(125, 24, 48);
+    FLYBY_SET_EVENT_ANGLE(202, 132, 36);
+    FLYBY_SET_EVENT_ANGLE(402, 300, 60);
+    FLYBY_SET_EVENT_ANGLE(1202, 348, 60);
 
-    --FLYBY_START();
+    FLYBY_START();
     --SCP FLYBY TERMINATE.
   else
 
     Engine:process();
+
+    if (Engine:getVar(1) == 0) then
+      if (Engine:getVar(2) == 0 and pp[player_tribe].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] >= 3) then
+        Engine:setVar(2, 1);
+        Engine:addCommand_QueueMsg("Shaman, we've finished building towers!", "Worker", 48, false, 1784, 0, 229, 12*4);
+      end
+
+      if (Engine:getVar(3) == 0) then
+        local h1 = pp[player_tribe].NumBuildingsOfType[1];
+        h1 = h1 + pp[player_tribe].NumBuildingsOfType[2];
+        h1 = h1 + pp[player_tribe].NumBuildingsOfType[3];
+        if (h1 >= 5) then
+          Engine:setVar(3, 1);
+          Engine:addCommand_QueueMsg("Shaman, we've finished building huts!", "Worker", 48, false, 1784, 0, 229, 12*4);
+        end
+      end
+
+      if (Engine:getVar(4) == 0) then
+        if (pp[player_tribe].NumBuildingsOfType[5] > 0 or pp[player_tribe].NumBuildingsOfType[6] > 0 or pp[player_tribe].NumBuildingsOfType[7] > 0 or pp[player_tribe].NumBuildingsOfType[8] > 0) then
+          Engine:setVar(4, 1);
+          Engine:addCommand_QueueMsg("Shaman, we've finished building training school!", "Worker", 48, false, 1784, 0, 229, 12*4);
+        end
+      end
+
+      if (Engine:getVar(2) == 1 and Engine:getVar(3) == 1 and Engine:getVar(4) == 1) then
+        Engine:setVar(1, 1);
+        Engine:addCommand_QueueMsg("Our temporary base is all setup! We can begin scouting area around.", "Worker", 48, false, 1784, 0, 229, 12*4);
+      end
+    end
+
 
     --MODIFY GAINING MANA
     if (death_counter > 0) then
