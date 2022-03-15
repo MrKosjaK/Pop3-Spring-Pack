@@ -28,6 +28,7 @@ include("CSequence.lua");
 local gs = gsi();
 local gns = gnsi();
 local spell_const = spells_type_info();
+local bldg_const = building_type_info();
 
 --player pointers
 local pp = {

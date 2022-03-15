@@ -28,6 +28,7 @@ include("CSequence.lua");
 local gs = gsi();
 local gns = gnsi();
 local spell_const = spells_type_info();
+local bldg_const = building_type_info();
 
 --these always have to be set on script load. (DISABLE GHOSTS!)
 spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_OFF;
