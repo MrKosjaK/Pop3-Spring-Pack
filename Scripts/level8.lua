@@ -65,6 +65,7 @@ local bard = 0
 local game_loaded = false
 local honorSaveTurnLimit = 1600 +12*20
 local gameStage = 0
+local lbLock = 0
 --atk turns
 tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250
 tribe1MiniAtk1 = 3800 - difficulty()*50
@@ -78,7 +79,7 @@ botSpells = {M_SPELL_CONVERT_WILD,
              M_SPELL_INSECT_PLAGUE,
              M_SPELL_INVISIBILITY,
              --M_SPELL_GHOST_ARMY,
-             M_SPELL_SWAMP,
+             --M_SPELL_SWAMP,
              M_SPELL_HYPNOTISM,
              M_SPELL_WHIRLWIND,
              M_SPELL_EROSION,
@@ -140,6 +141,7 @@ local dialog_msgs = {
   [8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "INFO", 6883, 2, 146},
   [9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall concede you with the rest of the knowledge and magic.", "Echoed Voice", 6883, 2, 146},
   [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive.", "INFO", 1772, 0, 175},
+  [11] = {"Bards have a strong connection with the earth. Although they can not charge land spells with mana, killing enemies will eventually earn the shaman free shots of this spells.", "villager #3", 1772, 0, 175},
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -216,9 +218,9 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		game_loaded = false
 	end
 	if turn() == 24 then
-		Engine:hidePanel()
-		Engine:addCommand_CinemaRaise(0)
-		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*12);
+		--Engine:hidePanel()
+		--Engine:addCommand_CinemaRaise(0)
+		--Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*12);
 	else
 		Engine.DialogObj:processQueue();
 		Engine:processCmd();
@@ -271,6 +273,20 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] & 240
 				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[M_SPELL_CONVERT_WILD] | 2
 				FLASH_BUTTON(27,1) --FLASH_BUTTON(22,1)
+			end
+		end
+	end
+	if every2Pow(2) then
+		--bard earns lbs/flattens by killing enemies
+		if _gsi.Players[player].PeopleKilled[tribe1] % (12+difficulty()*3+gameStage*3) == 0 and lbLock ~= _gsi.Players[player].PeopleKilled[tribe1] then
+			lbLock = _gsi.Players[player].PeopleKilled[tribe1]
+			local get,maxx = M_SPELL_LAND_BRIDGE,4
+			if rnd() > 70 then get = M_SPELL_FLATTEN maxx = 3 end
+			local shots = GET_NUM_ONE_OFF_SPELLS(player,get)
+			if shots < maxx then
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[get] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[get] & 240
+				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[get] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[get] | shots+1
+				queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
 			end
 		end
 	end
@@ -345,24 +361,26 @@ function OnCreateThing(t)
 		end
 	end
 	--healing balm (invisibility)
-	if (t.Type == T_SPELL) and (t.Model == balm) then
-		t.Model = M_SPELL_NONE
-		queue_sound_event(nil,SND_EVENT_SELECT_CMD, SEF_FIXED_VARS)
-		balmCDR = 8
-		balmC3D = CopyC3d(t.Pos.D3)
-		local shots = GET_NUM_ONE_OFF_SPELLS(t.Owner,balm)
-		_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] & 240
-		_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] | shots-1
-	end
-	--seed of life (swamp)
-	if (t.Type == T_SPELL) and (t.Model == seed) then
-		t.Model = M_SPELL_NONE
-		queue_sound_event(nil,SND_EVENT_ACCEPT_CMD, SEF_FIXED_VARS)
-		seedCDR = 8
-		seedC3D = CopyC3d(t.Pos.D3)
-		local shots = GET_NUM_ONE_OFF_SPELLS(t.Owner,seed)
-		_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] & 240
-		_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] | shots-1
+	if t.Owner == player then
+		if (t.Type == T_SPELL) and (t.Model == balm) then
+			t.Model = M_SPELL_NONE
+			queue_sound_event(nil,SND_EVENT_SELECT_CMD, SEF_FIXED_VARS)
+			balmCDR = 8
+			balmC3D = CopyC3d(t.Pos.D3)
+			local shots = GET_NUM_ONE_OFF_SPELLS(t.Owner,balm)
+			_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] & 240
+			_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[balm] | shots-1
+		end
+		--seed of life (swamp)
+		if (t.Type == T_SPELL) and (t.Model == seed) then
+			t.Model = M_SPELL_NONE
+			queue_sound_event(nil,SND_EVENT_ACCEPT_CMD, SEF_FIXED_VARS)
+			seedCDR = 8
+			seedC3D = CopyC3d(t.Pos.D3)
+			local shots = GET_NUM_ONE_OFF_SPELLS(t.Owner,seed)
+			_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] & 240
+			_gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] = _gsi.ThisLevelInfo.PlayerThings[t.Owner].SpellsAvailableOnce[seed] | shots-1
+		end
 	end
 end
 
@@ -380,6 +398,8 @@ function OnSave(save_data)
 		save_data:push_int(tribe1AtkSpells[i])
 	end
 	save_data:push_int(#tribe1AtkSpells)
+	
+	save_data:push_int(lbLock)
 	save_data:push_int(honorSaveTurnLimit)
 	save_data:push_int(gameStage)
 	save_data:push_int(tribe1Atk1)
@@ -406,6 +426,8 @@ function OnLoad(load_data)
 	tribe1Atk1 = load_data:pop_int()
 	gameStage = load_data:pop_int()
 	honorSaveTurnLimit = load_data:pop_int()
+	lbLock = load_data:pop_int()
+	
 	local numSpellsAtk1 = load_data:pop_int();
 	for i = 1, numSpellsAtk1 do
 		 tribe1AtkSpells[i] = load_data:pop_int();
@@ -436,5 +458,9 @@ function OnKeyDown(k)
 			return true end)
 		return true end)
 		createThing(T_EFFECT,M_EFFECT_BLDG_DAMAGED_SMOKE,8,marker_to_coord3d(2),false,false)
+	end
+	--test sounds
+	if k == LB_KEY_S then
+		queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
 	end
 end
