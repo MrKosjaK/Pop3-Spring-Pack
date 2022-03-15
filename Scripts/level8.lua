@@ -72,12 +72,14 @@ local game_loaded = false
 local honorSaveTurnLimit = 1600 +12*20
 local gameStage = 0
 local lbLock = 0
+local BardLives = 6-difficulty()
+local removeHut = -1
 if turn() == 0 then
 	set_player_reinc_site_off(getPlayer(4))
 	Csh = createThing(T_PERSON,M_PERSON_MEDICINE_MAN,4,marker_to_coord3d(16),false,false)
 	--DEFEND_SHAMEN(1,4)
 	local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
-	local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = 12*120 centre_coord3d_on_block(bf.Pos.D3)
+	local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = -1 centre_coord3d_on_block(bf.Pos.D3)
 end
 --atk turns
 tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250
@@ -134,10 +136,11 @@ local dialog_msgs = {
   [5] = {"...", "Nomel", 6939, 2, 138},
   [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "Echoed Voice", 1783, 0, 225},
   [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "Echoed Voice", 1783, 0, 225},
-  [8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "Info", 173, 0, 160},
+  --[8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "Info", 173, 0, 160},
   [9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall concede you with the rest of the knowledge and magic.", "Echoed Voice", 1783, 0, 225},
-  [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive.", "Info", 173, 0, 160},
+  [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive. <br> Notice your shaman lives at the top left corner.", "Info", 173, 0, 160},
   [11] = {"Bards have a strong connection with the earth. Although they can not charge land spells with mana, killing enemies will eventually earn the shaman free shots of this spells.", "Info", 173, 0, 160},
+  [12] = {"Your other spell is the healing balm. <br> Cast it on your units (3x3 area) to heal them for 1/3 of their maximum health!", "Info", 173, 0, 160},
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -155,16 +158,18 @@ function BalmSpell(pn,c3d)
 			cloud.u.Effect.Duration = 12*1 ; --cloud.DrawInfo.Alpha = 3
 			me.MapWhoList:processList( function (h)
 				if (h.Owner == pn) and (h.Type == T_PERSON) and (h.Model < 8) and (h.u.Pers.Life < h.u.Pers.MaxLife) then
-					local hp = h.u.Pers.Life
-					local give = math.floor(h.u.Pers.MaxLife/3)
-					if hp + give > h.u.Pers.MaxLife then
-						h.u.Pers.Life = h.u.Pers.MaxLife
-						a = 1
-					else
-						h.u.Pers.Life = hp + give
-						a = 1
+					if h.u.Pers.Life > 0 then
+						local hp = h.u.Pers.Life
+						local give = math.floor(h.u.Pers.MaxLife/3)
+						if hp + give > h.u.Pers.MaxLife then
+							h.u.Pers.Life = h.u.Pers.MaxLife
+							a = 1
+						else
+							h.u.Pers.Life = hp + give
+							a = 1
+						end
+						local sp = createThing(T_EFFECT,60,8,h.Pos.D3,false,false) centre_coord3d_on_block(sp.Pos.D3) sp.u.Effect.Duration = 12
 					end
-					local sp = createThing(T_EFFECT,60,8,h.Pos.D3,false,false) centre_coord3d_on_block(sp.Pos.D3) sp.u.Effect.Duration = 12
 				end
 			return true end)
 		return true end)
@@ -275,11 +280,11 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		--inside hut
 		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(30), 48);
 		Engine:addCommand_QueueMsg(dialog_msgs[6][1], dialog_msgs[6][2], 36, false, dialog_msgs[6][3], dialog_msgs[6][4], dialog_msgs[6][5], 16);
-		Engine:addCommand_QueueMsg(dialog_msgs[7][1], dialog_msgs[7][2], 36, false, dialog_msgs[7][3], dialog_msgs[7][4], dialog_msgs[7][5], 200);
+		Engine:addCommand_QueueMsg(dialog_msgs[7][1], dialog_msgs[7][2], 36, false, dialog_msgs[7][3], dialog_msgs[7][4], dialog_msgs[7][5], 180);
 		Engine:addCommand_CinemaHide(1);
 		Engine:addCommand_ShowPanel(1);
-		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(10), 84);
-		Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 96, true, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 16);
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(10), 72);
+		--Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 256, true, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 16);
 	else
 		Engine.DialogObj:processQueue();
 		Engine:processCmd();
@@ -297,6 +302,26 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 			GIVE_ONE_SHOT(t[i],player)
 		end
 		bard = 1
+	elseif turn() == 1230 then
+		ms_script_create_msg_information(693)
+		SET_MSG_AUTO_OPEN_DLG()
+	end
+	--remove bard hut and smokes
+	if turn() == removeHut then
+		createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(1),false,false)
+		for i = 2,15 do
+			createThing(T_EFFECT,M_EFFECT_SMOKE_CLOUD_CONSTANT,8,marker_to_coord3d(i),false,false)
+			createThing(T_EFFECT,M_EFFECT_SMOKE_CLOUD,8,marker_to_coord3d(i),false,false)
+		end
+		DELETE_SMOKE_STUFF(24, 244,0)
+		SearchMapCells(SQUARE, 0, 0, 1, world_coord3d_to_map_idx(marker_to_coord3d(3)), function(me)
+			me.MapWhoList:processList( function (t)
+				if t.Type ~= T_PERSON then
+					delete_thing_type(t)
+				end
+			return true end)
+		return true end)
+		createThing(T_EFFECT,M_EFFECT_BLDG_DAMAGED_SMOKE,8,marker_to_coord3d(2),false,false)
 	end
 	--balm spell
 	if balmCDR > 0 then 
@@ -407,10 +432,15 @@ function OnFrame()
 	local guiW = GFGetGuiWidth()
 	local middle = math.floor ((w)/2)
 	local middle2 = math.floor((w+guiW)/2)
-	local box = math.floor(h/20)
-	local box2 = math.floor(h/26)
+	local box = math.floor(h/24)
 	local offset = 8
-	local b2 = math.floor(box2/2)
+	
+	--bard lives
+	if BardLives > 0 and bard > 2 then
+		for i = 1,BardLives do
+			LbDraw_ScaledSprite(guiW+((i-1)*4)+((i-1)*box),4,get_sprite(0,1782),box,box)
+		end
+	end
 	
 end
 
@@ -429,8 +459,11 @@ function OnCreateThing(t)
 			queue_sound_event(nil,SND_EVENT_DISCOVERY_END, SEF_FIXED_VARS)
 			if bard == 3 then
 				createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(1),false,false)
-				Engine:addCommand_QueueMsg(dialog_msgs[9][1], dialog_msgs[9][2], 36, false, dialog_msgs[9][3], dialog_msgs[9][4], dialog_msgs[9][5], 130);
-				Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 36, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 12);
+				Engine:addCommand_QueueMsg(dialog_msgs[9][1], dialog_msgs[9][2], 36, false, dialog_msgs[9][3], dialog_msgs[9][4], dialog_msgs[9][5], 512);
+				Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 36, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 512);
+				Engine:addCommand_QueueMsg(dialog_msgs[12][1], dialog_msgs[12][2], 36, false, dialog_msgs[12][3], dialog_msgs[12][4], dialog_msgs[12][5], 1024);
+				Engine:addCommand_QueueMsg(dialog_msgs[11][1], dialog_msgs[11][2], 36, false, dialog_msgs[11][3], dialog_msgs[11][4], dialog_msgs[11][5], 12);
+				removeHut = turn() + 12*12
 				local t = {2,3,4,5,7,8,10,13,14,16,17,19}
 				for i = 1,#t do
 					if t[i] ~= replace1 and t[i] ~= replace2 then
@@ -491,6 +524,8 @@ function OnSave(save_data)
 	end
 	save_data:push_int(#tribe1AtkSpells)
 	
+	save_data:push_int(removeHut)
+	save_data:push_int(BardLives)
 	save_data:push_int(lbLock)
 	save_data:push_int(honorSaveTurnLimit)
 	save_data:push_int(gameStage)
@@ -519,6 +554,8 @@ function OnLoad(load_data)
 	gameStage = load_data:pop_int()
 	honorSaveTurnLimit = load_data:pop_int()
 	lbLock = load_data:pop_int()
+	BardLives = load_data:pop_int()
+	removeHut = load_data:pop_int()
 	
 	local numSpellsAtk1 = load_data:pop_int();
 	for i = 1, numSpellsAtk1 do
@@ -529,29 +566,8 @@ end
 import(Module_Helpers)
 function OnKeyDown(k)
     if (k == LB_KEY_1) then
-		bard = 1
-		local fullspells = {2,3,4,5,6,8,10,11,12,14,15,19}
-		for k,v in ipairs(fullspells) do
-			set_player_can_cast(v, player)
-		end
-		set_player_cannot_cast(6, player) set_player_cannot_cast(11, player) set_player_cannot_cast(9, player) set_player_cannot_cast(12, player) set_player_cannot_cast(15, player)
+		
 	end
-	if k == LB_KEY_J then
-		for i = 2,15 do
-			createThing(T_EFFECT,M_EFFECT_SMOKE_CLOUD_CONSTANT,8,marker_to_coord3d(i),false,false)
-			createThing(T_EFFECT,M_EFFECT_SMOKE_CLOUD,8,marker_to_coord3d(i),false,false)
-		end
-		DELETE_SMOKE_STUFF(24, 244,0)
-		SearchMapCells(SQUARE, 0, 0, 1, world_coord3d_to_map_idx(marker_to_coord3d(3)), function(me)
-			me.MapWhoList:processList( function (t)
-				if t.Type ~= T_PERSON then
-					delete_thing_type(t)
-				end
-			return true end)
-		return true end)
-		createThing(T_EFFECT,M_EFFECT_BLDG_DAMAGED_SMOKE,8,marker_to_coord3d(2),false,false)
-	end
-	
 	--test
 	if k == LB_KEY_A then
 		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
