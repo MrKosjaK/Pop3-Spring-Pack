@@ -58,7 +58,8 @@ bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
 --------------------
 local player = TRIBE_ORANGE
 local tribe1 = TRIBE_YELLOW
-computer_init_player(_gsi.Players[tribe1])
+computer_init_player(_gsi.Players[tribe1]) 
+computer_init_player(_gsi.Players[4])
 local AItribes = {TRIBE_YELLOW}
 --
 local balmCDR = -1
@@ -77,7 +78,6 @@ local removeHut = -1
 if turn() == 0 then
 	set_player_reinc_site_off(getPlayer(4))
 	Csh = createThing(T_PERSON,M_PERSON_MEDICINE_MAN,4,marker_to_coord3d(16),false,false)
-	--DEFEND_SHAMEN(1,4)
 	local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
 	local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = -1 centre_coord3d_on_block(bf.Pos.D3)
 end
@@ -188,12 +188,22 @@ function SeedSpell(pn,c3d)
 			if (is_map_elem_sea_or_coast(me) == 0) then
 				createThing(T_EFFECT,M_EFFECT_WW_DUST,8,c3d,false,false)
 				if is_map_cell_obstacle_free(world_coord3d_to_map_idx(c3d)) == 1 and is_cell_too_steep_for_building(world_coord3d_to_map_idx(c3d),4) == 0 then
-					if is_building_on_map_cell(world_coord3d_to_map_idx(c3d)) == 0 then
-						if is_map_cell_a_building_belonging_to_player(world_coord3d_to_map_idx(c3d),7) == 0 and is_map_cell_a_building_belonging_to_player(world_coord3d_to_map_idx(c3d),3) == 0 then
-							queue_sound_event(nil,SND_EVENT_WOOD_STRESS, SEF_FIXED_VARS)
-							local se = createThing(T_EFFECT,10,8,c3d,false,false) centre_coord3d_on_block(se.Pos.D3)
-							se.u.Effect.Duration = 56 ; se.DrawInfo.DrawNum = 475 se.DrawInfo.Alpha = -16
-							CREATE_THING_WITH_PARAMS4(T_SCENERY, M_SCENERY_DORMANT_TREE, TRIBE_HOSTBOT, c3d, T_SCENERY, math.random(1,6), 0, 0);
+					if is_building_on_map_cell(world_coord3d_to_map_idx(c3d)) == 0 and me.ShapeOrBldgIdx:isNull() then
+						if is_map_cell_a_building_belonging_to_player(world_coord3d_to_map_idx(c3d),player) == 0 and is_map_cell_a_building_belonging_to_player(world_coord3d_to_map_idx(c3d),3) == 0 then
+							local a = 0
+							me.MapWhoList:processList(function(t)
+								if t.Type == T_SCENERY then
+									a = 1
+								end
+							return true end)
+							if a == 0 then
+								queue_sound_event(nil,SND_EVENT_WOOD_STRESS, SEF_FIXED_VARS)
+								local se = createThing(T_EFFECT,10,8,c3d,false,false) centre_coord3d_on_block(se.Pos.D3)
+								se.u.Effect.Duration = 56 ; se.DrawInfo.DrawNum = 475 se.DrawInfo.Alpha = -16
+								CREATE_THING_WITH_PARAMS4(T_SCENERY, M_SCENERY_DORMANT_TREE, TRIBE_HOSTBOT, c3d, T_SCENERY, math.random(1,6), 0, 0);
+							else
+								RegiveSeed()
+							end
 						else
 							RegiveSeed()
 						end
@@ -247,6 +257,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		FLYBY_SET_EVENT_ANGLE(100, 613, 48)
 		
 		FLYBY_START()]]
+		DEFEND_SHAMEN(4,2)
 	end
 	if turn() == 24 then
 		Engine:hidePanel()
@@ -293,6 +304,26 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		createThing(T_EFFECT,M_EFFECT_ORBITER,8,getShaman(4).Pos.D3,false,false)
 		delete_thing_type(getShaman(4))
 		queue_sound_event(nil,SND_EVENT_HYPNOTISE, SEF_FIXED_VARS)
+	elseif turn() == 752 then
+		local a = 0
+		ProcessGlobalSpecialList(TRIBE_CYAN, PEOPLELIST, function(t)
+			if a == 0 then
+				createThing(T_EFFECT,M_EFFECT_ORBITER,8,t.Pos.D3,false,false)
+				delete_thing_type(t)
+				queue_sound_event(nil,SND_EVENT_HYPNOTISE, SEF_FIXED_VARS)
+				a = 1
+			end
+		return true end)
+	elseif turn() == 760 then
+		local a = 0
+		ProcessGlobalSpecialList(TRIBE_CYAN, PEOPLELIST, function(t)
+			if a == 0 then
+				createThing(T_EFFECT,M_EFFECT_ORBITER,8,t.Pos.D3,false,false)
+				delete_thing_type(t)
+				queue_sound_event(nil,SND_EVENT_HYPNOTISE, SEF_FIXED_VARS)
+				a = 1
+			end
+		return true end)
 	elseif turn() == 960 then
 		queue_sound_event(nil,SND_EVENT_BLDG_ROTATE, SEF_FIXED_VARS)
 	elseif turn() == 1217 then
@@ -340,17 +371,20 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	--trees grow
 	ProcessGlobalTypeList(T_EFFECT, function(t)
 		if t.Type == T_EFFECT and t.Model == 10 and t.DrawInfo.DrawNum == 475 then
-			SearchMapCells(CIRCULAR, 0, 0, 8, world_coord3d_to_map_idx(t.Pos.D3), function(me)
+			SearchMapCells(CIRCULAR, 0, 0, 1, world_coord3d_to_map_idx(t.Pos.D3), function(me)
 				me.MapWhoList:processList( function (h)
 					if h.Type == T_SCENERY and h.Model < 7 then
-						local s = h.u.ObjectInfo.Scale
-						if s+4 < 160 then h.u.ObjectInfo.Scale = s+1 else h.u.ObjectInfo.Scale = 160 end
-						local s = h.u.ObjectInfo.Scale
-						if s <= 40 then h.u.Scenery.ResourceRemaining = 100 elseif s <= 80 then h.u.Scenery.ResourceRemaining = 200 elseif h.u.Scenery.ResourceRemaining <= 120 then h.u.Scenery.ResourceRemaining = 300 else h.u.Scenery.ResourceRemaining = 400 end
-						if s > 155 and s < 160 then
-							queue_sound_event(nil,SND_EVENT_BIRTH, SEF_FIXED_VARS)
-							local g = createThing(T_EFFECT,59,8,h.Pos.D3,false,false) g.DrawInfo.Alpha = 1
-							createThing(T_PERSON,M_PERSON_WILD,8,h.Pos.D3,false,false)
+						local dist = get_world_dist_xz(t.Pos.D2,h.Pos.D2) 
+						if dist < 256 then
+							local s = h.u.ObjectInfo.Scale
+							if s+4 < 160 then h.u.ObjectInfo.Scale = s+1 else h.u.ObjectInfo.Scale = 160 end
+							local s = h.u.ObjectInfo.Scale
+							if s <= 40 then h.u.Scenery.ResourceRemaining = 100 elseif s <= 80 then h.u.Scenery.ResourceRemaining = 200 elseif h.u.Scenery.ResourceRemaining <= 120 then h.u.Scenery.ResourceRemaining = 300 else h.u.Scenery.ResourceRemaining = 400 end
+							if s > 155 and s < 160 then
+								queue_sound_event(nil,SND_EVENT_BIRTH, SEF_FIXED_VARS)
+								local g = createThing(T_EFFECT,59,8,h.Pos.D3,false,false) g.DrawInfo.Alpha = 1
+								createThing(T_PERSON,M_PERSON_WILD,8,h.Pos.D3,false,false)
+							end
 						end
 					end
 				return true end)
@@ -568,14 +602,8 @@ function OnKeyDown(k)
     if (k == LB_KEY_1) then
 		
 	end
-	--test
 	if k == LB_KEY_A then
 		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
-		--DEFEND_SHAMEN(1,1)
-		--[[ency[22].StrId = 689
-		ency[27].StrId = 690
-		ency[32].StrId = 691]]
-		--ms_script_create_msg_information(sti[M_SPELL_INVISIBILITY].ToolTipStrIdx)
-		LOG(turn())
+		--DEFEND_SHAMEN(4,1)
 	end
 end
