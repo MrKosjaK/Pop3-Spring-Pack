@@ -33,6 +33,20 @@ local bldg_const = building_type_info();
 --these always have to be set on script load. (DISABLE GHOSTS!)
 spell_const[M_SPELL_GHOST_ARMY].Active = SPAC_OFF;
 spell_const[M_SPELL_GHOST_ARMY].NetworkOnly = 1;
+spell_const[M_SPELL_INVISIBILITY].OneOffMaximum = 4
+spell_const[M_SPELL_INVISIBILITY].WorldCoordRange = 4096
+spell_const[M_SPELL_INVISIBILITY].CursorSpriteNum = 45
+spell_const[M_SPELL_INVISIBILITY].ToolTipStrIdx = 818
+spell_const[M_SPELL_INVISIBILITY].AvailableSpriteIdx = 359
+spell_const[M_SPELL_INVISIBILITY].NotAvailableSpriteIdx = 377
+spell_const[M_SPELL_INVISIBILITY].ClickedSpriteIdx = 395
+spell_const[M_SPELL_SWAMP].OneOffMaximum = 4
+spell_const[M_SPELL_SWAMP].WorldCoordRange = 4096
+spell_const[M_SPELL_SWAMP].CursorSpriteNum = 53
+spell_const[M_SPELL_SWAMP].ToolTipStrIdx = 823
+spell_const[M_SPELL_SWAMP].AvailableSpriteIdx = 364
+spell_const[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
+spell_const[M_SPELL_SWAMP].ClickedSpriteIdx = 400
 bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
 
 --enable wins

@@ -4,7 +4,7 @@ Level 5:
   - Fix "<br>" on villager message
 
 Level 7:
-  - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still hard i'll do it)
+  - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still easy i'll do it)
 
 Level 10:
   - Populate level with wilds
