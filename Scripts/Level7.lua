@@ -30,6 +30,7 @@ local gs = gsi();
 local gns = gnsi();
 local spell_const = spells_type_info();
 local bldg_const = building_type_info();
+local ency = encyclopedia_info();
 
 --player pointers
 local pp = {
@@ -61,6 +62,9 @@ spell_const[M_SPELL_SWAMP].AvailableSpriteIdx = 364
 spell_const[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
 spell_const[M_SPELL_SWAMP].ClickedSpriteIdx = 400
 bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
+ency[27].StrId = 690;
+ency[32].StrId = 691;
+ency[22].StrId = 692;
 
 --disable wins on this level
 gns.GameParams.Flags2 = gns.GameParams.Flags2 | GPF2_GAME_NO_WIN;
