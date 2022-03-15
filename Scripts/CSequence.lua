@@ -54,7 +54,8 @@ CMD_TYPE = {
   ["CMD_ATTACK_AREA"] = 19,
   ["BREAK_ALLY"] = 20,
   ["CAST_SPELL"] = 21,
-  ["CMD_PATROL_2P"] = 22
+  ["CMD_PATROL_2P"] = 22,
+  ["CMD_ANGLE"] = 23
 };
 
 CSequence = {};
@@ -744,6 +745,19 @@ function CSequence:processCmd()
 
       self.WaitCount = cmd.CmdWaitCount;
       table.remove(self.Commands, 1);
+    elseif (cmd.CmdType == CMD_TYPE["CMD_ANGLE"]) then
+      for j,tidx in ipairs(self.ThingBuffers[cmd.CmdSpawnThingBufIdx]) do
+        local t = GetThing(tidx);
+
+        if (t ~= nil) then
+          t.Flags = t.Flags | (1 << 7);
+          t.Flags = t.Flags | (1 << 12);
+          t.Move.CurrDest.AngleXZ = cmd.CmdThingAngle;
+        end
+      end
+
+      self.WaitCount = cmd.CmdWaitCount;
+      table.remove(self.Commands, 1);
     end
   end
 end
@@ -1029,6 +1043,17 @@ function CSequence:addCommand_CastSpellAt(_playerNum, _spellModel, _targetCoord,
   cmd.CmdSpawnThingModel = _spellModel or 0;
 
   cmd.CmdWaitCount = _waitCount or 0;
+
+  table.insert(self.Commands, cmd);
+end
+
+function CSequence:addCommand_FaceAngle(_thingBufferIdx, _angle, _waitCount)
+  local cmd = CSeqCommand:createCmd(CMD_TYPE["CMD_ANGLE"]);
+
+  cmd.CmdThingAngle = _angle or 0;
+  cmd.CmdSpawnThingBufIdx = _thingBufferIdx;
+
+  cmd.CmdWaitCount = _waitCount;
 
   table.insert(self.Commands, cmd);
 end
