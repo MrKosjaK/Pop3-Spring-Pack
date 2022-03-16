@@ -124,23 +124,23 @@ for t,w in ipairs (AItribes) do
 	end
 end
 --atk turns
-tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250
-tribe1MiniAtk1 = 3800 - difficulty()*50
+tribe1Atk1 = 5700 + math.random(3333) - difficulty()*250 + 1000
+tribe1MiniAtk1 = 3800 - difficulty()*50 + 500
 tribe1AtkSpells = {M_SPELL_LIGHTNING_BOLT,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND}
 tribe1NavStress = 0
 --
-tribe2Atk1 = 8700 + math.random(3333) - difficulty()*250
-tribe2MiniAtk1 = 3000 - difficulty()*50
+tribe2Atk1 = 8700 + math.random(3333) - difficulty()*250 + 1000
+tribe2MiniAtk1 = 3000 - difficulty()*50 + 500
 tribe2AtkSpells = {M_SPELL_WHIRLWIND,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND}
 tribe2NavStress = 0
 --
-tribe3Atk1 = 6000 + math.random(3333) - difficulty()*250
-tribe3MiniAtk1 = 3100 - difficulty()*50
+tribe3Atk1 = 6000 + math.random(3333) - difficulty()*250 + 1000
+tribe3MiniAtk1 = 3100 - difficulty()*50 + 500
 tribe3AtkSpells = {M_SPELL_LIGHTNING_BOLT,M_SPELL_HYPNOTISM,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND}
 tribe3NavStress = 0
 --
-tribe4Atk1 = 6300 + math.random(3333) - difficulty()*250
-tribe4MiniAtk1 = 2950 - difficulty()*50
+tribe4Atk1 = 6300 + math.random(3333) - difficulty()*250 + 1000
+tribe4MiniAtk1 = 2950 - difficulty()*50 + 500
 tribe4AtkSpells = {M_SPELL_LIGHTNING_BOLT,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND,M_SPELL_WHIRLWIND,M_SPELL_WHIRLWIND}
 tribe4NavStress = 0
 --M_SPELL_LIGHTNING_BOLT,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND,M_SPELL_SWAMP,M_SPELL_EROSION,M_SPELL_EARTHQUAKE,M_SPELL_FIRESTORM,M_SPELL_ANGEL_OF_DEATH,M_SPELL_VOLCANO
@@ -300,7 +300,7 @@ end
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"I can feel a dark mist flowing through my veins... I sense the ultimate power is close! <br> With the jewels reunited and the curse unleashed, all i have to do is neil before the gargoyle once i sacrifice my entire tribe. I must get rid of any love or compassion left in me, if i am to be worthy of this power.", "Ikani", 6881, 1, 219},
+  [0] = {"I can feel a dark mist flowing through me... I sense the ultimate power is close! <br> With the jewels reunited and the curse unleashed, all i have to do is neil before the gargoyle once i sacrifice my entire tribe. I must get rid of any love or compassion left in me, if i am to be worthy of this power.", "Ikani", 6881, 1, 219},
   [1] = {"To unleash the dark power upon Ikani, she must sacrifice her humanity - to do so, neil before the garoyle once all your tribe's followers are dead, and you have no completed huts. <br> (you can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
   [2] = {"Huh!?..........! <br> .......... Did you hear that?!.......... It sounded like........... like.....", "villager #1", 1769, 0, 138},
   [3] = {"The earthquakes were the first warnings... and now that scream... I fear it has happened: The curse has been unleashed, once again, after so many centuries... We failed to protect the jewels... The culprit was that intruder, the Ikani!", "villager #2", 1770, 0, 146},
@@ -879,7 +879,7 @@ function OnTurn()
 		return true end)
 		--give invi for experienced if 1 jewel left
 		if difficulty() == 1 and placedJewels >= 7 then
-			set_player_can_cast(M_SPELL_INVISIBILITY, 0)
+			set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
 		end
 		if teach == 0 and jewels == 0 then
 			if (IS_SHAMAN_IN_AREA(0,21,3) == 1) or (IS_SHAMAN_IN_AREA(0,26,3) == 1) or (IS_SHAMAN_IN_AREA(0,22,3) == 1) or (IS_SHAMAN_IN_AREA(0,23,3) == 1)
@@ -927,7 +927,7 @@ function OnTurn()
 		end
 	end
 	
-	if everySeconds(32-(difficulty()*3)) then
+	if everySeconds(38-(difficulty()*3)) then
 		--patrolling marker entries and preach at marker
 		for idx,v in ipairs(AItribes) do
 			MARKER_ENTRIES(v,0,math.random(1,2),-1,-1)--wars
@@ -1006,7 +1006,7 @@ function OnTurn()
 		end
 	end
 	
-	if everySeconds(20) then
+	if everySeconds(24) then
 		--send main attacks
 		if tribe1Atk1 < turn() then SendAttack(tribe1) end
 		if tribe2Atk1 < turn() then SendAttack(tribe2) end
@@ -1026,7 +1026,7 @@ function OnTurn()
 				if (_gsi.Players[t.Owner].PlayerType == COMPUTER_PLAYER) then
 					if (t.u.Bldg.ShapeThingIdx:isNull()) then
 						if (t.u.Bldg.TrainingManaCost > 0) then
-							t.u.Bldg.TrainingManaStored = t.u.Bldg.TrainingManaStored + (64*difficulty())
+							t.u.Bldg.TrainingManaStored = t.u.Bldg.TrainingManaStored + (32*difficulty())
 						end
 					end
 				end
@@ -1036,10 +1036,10 @@ function OnTurn()
 		ProcessGlobalSpecialListAll(BUILDINGLIST, function(b)
 			if (b.Model <= 3) and b.Owner ~= 0 then
 				if (b.u.Bldg.UpgradeCount < 1850) then
-					b.u.Bldg.UpgradeCount = b.u.Bldg.UpgradeCount + (difficulty()*6)
+					b.u.Bldg.UpgradeCount = b.u.Bldg.UpgradeCount + (difficulty()*4)
 				end
 				if (b.u.Bldg.SproggingCount < 1000) then
-					b.u.Bldg.SproggingCount = b.u.Bldg.SproggingCount + (difficulty()*6)
+					b.u.Bldg.SproggingCount = b.u.Bldg.SproggingCount + (difficulty()*4)
 				end
 			end
 		return true end)
@@ -1069,23 +1069,23 @@ function OnTurn()
 	end
 	
 	-- new towers every x mins
-	if everySeconds(220-(difficulty()*28)) and gameStage >= 1 then
-		if _gsi.Players[tribe1].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (6+(difficulty()*2)) then
+	if everySeconds(256-(difficulty()*24)) and gameStage >= 1 then
+		if _gsi.Players[tribe1].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (5+(difficulty()*2)) then
 			local rndTowMk = math.random(54,58)
 			local coord = MapPosXZ.new() ; coord.Pos = world_coord3d_to_map_idx(marker_to_coord3d(rndTowMk))
 			BUILD_DRUM_TOWER(tribe1,coord.XZ.X, coord.XZ.Z)
 		end
-		if _gsi.Players[tribe2].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (6+(difficulty()*2)) then
+		if _gsi.Players[tribe2].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (5+(difficulty()*2)) then
 			local rndTowMk = math.random(59,63)
 			local coord = MapPosXZ.new() ; coord.Pos = world_coord3d_to_map_idx(marker_to_coord3d(rndTowMk))
 			BUILD_DRUM_TOWER(tribe2,coord.XZ.X, coord.XZ.Z)
 		end
-		if _gsi.Players[tribe3].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (6+(difficulty()*2)) then
+		if _gsi.Players[tribe3].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (5+(difficulty()*2)) then
 			local rndTowMk = math.random(64,67)
 			local coord = MapPosXZ.new() ; coord.Pos = world_coord3d_to_map_idx(marker_to_coord3d(rndTowMk))
 			BUILD_DRUM_TOWER(tribe3,coord.XZ.X, coord.XZ.Z)
 		end
-		if _gsi.Players[tribe4].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (6+(difficulty()*2)) then
+		if _gsi.Players[tribe4].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] < (5+(difficulty()*2)) then
 			local rndTowMk = math.random(68,71)
 			local coord = MapPosXZ.new() ; coord.Pos = world_coord3d_to_map_idx(marker_to_coord3d(rndTowMk))
 			BUILD_DRUM_TOWER(tribe4,coord.XZ.X, coord.XZ.Z)
@@ -1093,7 +1093,7 @@ function OnTurn()
 	end
 	
 	--give AI spell shots occasionally
-	if everySeconds(10-difficulty()) then
+	if everySeconds(24-difficulty()) then
 		for k,v in ipairs(AItribes) do
 			if gameStage == 0 then
 				GIVE_ONE_SHOT(M_SPELL_BLAST,v)
@@ -1107,7 +1107,7 @@ function OnTurn()
 		end
 	end
 	--give AI spell shots rarely
-	if everySeconds(48-(difficulty()*3)) then
+	if everySeconds(54-(difficulty()*3)) then
 		for k,v in ipairs(AItribes) do
 			if gameStage == 0 then
 				GIVE_ONE_SHOT(M_SPELL_WHIRLWIND,v)
@@ -1121,7 +1121,7 @@ function OnTurn()
 		end
 	end
 	
-	if everySeconds(90-(difficulty()*5)) and turn() > 2700 then
+	if everySeconds(96-(difficulty()*5)) and turn() > 3200 then
 		--some preach at attacks
 		if rnd() > 30 then
 			PREACH_AT_MARKER(tribe1,50) 
@@ -1138,12 +1138,26 @@ function OnTurn()
 	end
 	
 	if every2Pow(6) then
+		--remove light/invi is bugged upon load
+		if difficulty() > 1 then
+			set_player_cannot_cast(M_SPELL_INVISIBILITY, 0) set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0)
+			else
+				if difficulty() == 1 then
+					set_player_can_cast(M_SPELL_INVISIBILITY, 0)
+					if jewels >= 7 then
+						set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+					end
+				else
+					set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+				end
+			end
+		end
 		--update game stage (early,mid,late,very late)
-		if minutes() < 6 then
+		if minutes() < 8 then
 			gameStage = 0
-		elseif minutes() >= 6 and minutes() < 12 then
+		elseif minutes() >= 8 and minutes() < 16 then
 			gameStage = 1
-		elseif minutes() >= 12 and minutes() < 18 then
+		elseif minutes() >= 16 and minutes() < 24 then
 			gameStage = 2
 		else
 			gameStage = 3
@@ -1179,10 +1193,10 @@ function OnTurn()
 
 		for i,v in ipairs(AItribes) do
 			if turn() > 1000 then WRITE_CP_ATTRIB(v, ATTR_EXPANSION, math.random(16,24)) end
-			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 90+G_RANDOM(1+5*difficulty())+(difficulty()*10)+(gameStage*(10+difficulty()))) --base size
-			WriteAiTrainTroops(v,10+(difficulty()*2)+(gameStage*1),10+(difficulty()*2)+(gameStage*1),10+(difficulty()*2)+(gameStage*1),0) --(pn,w,r,fw,spy)
+			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 75+G_RANDOM(1+4*difficulty())+(difficulty()*8)+(gameStage*(6+difficulty()))) --base size
+			WriteAiTrainTroops(v,8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),0) --(pn,w,r,fw,spy)
 			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 70+(minutes()*2)) --attack stuff
-			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 200 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 180) end
+			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 140 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 120) end
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_BLAST, math.random(6,8)-(difficulty()*1)) --spells
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_CONVERT_WILD, math.random(5,8)-(difficulty()*1))
 			--SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_GHOST_ARMY, 12)
@@ -1233,7 +1247,7 @@ function OnTurn()
 			--conditional stuff
 			if _gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_2]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_3] > 3 then WRITE_CP_ATTRIB(v, ATTR_PREF_SUPER_WARRIOR_TRAINS, 1) else WRITE_CP_ATTRIB(v, ATTR_PREF_SUPER_WARRIOR_TRAINS, 0) end
 			if _gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_2]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_3] > 5 then WRITE_CP_ATTRIB(v, ATTR_PREF_RELIGIOUS_TRAINS, 1) else WRITE_CP_ATTRIB(v, ATTR_PREF_RELIGIOUS_TRAINS, 0) end
-			if _gsi.Players[v].NumPeople < 3 then GIVE_UP_AND_SULK(v,TRUE) end
+			if _gsi.Players[v].NumPeople < 4 then GIVE_UP_AND_SULK(v,TRUE) end
 			--add lategame spells to atkspells
 			if gameStage == 2 then
 				if #tribe1AtkSpells == 4 then
@@ -1353,12 +1367,12 @@ function SendMiniAttack(attacker)
 			if _gsi.Players[target].NumBuildings > 0 then
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(1800) - (difficulty()*256) - (gameStage*128),false)
+					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
 					--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
 				elseif _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-						IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(1800) - (difficulty()*256) - (gameStage*128),false)
+						IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
 						--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 					end
 				else
@@ -1367,7 +1381,7 @@ function SendMiniAttack(attacker)
 			else
 				if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(1800) - (difficulty()*256) - (gameStage*128),false)
+					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
 					--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 				else
 					IncrementAtkVar(attacker,turn() + 555, false)
@@ -1382,7 +1396,7 @@ function SendMiniAttack(attacker)
 end
 
 function SendAttack(attacker)
-	if (minutes() > 6-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
+	if (minutes() > 7-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
 		WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 28 + G_RANDOM(16))
 		WriteAiAttackers(attacker,G_RANDOM(5),15+G_RANDOM(10)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(5)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(7)+(difficulty()*6)+(gameStage*4),0,100) --(pn,b,w,r,fw,spy,sh)
 		local target = 0
@@ -1470,20 +1484,20 @@ function SendAttack(attacker)
 				--can target bldg by land
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*300) - (gameStage*200),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
+					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
 				else
 					--try atk bldg from water
 					if boats > 0 then
 						WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 						WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
 						ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
-						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*300) - (gameStage*200),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg boat")
+						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg boat")
 					else
 						--else attack units
 						if _gsi.Players[target].NumPeople > 0 then
 							if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 								ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-								IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*300) - (gameStage*200),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
+								IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 							else
 								--fail
 								IncrementAtkVar(attacker,turn() + 500 + G_RANDOM(200) - (difficulty()*100) - (gameStage*50),true)
@@ -1501,14 +1515,14 @@ function SendAttack(attacker)
 				if _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*300) - (gameStage*200),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
+						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 					else
 						--try to atk units from water
 						if boats > 0 then
 							WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 							WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
 							ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
-							IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*300) - (gameStage*200),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person boat")
+							IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person boat")
 						else
 							--fail
 							IncrementAtkVar(attacker,turn() + 500 + G_RANDOM(200) - (difficulty()*100) - (gameStage*50),true)
@@ -1566,12 +1580,6 @@ function OnCreateThing(t)
 			if (v == pos) then
 				t.Model = M_SPELL_NONE
 			end
-		end
-	end
-	
-	if devil == 1 and win == 0 then
-		if t.Type == T_EFFECT and t.Model == 30 then
-			t.DrawInfo.Alpha = 3
 		end
 	end
 end
