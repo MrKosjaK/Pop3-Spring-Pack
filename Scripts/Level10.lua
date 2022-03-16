@@ -112,6 +112,20 @@ local death_counter = 0;
 local death_initiated = false;
 local honour_saved_once = false;
 
+--timers
+local B_Atk1 = CTimer:register();
+
+--attack types
+local AT =
+{
+  --[0] = {TIMER_TIME, RANDOMNESS, GROUP_TYPE, DONT_GROUP_AT_DT, BRAVES, WARS, FWS, PRIESTS, SHAMAN, NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2},
+  [0] = {1540, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 17, -1},
+  [1] = {1540, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
+  [2] = {1540, 1024, 2, 0, 5, 0, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 19, -1},
+  [3] = {1540, 1024, 2, 0, 0, 50, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
+  [4] = {2720, 1024, 3, 0, 25, 25, 25, 25, 0, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, -1, -1},
+};
+
 function OnSave(save_data)
   --Globals save
   save_data:push_int(current_game_difficulty);
@@ -130,9 +144,17 @@ function OnSave(save_data)
 
   --Engine save
   Engine:saveData(save_data);
+
+  --Timers
+  B_Atk1:saveData(save_data);
+  log("[INFO] Timers saved.");
 end
 
 function OnLoad(load_data)
+  --Timers
+  B_Atk1:loadData(load_data);
+  log("[INFO] Timers loaded.");
+
   --Engine
   Engine:loadData(load_data);
 
@@ -272,6 +294,7 @@ function OnTurn()
     set_player_can_cast(M_SPELL_HYPNOTISM, ai_tribe_1);
 
     computer_init_player(pp[ai_tribe_1]);
+
     STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_CONSTRUCT_BUILDING);
     STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_AUTO_ATTACK);
     STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_TRAIN_PEOPLE);
@@ -291,14 +314,51 @@ function OnTurn()
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_DEFENSIVE_ACTIONS, 0);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_RETREAT_VALUE, 0);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_BASE_UNDER_ATTACK_RETREAT, 0);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_DEFEND);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_DEFEND_BASE);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_SUPER_DEFEND);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_PREACH);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_USE_PREACHER_FOR_DEFENCE, 1);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 32);
 
     SET_DRUM_TOWER_POS(ai_tribe_1, 30, 182);
+    SHAMAN_DEFEND(ai_tribe_1, 30, 182, TRUE);
     SET_DEFENCE_RADIUS(ai_tribe_1, 5);
 
     SET_MARKER_ENTRY(ai_tribe_1, 0, 16, -1, 0, 2, 0, 0);
     SET_MARKER_ENTRY(ai_tribe_1, 1, 10, -1, 0, 2, 0, 0);
     SET_MARKER_ENTRY(ai_tribe_1, 2, 14, 15, 0, 5, 0, 0);
     MARKER_ENTRIES(ai_tribe_1, 0, 1, 2, -1);
+
+    SET_BUCKET_USAGE(ai_tribe_1, TRUE);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_CONVERT_WILD, 1);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_BLAST, 1);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_INSECT_PLAGUE, 8);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_HYPNOTISM, 12);
+
+    SET_SPELL_ENTRY(ai_tribe_1, 0, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> 4, 128, 2, 1);
+    SET_SPELL_ENTRY(ai_tribe_1, 1, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> 4, 128, 2, 0);
+    SET_SPELL_ENTRY(ai_tribe_1, 2, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> 4, 128, 5, 1);
+    SET_SPELL_ENTRY(ai_tribe_1, 3, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> 4, 128, 5, 0);
+
+    if (current_game_difficulty >= diff_experienced) then
+      WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 2);
+      WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 16);
+      SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_LIGHTNING_BOLT, 10);
+
+      SET_SPELL_ENTRY(ai_tribe_1, 4, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> 4, 128, 3, 1);
+      SET_SPELL_ENTRY(ai_tribe_1, 5, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> 4, 128, 3, 0);
+
+      TARGET_PLAYER_DT_AND_S(ai_tribe_1, player_tribe);
+      TARGET_DRUM_TOWERS(ai_tribe_1);
+
+      if (current_game_difficulty >= diff_veteran) then
+        WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 3);
+        WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 8);
+        TARGET_SHAMAN(ai_tribe_1);
+        TARGET_S_WARRIORS(ai_tribe_1);
+      end
+    end
   else
 
     Engine:process();
@@ -356,16 +416,76 @@ function OnTurn()
         Engine:addCommand_QueueMsg("We're not alone here, as i thought. Tiyao should arrive soon or late to help us.", "Matak", 36, false, 6943, 1, 229, 12*4);
         Engine:setVar(7, 1);
         Engine:setVar(1, 2);
+        B_Atk1:setTime(1440, 1);
       end
     end
 
     if (getTurn() >= 720*8 and Engine:getVar(7) == 0) then
       Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
       Engine:setVar(1, 2);
+      B_Atk1:setTime(256, 1);
     end
 
-    if (Engine:getVar(7) == 1) then
+    if (current_game_difficulty >= diff_experienced) then
+      if ((getTurn() & (1 << 10)-1) == 0) then
+        ProcessGlobalTypeList(T_BUILDING, function(t)
+          if (t.Owner == ai_tribe_1 or t.Owner == ai_tribe_2) then
+            if (t.State == S_BUILDING_STAND) then
+              if (t.Model <= 3 and pp[t.Owner].NumPeopleOfType[M_PERSON_BRAVE] < (40 + current_game_difficulty * 10)) then
+                t.u.Bldg.SproggingCount = 9999;
+                return true;
+              end
+            end
+          end
+          return true;
+        end);
+      end
+    end
 
+    --BLUE CODE PART
+    if (pp[ai_tribe_1].NumPeople > 0) then
+      if (Engine:getVar(7) == 1) then
+        --ATTACKING HERE M8
+        if (B_Atk1:process()) then
+          if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 2 or pp[ai_tribe_1].NumPeopleOfType[M_PERSON_RELIGIOUS] > 3) then
+            local ac = G_RANDOM(#AT);
+
+            B_Atk1:setTime(AT[ac][1], AT[ac][2]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT[ac][3])
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_DONT_GROUP_AT_DT, AT[ac][4]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, AT[ac][5]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, AT[ac][6]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, AT[ac][7]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, AT[ac][8]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, AT[ac][9]); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
+            ATTACK(ai_tribe_1, player_tribe, AT[ac][10], AT[ac][11], AT[ac][12], AT[ac][13], AT[ac][14], AT[ac][15], AT[ac][16], ATTACK_NORMAL, 0, AT[ac][17], AT[ac][18], 0);
+          else
+            B_Atk1:setTime(720, 1);
+          end
+        end
+      end
+
+      if (getTurn() % 720+ai_tribe_1 == 0) then
+        if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 3) then
+          MARKER_ENTRIES(player_ally_tribe, 0, 1, 2, -1);
+        end
+      end
+
+      if ((getTurn() % 360+ai_tribe_1) == 0) then
+        if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_BRAVE] > 49 and current_game_difficulty >= diff_experienced) then
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 35);
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_PEOPLE, 35);
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_PEOPLE, 35);
+        elseif (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_BRAVE] > 20) then
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 17);
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_PEOPLE, 22);
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_PEOPLE, 14);
+        else
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 0);
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_PEOPLE, 0);
+          WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_PEOPLE, 0);
+        end
+      end
     end
 
     --MODIFY GAINING MANA
@@ -417,6 +537,10 @@ function OnFrame()
   if (gns.Flags3 & GNS3_INGAME_OPTIONS == 0) then
     local gui_width = GFGetGuiWidth();
 
+    --DEBUg STUFF
+    PopSetFont(4);
+    LbDraw_Text(gui_width, CharHeight2(), string.format("Blue small attack: %i", B_Atk1.CurrentTime), 0);
+    --DEbug STUFF
     Engine.CinemaObj:renderView();
 
     Engine.DialogObj:setDimensions(ScreenWidth() >> 1, Engine.DialogObj.DialogHeight);
