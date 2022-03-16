@@ -153,6 +153,28 @@ function OnLoad(load_data)
   end
 end
 
+local function process_area(x, z)
+  local stop_now = false;
+  SearchMapCells(SQUARE, 0, 0, 5, world_coord3d_to_map_idx(MAP_XZ_2_WORLD_XYZ(x, z)), function(me)
+    if (not me.MapWhoList:isEmpty() and (not stop_now)) then
+      me.MapWhoList:processList(function(t)
+        if (t.Type == T_PERSON) then
+          if (t.Model > M_PERSON_WILD) then
+            if (t.Owner == player_tribe) then
+              stop_now = true;
+              return false;
+            end
+          end
+        end
+        return true;
+      end);
+    end
+    return true;
+  end);
+
+  return stop_now;
+end
+
 function OnTurn()
   if (init) then
     init = false;
@@ -244,7 +266,7 @@ function OnTurn()
     if (Engine:getVar(1) == 0) then
       if (Engine:getVar(2) == 0 and pp[player_tribe].NumBuildingsOfType[M_BUILDING_DRUM_TOWER] >= 3) then
         Engine:setVar(2, 1);
-        Engine:addCommand_QueueMsg("Shaman, we've finished building towers!", "Worker", 48, false, 1784, 0, 229, 12*4);
+        Engine:addCommand_QueueMsg("Shaman, we've finished building towers!", "Worker", 36, false, 1784, 0, 229, 12*4);
       end
 
       if (Engine:getVar(3) == 0) then
@@ -253,23 +275,57 @@ function OnTurn()
         h1 = h1 + pp[player_tribe].NumBuildingsOfType[3];
         if (h1 >= 5) then
           Engine:setVar(3, 1);
-          Engine:addCommand_QueueMsg("Shaman, we've finished building huts!", "Worker", 48, false, 1784, 0, 229, 12*4);
+          Engine:addCommand_QueueMsg("Shaman, we've finished building huts!", "Worker", 36, false, 1784, 0, 229, 12*4);
         end
       end
 
       if (Engine:getVar(4) == 0) then
         if (pp[player_tribe].NumBuildingsOfType[5] > 0 or pp[player_tribe].NumBuildingsOfType[6] > 0 or pp[player_tribe].NumBuildingsOfType[7] > 0 or pp[player_tribe].NumBuildingsOfType[8] > 0) then
           Engine:setVar(4, 1);
-          Engine:addCommand_QueueMsg("Shaman, we've finished building training school!", "Worker", 48, false, 1784, 0, 229, 12*4);
+          Engine:addCommand_QueueMsg("Shaman, we've finished building training school!", "Worker", 36, false, 1784, 0, 229, 12*4);
         end
       end
 
       if (Engine:getVar(2) == 1 and Engine:getVar(3) == 1 and Engine:getVar(4) == 1) then
         Engine:setVar(1, 1);
-        Engine:addCommand_QueueMsg("Our temporary base is all setup! We can begin scouting area around.", "Worker", 48, false, 1784, 0, 229, 12*4);
+        Engine:addCommand_QueueMsg("Our temporary base is all setup! We can begin scouting area around.", "Worker", 36, false, 1784, 0, 229, 12*4);
       end
     end
 
+    if (Engine:getVar(1) == 1) then
+      --check places near blue and yellow and alert player.
+      if (getTurn() % (1<<4)-1 == 0) then
+        if (Engine:getVar(5) == 0) then
+          if (process_area(46, 104) or process_area(54, 124)) then
+            Engine:setVar(5, 1);
+            Engine:addCommand_QueueMsg("Ikani have been spotted!", "", 36, false, 1784, 0, 229, 12*4);
+          end
+        end
+      end
+
+      if (getTurn() % (1<<4) == 0) then
+        if (Engine:getVar(6) == 0) then
+          if (process_area(134, 84) or process_area(142, 66)) then
+            Engine:setVar(6, 1);
+            Engine:addCommand_QueueMsg("Chumara have been spotted!", "", 36, false, 1784, 0, 229, 12*4);
+          end
+        end
+      end
+
+      if (Engine:getVar(5) == 1 and Engine:getVar(6) == 1) then
+        Engine:addCommand_QueueMsg("We're not alone here, as i thought. Tiyao should arrive soon or late to help us.", "Matak", 36, false, 6943, 1, 229, 12*4);
+        Engine:setVar(7, 1);
+        Engine:setVar(1, 2);
+      end
+    end
+
+    if (getTurn() >= 720*8 and Engine:getVar(7) == 0) then
+      Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
+    end
+
+    if (Engine:getVar(7) == 1) then
+
+    end
 
     --MODIFY GAINING MANA
     if (death_counter > 0) then
