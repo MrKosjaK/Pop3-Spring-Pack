@@ -259,6 +259,46 @@ function OnTurn()
 
     FLYBY_START();
     --SCP FLYBY TERMINATE.
+
+    --BEE BOO BEEP ME ACTIVATE
+    set_player_can_build(M_BUILDING_TEPEE, ai_tribe_1);
+    set_player_can_build(M_BUILDING_DRUM_TOWER, ai_tribe_1);
+    set_player_can_build(M_BUILDING_WARRIOR_TRAIN, ai_tribe_1)
+    set_player_can_build(M_BUILDING_SUPER_TRAIN, ai_tribe_1);
+    set_player_can_build(M_BUILDING_TEMPLE, ai_tribe_1);
+    set_player_can_cast(M_SPELL_BLAST, ai_tribe_1);
+    set_player_can_cast(M_SPELL_INSECT_PLAGUE, ai_tribe_1);
+    set_player_can_cast(M_SPELL_CONVERT_WILD, ai_tribe_1);
+    set_player_can_cast(M_SPELL_HYPNOTISM, ai_tribe_1);
+
+    computer_init_player(pp[ai_tribe_1]);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_CONSTRUCT_BUILDING);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_AUTO_ATTACK);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_TRAIN_PEOPLE);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_POPULATE_DRUM_TOWER);
+    SET_ATTACK_VARIABLE(ai_tribe_1, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_BUILDINGS_ON_GO, 3);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_HOUSE_PERCENTAGE, 60);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_TRAINS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_TRAINS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_TRAINS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_TRAIN_AT_ONCE, 4);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_ATTACK_PERCENTAGE, 100);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_DEFENSIVE_ACTIONS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_RETREAT_VALUE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_BASE_UNDER_ATTACK_RETREAT, 0);
+
+    SET_DRUM_TOWER_POS(ai_tribe_1, 30, 182);
+    SET_DEFENCE_RADIUS(ai_tribe_1, 5);
+
+    SET_MARKER_ENTRY(ai_tribe_1, 0, 16, -1, 0, 2, 0, 0);
+    SET_MARKER_ENTRY(ai_tribe_1, 1, 10, -1, 0, 2, 0, 0);
+    SET_MARKER_ENTRY(ai_tribe_1, 2, 14, 15, 0, 5, 0, 0);
+    MARKER_ENTRIES(ai_tribe_1, 0, 1, 2, -1);
   else
 
     Engine:process();
@@ -288,7 +328,7 @@ function OnTurn()
 
       if (Engine:getVar(2) == 1 and Engine:getVar(3) == 1 and Engine:getVar(4) == 1) then
         Engine:setVar(1, 1);
-        Engine:addCommand_QueueMsg("Our temporary base is all setup! We can begin scouting area around.", "Worker", 36, false, 1784, 0, 229, 12*4);
+        Engine:addCommand_QueueMsg("Our temporary base is established! We can begin scouting area around.", "Worker", 36, false, 1784, 0, 229, 12*4);
       end
     end
 
@@ -298,7 +338,7 @@ function OnTurn()
         if (Engine:getVar(5) == 0) then
           if (process_area(46, 104) or process_area(54, 124)) then
             Engine:setVar(5, 1);
-            Engine:addCommand_QueueMsg("Ikani have been spotted!", "", 36, false, 1784, 0, 229, 12*4);
+            Engine:addCommand_QueueMsg("Ikani have been spotted!", "", 36, false, 1785, 0, 229, 12*4);
           end
         end
       end
@@ -307,7 +347,7 @@ function OnTurn()
         if (Engine:getVar(6) == 0) then
           if (process_area(134, 84) or process_area(142, 66)) then
             Engine:setVar(6, 1);
-            Engine:addCommand_QueueMsg("Chumara have been spotted!", "", 36, false, 1784, 0, 229, 12*4);
+            Engine:addCommand_QueueMsg("Chumara have been spotted!", "", 36, false, 1785, 0, 229, 12*4);
           end
         end
       end
@@ -321,6 +361,7 @@ function OnTurn()
 
     if (getTurn() >= 720*8 and Engine:getVar(7) == 0) then
       Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
+      Engine:setVar(1, 2);
     end
 
     if (Engine:getVar(7) == 1) then
