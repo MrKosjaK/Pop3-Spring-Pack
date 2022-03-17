@@ -207,6 +207,7 @@ function OnTurn()
     set_players_allied(player_tribe, player_ally_tribe);
     set_players_allied(player_ally_tribe, player_tribe);
 
+    set_player_can_cast(M_SPELL_GHOST_ARMY, player_tribe);
     set_correct_gui_menu();
 
     --delete initial brave lol
