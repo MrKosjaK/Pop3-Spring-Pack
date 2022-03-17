@@ -1141,15 +1141,14 @@ function OnTurn()
 		--remove light/invi is bugged upon load
 		if difficulty() > 1 then
 			set_player_cannot_cast(M_SPELL_INVISIBILITY, 0) set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0)
-			else
-				if difficulty() == 1 then
-					set_player_can_cast(M_SPELL_INVISIBILITY, 0)
-					if jewels >= 7 then
-						set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
-					end
-				else
-					set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+		else
+			if difficulty() == 1 then
+				set_player_can_cast(M_SPELL_INVISIBILITY, 0)
+				if jewels >= 7 then
+					set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
 				end
+			else
+				set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
 			end
 		end
 		--update game stage (early,mid,late,very late)
