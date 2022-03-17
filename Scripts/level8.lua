@@ -73,7 +73,8 @@ local game_loaded = false
 local honorSaveTurnLimit = 1600 +12*20
 local gameStage = 0
 local lbLock = 0
-local BardLives = 6-difficulty()
+local BardLives = 2--6-difficulty()
+local livesLock = 0
 local removeHut = -1
 if turn() == 0 then
 	set_player_reinc_site_off(getPlayer(4))
@@ -130,9 +131,9 @@ local Engine = CSequence:createNew();
 local dialog_msgs = {
   [0] = {"This planet looks dull. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
   [1] = {"It is, indeed. You must be congratulated. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your decision was to become... a bard.", "Tiyao", 6883, 2, 146},
-  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create life... or to restore life.", "Tiyao", 6883, 2, 146},
+  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create and restore life.", "Tiyao", 6883, 2, 146},
   [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
-  [4] = {"I must go now. Your trials for the bard magic begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
+  [4] = {"I must go now. Your trials as a bard begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
   [5] = {"...", "Nomel", 6939, 2, 138},
   [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "Echoed Voice", 1783, 0, 225},
   [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "Echoed Voice", 1783, 0, 225},
@@ -233,35 +234,41 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		FLYBY_ALLOW_INTERRUPT(FALSE)
 
 		--start
-		FLYBY_SET_EVENT_POS(32, 224, 1, 40)
-		FLYBY_SET_EVENT_ANGLE(1500, 1, 30)
+		FLYBY_SET_EVENT_POS(30, 224, 1, 70)
+		FLYBY_SET_EVENT_ANGLE(500, 1, 40)
 		
-		FLYBY_SET_EVENT_POS(38, 224, 56, 130)
-		FLYBY_SET_EVENT_ANGLE(500, 57, 50)
+		FLYBY_SET_EVENT_POS(48, 224, 82, 100)
 		
-		FLYBY_SET_EVENT_POS(60, 224, 192, 150)
-		FLYBY_SET_EVENT_ANGLE(502, 193, 30)
+		FLYBY_SET_EVENT_POS(50, 214, 200, 140)
+		FLYBY_SET_EVENT_ANGLE(800, 200, 50)
 		
-		FLYBY_SET_EVENT_POS(34, 224, 344, 50)
-		FLYBY_SET_EVENT_ANGLE(1500, 344, 50)
+		FLYBY_SET_EVENT_POS(42, 218, 360, 120)
+		FLYBY_SET_EVENT_ANGLE(1500, 360, 50)
 		
-		FLYBY_SET_EVENT_POS(44, 214, 400, 150)
-		FLYBY_SET_EVENT_ANGLE(650, 401, 48)
-		FLYBY_SET_EVENT_ZOOM (-60,400,48)
+		FLYBY_SET_EVENT_POS(40, 214, 400, 140)
+		FLYBY_SET_EVENT_ANGLE(1000, 400, 50)
 		
-		FLYBY_SET_EVENT_POS(18, 242, 555, 50)
-		FLYBY_SET_EVENT_ANGLE(200, 555, 48)
-		FLYBY_SET_EVENT_ZOOM (-10,555,48)
+		FLYBY_SET_EVENT_POS(44, 206, 560, 100)
+		FLYBY_SET_EVENT_ZOOM (-50,560,72)
+			
+		FLYBY_SET_EVENT_POS(38, 236, 670, 30)
+		FLYBY_SET_EVENT_ANGLE(0, 670, 24)
+		FLYBY_SET_EVENT_ZOOM (-10,670,24)
 		
-		FLYBY_SET_EVENT_POS(20, 240, 612, 50)
-		FLYBY_SET_EVENT_ANGLE(100, 613, 48)
+		FLYBY_SET_EVENT_POS(20, 254, 710, 200)
+		FLYBY_SET_EVENT_ANGLE(0, 710, 40)
+		
+		FLYBY_SET_EVENT_POS(20, 4, 920, 100)
+		
+		FLYBY_SET_EVENT_POS(20, 250, 1030, 10)
+		--
 		
 		FLYBY_START()]]
 		DEFEND_SHAMEN(4,2)
 	end
 	if turn() == 24 then
-		Engine:hidePanel()
-		Engine:addCommand_CinemaRaise(0)
+		--Engine:hidePanel()
+		--Engine:addCommand_CinemaRaise(0)
 		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1500, 36);
 		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*1);
 		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(21), 1);
@@ -384,6 +391,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 								queue_sound_event(nil,SND_EVENT_BIRTH, SEF_FIXED_VARS)
 								local g = createThing(T_EFFECT,59,8,h.Pos.D3,false,false) g.DrawInfo.Alpha = 1
 								createThing(T_PERSON,M_PERSON_WILD,8,h.Pos.D3,false,false)
+								FIX_WILD_IN_AREA(ThingX(h),ThingZ(h),2)
 							end
 						end
 					end
@@ -391,6 +399,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 			return true end)
 		end
 	return true end)
+	
 	if every2Pow(4) then
 		--remove seed flash
 		if _gsi.Players[player].SpellsCast[seed] > 0 and _gsi.Players[player].SpellsCast[seed] < 3 then
@@ -411,6 +420,27 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 			end
 		end
 	end
+	
+	if every2Pow(3) then
+		--remove a bard life
+		if getShaman(player) == nil and livesLock == 0 then
+			BardLives = BardLives - 1
+			livesLock = 1
+			if BardLives == 1 then	
+				SET_NO_REINC(player)
+			elseif BardLives == 0 then
+				SearchMapCells(CIRCULAR, 0, 0 , 3, world_coord3d_to_map_idx(marker_to_coord3d(32)), function(me)
+						me.Flags = me.Flags | (1<<16)
+				return true
+				end)
+				ms_script_create_msg_information(694)
+				SET_MSG_AUTO_OPEN_DLG()
+			end
+		elseif  getShaman(player) ~= nil and livesLock == 1 then
+			livesLock = 0
+		end
+	end
+	
 	if every2Pow(2) then
 		--bard earns lbs/flattens by killing enemies
 		if _gsi.Players[player].PeopleKilled[tribe1] % (12+difficulty()*3+gameStage*3) == 0 and lbLock ~= _gsi.Players[player].PeopleKilled[tribe1] then
@@ -558,6 +588,7 @@ function OnSave(save_data)
 	end
 	save_data:push_int(#tribe1AtkSpells)
 	
+	save_data:push_int(livesLock)
 	save_data:push_int(removeHut)
 	save_data:push_int(BardLives)
 	save_data:push_int(lbLock)
@@ -574,7 +605,7 @@ function OnSave(save_data)
 	Engine:saveData(save_data)
 end
 
-function OnLoad(load_data)
+function OnLoad(load_data) 
 	game_loaded = true
 	Engine:loadData(load_data)
 	replace2 = load_data:pop_int()
@@ -590,6 +621,7 @@ function OnLoad(load_data)
 	lbLock = load_data:pop_int()
 	BardLives = load_data:pop_int()
 	removeHut = load_data:pop_int()
+	livesLock = load_data:pop_int()
 	
 	local numSpellsAtk1 = load_data:pop_int();
 	for i = 1, numSpellsAtk1 do
