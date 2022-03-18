@@ -134,12 +134,12 @@ tribe2MiniAtk1 = 3000 - difficulty()*50 + 500
 tribe2AtkSpells = {M_SPELL_WHIRLWIND,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND}
 tribe2NavStress = 0
 --
-tribe3Atk1 = 6000 + math.random(3333) - difficulty()*250 + 1000
+tribe3Atk1 = 5000 + math.random(3000) - difficulty()*250 + 700
 tribe3MiniAtk1 = 3100 - difficulty()*50 + 500
 tribe3AtkSpells = {M_SPELL_LIGHTNING_BOLT,M_SPELL_HYPNOTISM,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND}
 tribe3NavStress = 0
 --
-tribe4Atk1 = 6300 + math.random(3333) - difficulty()*250 + 1000
+tribe4Atk1 = 6700 + math.random(3333) - difficulty()*250 + 1000
 tribe4MiniAtk1 = 2950 - difficulty()*50 + 500
 tribe4AtkSpells = {M_SPELL_LIGHTNING_BOLT,M_SPELL_INSECT_PLAGUE,M_SPELL_HYPNOTISM,M_SPELL_WHIRLWIND,M_SPELL_WHIRLWIND,M_SPELL_WHIRLWIND}
 tribe4NavStress = 0
@@ -300,8 +300,8 @@ end
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"I can feel a dark mist flowing through me... I sense the ultimate power is close! <br> With the jewels reunited and the curse unleashed, all i have to do is neil before the gargoyle once i sacrifice my entire tribe. I must get rid of any love or compassion left in me, if i am to be worthy of this power.", "Ikani", 6881, 1, 219},
-  [1] = {"To unleash the dark power upon Ikani, she must sacrifice her humanity - to do so, neil before the garoyle once all your tribe's followers are dead, and you have no completed huts. <br> (you can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
+  [0] = {"I can feel a dark mist flowing through me... I sense the ultimate power is emerging! <br> With the jewels reunited and the curse unleashed, all i have to do is neil before the gargoyle once i sacrifice my entire tribe. I must get rid of any love or compassion left in me, if i am to be worthy of this power.", "Ikani", 6881, 1, 219},
+  [1] = {"To unleash the witch's power upon Ikani, she must sacrifice her humanity - to do so, neil before the garoyle once all your tribe's followers are dead, and you have no completed huts. <br> (you can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
   [2] = {"Huh!?..........! <br> .......... Did you hear that?!.......... It sounded like........... like.....", "villager #1", 1769, 0, 138},
   [3] = {"The earthquakes were the first warnings... and now that scream... I fear it has happened: The curse has been unleashed, once again, after so many centuries... We failed to protect the jewels... The culprit was that intruder, the Ikani!", "villager #2", 1770, 0, 146},
   [4] = {"(!) <br> We are all doomed! But there is hope - the curse will be lifted and abandon the host if it senses sign of life on the planet. <br> As long as one of us is alive by the end of the hunt, Ikani will perish. ", "Preacher #1", 1771, 0, 212},
@@ -919,10 +919,12 @@ function OnTurn()
 		end
 	end
 	
-	if every(1800-(difficulty()*100)-(gameStage*100)) then
+	if every(2000-(difficulty()*100)-(gameStage*100)) then
 		if turn() > 3000 then
 			for k,v in ipairs(AItribes) do
-				MARKER_ENTRIES(v,5,-1,-1,-1)--atk patrols
+				if rnd() > 40 then
+					MARKER_ENTRIES(v,5,-1,-1,-1)--atk patrols
+				end
 			end
 		end
 	end
@@ -930,8 +932,10 @@ function OnTurn()
 	if everySeconds(38-(difficulty()*3)) then
 		--patrolling marker entries and preach at marker
 		for idx,v in ipairs(AItribes) do
-			MARKER_ENTRIES(v,0,math.random(1,2),-1,-1)--wars
-			MARKER_ENTRIES(v,math.random(3,4),-1,-1,-1)--fws
+			if rnd() > 30 then
+				MARKER_ENTRIES(v,0,math.random(1,2),-1,-1)--wars
+				MARKER_ENTRIES(v,math.random(3,4),-1,-1,-1)--fws
+			end
 			if _gsi.Players[v].NumPeopleOfType[M_PERSON_RELIGIOUS] > 4 then
 				if rnd() > 40 then
 					for i = 0,3 do PREACH_AT_MARKER(v,(155+(4*(v-4))+i)) end
@@ -1006,7 +1010,7 @@ function OnTurn()
 		end
 	end
 	
-	if everySeconds(24) then
+	if everySeconds(32) then
 		--send main attacks
 		if tribe1Atk1 < turn() then SendAttack(tribe1) end
 		if tribe2Atk1 < turn() then SendAttack(tribe2) end
@@ -1093,21 +1097,21 @@ function OnTurn()
 	end
 	
 	--give AI spell shots occasionally
-	if everySeconds(24-difficulty()) then
+	if everySeconds(64-difficulty()*2) then
 		for k,v in ipairs(AItribes) do
 			if gameStage == 0 then
 				GIVE_ONE_SHOT(M_SPELL_BLAST,v)
 			elseif gameStage == 1 then
-				GIVE_ONE_SHOT(M_SPELL_BLAST,v) GIVE_ONE_SHOT(M_SPELL_LIGHTNING_BOLT,v)
+				GIVE_ONE_SHOT(M_SPELL_BLAST,v) if rnd() > 50 then GIVE_ONE_SHOT(M_SPELL_LIGHTNING_BOLT,v) end
 			elseif gameStage == 2 then
-				GIVE_ONE_SHOT(M_SPELL_BLAST,v) GIVE_ONE_SHOT(M_SPELL_LIGHTNING_BOLT,v) GIVE_ONE_SHOT(M_SPELL_INSECT_PLAGUE,v)
+				GIVE_ONE_SHOT(M_SPELL_BLAST,v) if rnd() > 50 then GIVE_ONE_SHOT(M_SPELL_LIGHTNING_BOLT,v) GIVE_ONE_SHOT(M_SPELL_INSECT_PLAGUE,v) end
 			else
-				GIVE_ONE_SHOT(M_SPELL_BLAST,v) GIVE_ONE_SHOT(M_SPELL_LIGHTNING_BOLT,v) GIVE_ONE_SHOT(M_SPELL_INSECT_PLAGUE,v) GIVE_ONE_SHOT(M_SPELL_HYPNOTISM,v)
+				GIVE_ONE_SHOT(M_SPELL_BLAST,v) if rnd() > 50 then GIVE_ONE_SHOT(M_SPELL_LIGHTNING_BOLT,v) GIVE_ONE_SHOT(M_SPELL_INSECT_PLAGUE,v) GIVE_ONE_SHOT(M_SPELL_HYPNOTISM,v) end
 			end
 		end
 	end
 	--give AI spell shots rarely
-	if everySeconds(54-(difficulty()*3)) then
+	if everySeconds(60-(difficulty()*3)) then
 		for k,v in ipairs(AItribes) do
 			if gameStage == 0 then
 				GIVE_ONE_SHOT(M_SPELL_WHIRLWIND,v)
@@ -1121,18 +1125,18 @@ function OnTurn()
 		end
 	end
 	
-	if everySeconds(96-(difficulty()*5)) and turn() > 3200 then
+	if everySeconds(96-(difficulty()*4)) and turn() > 3200 then
 		--some preach at attacks
-		if rnd() > 30 then
+		if rnd() > 32 then
 			PREACH_AT_MARKER(tribe1,50) 
 		end
-		if rnd() > 30 then
+		if rnd() > 32 then
 			PREACH_AT_MARKER(tribe2,51)
 		end
-		if rnd() > 30 then
+		if rnd() > 32 then
 			PREACH_AT_MARKER(tribe3,52)
 		end
-		if rnd() > 30 then
+		if rnd() > 32 then
 			PREACH_AT_MARKER(tribe4,53)
 		end
 	end
@@ -1152,11 +1156,11 @@ function OnTurn()
 			end
 		end
 		--update game stage (early,mid,late,very late)
-		if minutes() < 8 then
+		if minutes() < 9 then
 			gameStage = 0
-		elseif minutes() >= 8 and minutes() < 16 then
+		elseif minutes() >= 9 and minutes() < 18 then
 			gameStage = 1
-		elseif minutes() >= 16 and minutes() < 24 then
+		elseif minutes() >= 18 and minutes() < 27 then
 			gameStage = 2
 		else
 			gameStage = 3
@@ -1192,9 +1196,9 @@ function OnTurn()
 
 		for i,v in ipairs(AItribes) do
 			if turn() > 1000 then WRITE_CP_ATTRIB(v, ATTR_EXPANSION, math.random(16,24)) end
-			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 75+G_RANDOM(1+4*difficulty())+(difficulty()*8)+(gameStage*(6+difficulty()))) --base size
+			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 70+G_RANDOM(1+4*difficulty())+(difficulty()*8)+(gameStage*(6+difficulty()))) --base size
 			WriteAiTrainTroops(v,8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),0) --(pn,w,r,fw,spy)
-			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 70+(minutes()*2)) --attack stuff
+			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 65+(minutes()*2)) --attack stuff
 			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 140 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 120) end
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_BLAST, math.random(6,8)-(difficulty()*1)) --spells
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_CONVERT_WILD, math.random(5,8)-(difficulty()*1))
@@ -1216,8 +1220,8 @@ function OnTurn()
 			--spell entries base and outside
 			if IS_SHAMAN_IN_AREA(v,baseMK,18) == 1 then
 				--spells in base defense
-				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 128, 1, 1)
-				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 128, 1, 1)
+				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 64, 1, 1)
+				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 256, 3, 1)
 				SET_SPELL_ENTRY(v, 2, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 5-difficulty(), 1)
 				SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 13-difficulty(), 1)
 				if gameStage > 1 then
@@ -1228,8 +1232,8 @@ function OnTurn()
 				end
 			else
 				--spells when attacking
-				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 128, 1, 0)
-				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 128, 1, 0)
+				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 64, 1, 0)
+				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 256, 1, 0)
 				SET_SPELL_ENTRY(v, 2, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 5-difficulty(), 0)
 				SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 12-difficulty(), 0)
 				if gameStage > 1 then
