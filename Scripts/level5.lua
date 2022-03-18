@@ -1010,7 +1010,7 @@ function OnTurn()
 		end
 	end
 	
-	if everySeconds(32) then
+	if everySeconds(8) then
 		--send main attacks
 		if tribe1Atk1 < turn() then SendAttack(tribe1) end
 		if tribe2Atk1 < turn() then SendAttack(tribe2) end
