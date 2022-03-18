@@ -113,17 +113,28 @@ local death_initiated = false;
 local honour_saved_once = false;
 
 --timers
-local B_Atk1 = CTimer:register();
+local B_Atk1 = CTimer:register(); --small cripple attacks
+local B_Atk2 = CTimer:register();
+local B_Atk3 = CTimer:register(); -- shaman attack
 
 --attack types
 local AT =
 {
   --[0] = {TIMER_TIME, RANDOMNESS, GROUP_TYPE, DONT_GROUP_AT_DT, BRAVES, WARS, FWS, PRIESTS, SHAMAN, NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2},
-  [0] = {1540, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 17, -1},
-  [1] = {1540, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
-  [2] = {1540, 1024, 2, 0, 5, 0, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 19, -1},
-  [3] = {1540, 1024, 2, 0, 0, 50, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
-  [4] = {2720, 1024, 3, 0, 25, 25, 25, 25, 0, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, -1, -1},
+  [0] = {1840, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 17, -1},
+  [1] = {1840, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
+  [2] = {1840, 1024, 2, 0, 5, 0, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 19, -1},
+  [3] = {1840, 1024, 2, 0, 0, 50, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
+  [4] = {2820, 1024, 3, 0, 25, 25, 25, 25, 0, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, -1, -1},
+};
+
+local AT_S =
+{
+  [0] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, 17, -1},
+  [1] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_INSECT_PLAGUE, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, 18, -1},
+  [2] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, M_SPELL_LIGHTNING_BOLT, 19, -1},
+  [3] = {2172, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, -1, -1},
+  [4] = {1958, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, -1, -1},
 };
 
 function OnSave(save_data)
@@ -147,11 +158,15 @@ function OnSave(save_data)
 
   --Timers
   B_Atk1:saveData(save_data);
+  B_Atk2:saveData(save_data);
+  B_Atk3:saveData(save_data);
   log("[INFO] Timers saved.");
 end
 
 function OnLoad(load_data)
   --Timers
+  B_Atk3:loadData(load_data);
+  B_Atk2:loadData(load_data);
   B_Atk1:loadData(load_data);
   log("[INFO] Timers loaded.");
 
@@ -418,6 +433,10 @@ function OnTurn()
         Engine:setVar(7, 1);
         Engine:setVar(1, 2);
         B_Atk1:setTime(1440, 1);
+        if (current_game_difficulty >= diff_experienced) then
+          B_Atk2:setTime(2280, 1);
+          B_Atk3:setTime(3000, 1);
+        end
       end
     end
 
@@ -425,6 +444,10 @@ function OnTurn()
       Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
       Engine:setVar(1, 2);
       B_Atk1:setTime(256, 1);
+      if (current_game_difficulty >= diff_experienced) then
+        B_Atk2:setTime(2280, 1);
+        B_Atk3:setTime(512, 1);
+      end
     end
 
     if (current_game_difficulty >= diff_experienced) then
@@ -447,6 +470,45 @@ function OnTurn()
     if (pp[ai_tribe_1].NumPeople > 0) then
       if (Engine:getVar(7) == 1) then
         --ATTACKING HERE M8
+        if (B_Atk3:process()) then
+          if (IS_SHAMAN_AVAILABLE_FOR_ATTACK(ai_tribe_1) > 0) then
+            if (MANA(ai_tribe_1) > 200000) then
+              local ac = G_RANDOM(#AT_S);
+
+              B_Atk3:setTime(AT_S[ac][1], AT_S[ac][2]);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT_S[ac][3]);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_DONT_GROUP_AT_DT, AT_S[ac][4]);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 0);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 0);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 0);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 0);
+              WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 1);
+              ATTACK(ai_tribe_1, player_tribe, 0, AT_S[ac][5], AT_S[ac][6], AT_S[ac][7], AT_S[ac][8], AT_S[ac][9], AT_S[ac][10], ATTACK_NORMAL, 0, AT_S[ac][11], AT_S[ac][12], 0);
+            else
+              B_Atk3:setTime(720, 1);
+            end
+          else
+            B_Atk3:setTime(720, 1);
+          end
+        end
+        if (B_Atk2:process()) then
+          if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 2 or pp[ai_tribe_1].NumPeopleOfType[M_PERSON_RELIGIOUS] > 3) then
+            local ac = G_RANDOM(#AT);
+
+            B_Atk2:setTime(AT[ac][1], AT[ac][2] << 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT[ac][3])
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_DONT_GROUP_AT_DT, AT[ac][4]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, AT[ac][5]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, AT[ac][6]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, AT[ac][7]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, AT[ac][8]);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, AT[ac][9]); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
+            ATTACK(ai_tribe_1, player_tribe, AT[ac][10] + G_RANDOM(AT[ac][10] << 1), AT[ac][11], AT[ac][12], AT[ac][13], AT[ac][14], AT[ac][15], AT[ac][16], ATTACK_NORMAL, 0, AT[ac][17], AT[ac][18], 0);
+          else
+            B_Atk2:setTime(720, 1);
+          end
+        end
+
         if (B_Atk1:process()) then
           if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 2 or pp[ai_tribe_1].NumPeopleOfType[M_PERSON_RELIGIOUS] > 3) then
             local ac = G_RANDOM(#AT);
@@ -540,7 +602,12 @@ function OnFrame()
 
     --DEBUg STUFF
     PopSetFont(4);
-    LbDraw_Text(gui_width, CharHeight2(), string.format("Blue small attack: %i", B_Atk1.CurrentTime), 0);
+    local y = 0;
+    LbDraw_Text(gui_width, y, string.format("Blue small attack #1: %i", B_Atk1.CurrentTime), 0);
+    y = y + CharHeight2();
+    LbDraw_Text(gui_width, y, string.format("Blue small attack #2: %i", B_Atk2.CurrentTime), 0);
+    y = y + CharHeight2();
+    LbDraw_Text(gui_width, y, string.format("Blue shaman attack #1: %i", B_Atk3.CurrentTime), 0);
     --DEbug STUFF
     Engine.CinemaObj:renderView();
 
