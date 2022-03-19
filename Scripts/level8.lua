@@ -73,7 +73,7 @@ local game_loaded = false
 local honorSaveTurnLimit = 0
 local gameStage = 0
 local lbLock = 0
-local BardLives = 2--6-difficulty()
+local BardLives = 6-difficulty()
 local livesLock = 0
 local removeHut = -1
 if turn() == 0 then
@@ -81,12 +81,15 @@ if turn() == 0 then
 	Csh = createThing(T_PERSON,M_PERSON_MEDICINE_MAN,4,marker_to_coord3d(16),false,false)
 	local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
 	local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = -1 centre_coord3d_on_block(bf.Pos.D3)
-	bf.Pos.D3.Ypos = bf.Pos.D3.Ypos - 2 bf.Pos.D3.Xpos = bf.Pos.D3.Xpos + 24
+	bf.Pos.D3.Ypos = bf.Pos.D3.Ypos - 2 --bf.Pos.D3.Xpos = bf.Pos.D3.Xpos + 0
 	ProcessGlobalTypeList(T_SCENERY, function(t)
 		if t.Model == M_SCENERY_WOOD_PILE then
 			t.DrawInfo.Flags = t.DrawInfo.Flags ~ DF_USE_ENGINE_SHADOW
 		end
 	return true end)
+	for i = 40,59-difficulty()*3 do
+		createThing(T_SCENERY,M_SCENERY_WOOD_PILE,8,marker_to_coord3d(i),false,false)
+	end
 end
 --atk turns
 tribe1Atk1 = 1400 + 7000 + math.random(800) - difficulty()*500
@@ -146,6 +149,7 @@ for i = 2,3 do
 	--train
 	STATE_SET(i, TRUE, CP_AT_TYPE_TRAIN_PEOPLE)
 	WRITE_CP_ATTRIB(i, ATTR_MAX_TRAIN_AT_ONCE, 4)
+	WriteAiTrainTroops(i,14,14,14,0) --(pn,w,r,fw,spy)
 	--buildings
 	STATE_SET(i, TRUE, CP_AT_TYPE_CONSTRUCT_BUILDING)
 	STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_WOOD)
@@ -154,17 +158,19 @@ for i = 2,3 do
 	WRITE_CP_ATTRIB(i, ATTR_PREF_SUPER_WARRIOR_TRAINS, 1)
 	WRITE_CP_ATTRIB(i, ATTR_PREF_RELIGIOUS_TRAINS, 1)
 	WRITE_CP_ATTRIB(i, ATTR_PREF_SPY_TRAINS, 0)
-	--train
-	WriteAiTrainTroops(i,14,14,14,0) --(pn,w,r,fw,spy)
 	--vehicles
 	STATE_SET(i, TRUE, CP_AT_TYPE_BUILD_VEHICLE)
 	STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_FAR_VEHICLE)
+	--boats
 	--WRITE_CP_ATTRIB(i, ATTR_PREF_BOAT_HUTS, 1)
 	--WRITE_CP_ATTRIB(i, ATTR_PREF_BOAT_DRIVERS, 2+difficulty())
 	--WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BOAT, 2+difficulty())
+	--WRITE_CP_ATTRIB(i, ATTR_DONT_USE_BOATS, 0)
+	--balloons
 	WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_HUTS, 1)
-	WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_DRIVERS, 3+difficulty())
-	WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BALLOON, 3+difficulty())
+	WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_DRIVERS, 2+difficulty())
+	WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BALLOON, 2+difficulty())
+	WRITE_CP_ATTRIB(i, ATTR_EMPTY_AT_WAYPOINT, 0) --leave balloon midway, and go on foot
 	--attack
 	SET_ATTACK_VARIABLE(i,0)
 	STATE_SET(i, TRUE, CP_AT_TYPE_AUTO_ATTACK)
@@ -180,15 +186,15 @@ for i = 2,3 do
 	3 - Don't stop anywhere]]
 	WriteAiAttackers(i,0,35,35,35,0,100) --(pn,b,w,r,fw,spy,sh)
 	--defense
-	WRITE_CP_ATTRIB(i, ATTR_DEFENSE_RAD_INCR, 3)
+	WRITE_CP_ATTRIB(i, ATTR_DEFENSE_RAD_INCR, 5)
 	WRITE_CP_ATTRIB(i, ATTR_MAX_DEFENSIVE_ACTIONS, 2)
 	WRITE_CP_ATTRIB(i, ATTR_USE_PREACHER_FOR_DEFENCE, 1)
 	STATE_SET(i, TRUE, CP_AT_TYPE_POPULATE_DRUM_TOWER)
 	STATE_SET(i, TRUE, CP_AT_TYPE_BUILD_OUTER_DEFENCES)
 	STATE_SET(i, TRUE, CP_AT_TYPE_DEFEND)
 	STATE_SET(i, TRUE, CP_AT_TYPE_DEFEND_BASE)
-	STATE_SET(i, TRUE, CP_AT_TYPE_PREACH)
 	STATE_SET(i, TRUE, CP_AT_TYPE_SUPER_DEFEND)
+	STATE_SET(i, TRUE, CP_AT_TYPE_PREACH)
 	--spies
 	WRITE_CP_ATTRIB(i, ATTR_SPY_DISCOVER_CHANCE, 8) -- (% chance of a spy being uncovered when spotted in cps base)
 	WRITE_CP_ATTRIB(i, ATTR_ENEMY_SPY_MAX_STAND, 128) --(number of game turns computer player will ignore a spy stood in their base doing nothing)
@@ -571,7 +577,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	if everySeconds(44 - difficulty()*4 - (gameStage*2)) then
 		for i = 4,7 do
 			local r = 0
-			if getShaman(i) ~= nil and IS_SHAMAN_IN_AREA(i,49,18) == 1 then
+			if getShaman(i) ~= nil and IS_SHAMAN_IN_AREA(i,32,18) == 1 then
 				if gameStage >= 1 and difficulty() > 0 then
 					SearchMapCells(SQUARE, 0, 0 , 6, world_coord3d_to_map_idx(getShaman(i).Pos.D3), function(me)
 						me.MapWhoList:processList(function (t)
@@ -690,18 +696,11 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		else
 			gameStage = 3
 		end
-		--update AI ATTRS
-		SET_MARKER_ENTRY(tribe1,0,100,101,0,2+difficulty(),2+difficulty(),1) --br,war,fw,pre
-		SET_MARKER_ENTRY(tribe1,1,102,103,0,2,0,0)
-		SET_MARKER_ENTRY(tribe1,2,104,104,0,0,2,0)
-		SET_MARKER_ENTRY(tribe1,3,105,105,0,0,2,0)
-		SET_MARKER_ENTRY(tribe1,4,106,106,0,0,2,0)
-		SET_MARKER_ENTRY(tribe1,5,107,108,0,gameStage+difficulty(),gameStage+difficulty(),2) --atk
 
 		for i,v in ipairs(AItribes) do
 			if turn() > 1400 then WRITE_CP_ATTRIB(v, ATTR_EXPANSION, math.random(16,24)) end
 			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 50+G_RANDOM(1+4*difficulty())+(difficulty()*8)+(gameStage*(6+difficulty()))) --base size
-			WriteAiTrainTroops(v,12+(difficulty()*1)+(gameStage*1),10+(gameStage*1),12+(difficulty()*1)+(gameStage*1),0) --(pn,w,r,fw,spy)
+			WriteAiTrainTroops(v,12+(difficulty()*2)+(gameStage*1),10+(gameStage*1),15+(difficulty()*2)+(gameStage*1),0) --(pn,w,r,fw,spy)
 			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 85+(minutes()*2)) --attack stuff
 			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 120 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 90) end
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_BLAST, math.random(6,8)-(difficulty()*1)) --spells
@@ -792,20 +791,21 @@ function SendMiniAttack(attacker)
 		local target = player
 		local numTroops = 0
 		local mk1,mk2 = -1,-1
+		local balloons = _gsi.Players[attacker].NumVehiclesOfType[M_VEHICLE_AIRSHIP_1]
 		--check if enough pop and troops to attack
 		if _gsi.Players[attacker].NumPeople > 16 and GetTroops(attacker) > 8 then
 			numTroops = 2 + gameStage
 		end
 		--LAUNCH MINI ATK
-		if numTroops > 0 then
+		if numTroops > 0 and balloons > math.floor(numTroops/3) then
 			if _gsi.Players[target].NumBuildings > 0 then
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_BY_BALLOON, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
+					IncrementAtkVar(attacker,turn() + 1888 + G_RANDOM(1888) - (difficulty()*256) - (gameStage*128),false) log_msg(8,"mini vs bldg; attackers: " .. numTroops)
 				elseif _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_BY_BALLOON, 0, mk1, mk2, -1)
-						IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
+						IncrementAtkVar(attacker,turn() + 1888 + G_RANDOM(1888) - (difficulty()*256) - (gameStage*128),false) log_msg(8,"mini vs person; attackers: " .. numTroops)
 					end
 				else
 					IncrementAtkVar(attacker,turn() + 555, false)
@@ -813,7 +813,7 @@ function SendMiniAttack(attacker)
 			else
 				if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_BY_BALLOON, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
+					IncrementAtkVar(attacker,turn() + 1888 + G_RANDOM(1888) - (difficulty()*256) - (gameStage*128),false) log_msg(8,"mini vs person; attackers: " .. numTroops)
 				else
 					IncrementAtkVar(attacker,turn() + 555, false)
 				end
@@ -827,7 +827,7 @@ function SendMiniAttack(attacker)
 end
 
 function SendAttack(attacker)
-	if (minutes() > 7-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
+	if (minutes() > 5-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
 		WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 28 + G_RANDOM(16))
 		WriteAiAttackers(attacker,G_RANDOM(5),15+G_RANDOM(10)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(5)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(7)+(difficulty()*6)+(gameStage*4),0,100) --(pn,b,w,r,fw,spy,sh)
 		local target = player
@@ -893,21 +893,21 @@ function SendAttack(attacker)
 			if _gsi.Players[target].NumBuildings > 0 then
 				--can target bldg by land
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
-					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
+					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 999, spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
+					IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) log_msg(attacker,"main atk vs: " .. target .. "   bldg, by land")
 				else
 					--try atk bldg from water
-					if balloons > 0 then
+					if balloons > math.ceil(numTroops/3) then
 						WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 						WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
-						ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BALLOON, 1, -1, -1, -1)
-						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg boat")
+						ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 999, spell1, spell2, spell3, ATTACK_BY_BALLOON, 1, -1, -1, -1)
+						IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) log_msg(attacker,"main atk vs: " .. target .. "   bldg, by boat")
 					else
 						--else attack units
 						if _gsi.Players[target].NumPeople > 0 then
 							if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
-								ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-								IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
+								ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 999, spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
+								IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) log_msg(attacker,"main atk vs: " .. target .. "   person, by land")
 							else
 								--fail
 								IncrementAtkVar(attacker,turn() + 500 + G_RANDOM(200) - (difficulty()*100) - (gameStage*50),true)
@@ -924,15 +924,15 @@ function SendAttack(attacker)
 				--if no buildings, focus on units
 				if _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
-						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
+						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 999, spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
+						IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) log_msg(attacker,"main atk vs: " .. target .. "   person, by land")
 					else
 						--try to atk units from water
-						if balloons > 0 then
+						if balloons > math.ceil(numTroops/3) then
 							WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 							WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
-							ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BALLOON, 1, -1, -1, -1)
-							IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person boat")
+							ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 999, spell1, spell2, spell3, ATTACK_BY_BALLOON, 1, -1, -1, -1)
+							IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) log_msg(attacker,"main atk vs: " .. target .. "   person, by boat")
 						else
 							--fail
 							IncrementAtkVar(attacker,turn() + 500 + G_RANDOM(200) - (difficulty()*100) - (gameStage*50),true)
@@ -1006,10 +1006,10 @@ function OnFrame()
 	LbDraw_Text(guiW+2,100+10*1,"turn: " .. turn(),0)
 	LbDraw_Text(guiW+2,100+10*2,"seconds: " .. seconds(),0)
 	PopSetFont(11) LbDraw_Text(guiW+2,100+10*3,"gameStage: " .. gameStage,0)
-	--[[PopSetFont(1)
-	LbDraw_Text(guiW+2,100+14*4,"day: " .. day,0)
-	LbDraw_Text(guiW+2,100+14*5,"cycle change: " .. turnDayChanges,0)
-	LbDraw_Text(guiW+2,100+14*7,"tribe1NavStress: " .. tribe1NavStress,0)]]
+	PopSetFont(3)
+	LbDraw_Text(guiW+2,100+14*4,"tribe1Atk1: " .. tribe1Atk1,0)
+	LbDraw_Text(guiW+2,100+14*5,"tribe1MiniAtk1: " .. tribe1MiniAtk1,0)
+	--[[LbDraw_Text(guiW+2,100+14*7,"tribe1NavStress: " .. tribe1NavStress,0)]]
 	--HELPER--
 	
 	--honor save timer
@@ -1051,9 +1051,9 @@ function OnCreateThing(t)
 			if bard == 3 then
 				createThing(T_EFFECT,M_EFFECT_EARTHQUAKE,8,marker_to_coord3d(1),false,false)
 				Engine:addCommand_QueueMsg(dialog_msgs[9][1], dialog_msgs[9][2], 36, false, dialog_msgs[9][3], dialog_msgs[9][4], dialog_msgs[9][5], 512);
-				Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 36, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 512);
-				Engine:addCommand_QueueMsg(dialog_msgs[12][1], dialog_msgs[12][2], 36, false, dialog_msgs[12][3], dialog_msgs[12][4], dialog_msgs[12][5], 1024);
-				Engine:addCommand_QueueMsg(dialog_msgs[11][1], dialog_msgs[11][2], 36, false, dialog_msgs[11][3], dialog_msgs[11][4], dialog_msgs[11][5], 12);
+				Engine:addCommand_QueueMsg(dialog_msgs[10][1], dialog_msgs[10][2], 60, false, dialog_msgs[10][3], dialog_msgs[10][4], dialog_msgs[10][5], 512);
+				Engine:addCommand_QueueMsg(dialog_msgs[12][1], dialog_msgs[12][2], 60, false, dialog_msgs[12][3], dialog_msgs[12][4], dialog_msgs[12][5], 1024);
+				Engine:addCommand_QueueMsg(dialog_msgs[11][1], dialog_msgs[11][2], 60, false, dialog_msgs[11][3], dialog_msgs[11][4], dialog_msgs[11][5], 12);
 				removeHut = turn() + 12*12
 				local t = {2,3,4,5,7,8,10,13,14,16,17,19}
 				for i = 1,#t do
@@ -1066,6 +1066,9 @@ function OnCreateThing(t)
 						end
 					end
 				end
+				--give lbs/flattens at start
+				for i = 4-difficulty(),1,-1 do GIVE_ONE_SHOT(M_SPELL_LAND_BRIDGE,player) end
+				for i = 3-difficulty(),1,-1 do GIVE_ONE_SHOT(M_SPELL_FLATTEN,player) end
 				local t = {2,3,4,5,7,8,10,13,14,16,17,19}
 				for i = 1,#t do
 					if t[i] ~= 17 then
@@ -1165,6 +1168,28 @@ function OnKeyDown(k)
 	end
 	if k == LB_KEY_A then
 		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
-		LOG(honorSaveTurnLimit)
+		log_msg(2,"nav check: " .. (NAV_CHECK(2,0,ATTACK_MARKER,0,0)))
 	end
 end
+
+
+--[[
+		--why nav check always returns -1 (when called via keydown) - but works normally on attack commands
+		
+		--possible bug(?) sometimes (usually later in game) units inside balloons wont move, only move if the balloon has 2 people (1 inside balloon = not move gg)
+		
+		--preach at marker / patrols work if AI on island and have to send those units via vehicle?
+		
+		-- balloon patrols work?
+		
+		
+		
+		
+		
+		------to do:
+		
+		--check spell atk table (shaman casted lb somehow in attack)
+		--add fog and fog reveals (including at stone head)
+		--reenable the cinematic
+		--save/load the c3d vars from both spells (balmC3D,seedC3D)
+]]
