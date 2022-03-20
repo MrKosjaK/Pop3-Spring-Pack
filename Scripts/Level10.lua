@@ -146,7 +146,7 @@ function OnSave(save_data)
   save_data:push_bool(init);
   save_data:push_bool(death_initiated);
 
-  if (getTurn() >= 12*240 and current_game_difficulty == diff_honour) then
+  if (getTurn() >= 12*60 and current_game_difficulty == diff_honour) then
     honour_saved_once = true;
   end
 
@@ -325,7 +325,7 @@ function OnTurn()
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_TRAINS, 1);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_RELIGIOUS_PEOPLE, 0);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_TRAIN_AT_ONCE, 4);
-    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 2);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_ATTACK_PERCENTAGE, 100);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_DEFENSIVE_ACTIONS, 0);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_RETREAT_VALUE, 0);
@@ -358,7 +358,7 @@ function OnTurn()
     SET_SPELL_ENTRY(ai_tribe_1, 3, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> 4, 128, 5, 0);
 
     if (current_game_difficulty >= diff_experienced) then
-      WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 2);
+      WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 3);
       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 16);
       SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_LIGHTNING_BOLT, 10);
 
@@ -369,7 +369,7 @@ function OnTurn()
       TARGET_DRUM_TOWERS(ai_tribe_1);
 
       if (current_game_difficulty >= diff_veteran) then
-        WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 3);
+        WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 4); --really wow!
         WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 8);
         TARGET_SHAMAN(ai_tribe_1);
         TARGET_S_WARRIORS(ai_tribe_1);
@@ -471,7 +471,16 @@ function OnTurn()
       if (Engine:getVar(7) == 1) then
         --ATTACKING HERE M8
         if (B_Atk3:process()) then
-          if (IS_SHAMAN_AVAILABLE_FOR_ATTACK(ai_tribe_1) > 0) then
+          local s = getShaman(ai_tribe_1);
+          local should_care = false;
+
+          if (s ~= nil) then
+            if (s.u.Pers.u.Owned.FightGroup == 0) then
+              should_care = true;
+            end
+          end
+
+          if (should_care) then
             if (MANA(ai_tribe_1) > 200000) then
               local ac = G_RANDOM(#AT_S);
 
@@ -494,6 +503,23 @@ function OnTurn()
         if (B_Atk2:process()) then
           if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 2 or pp[ai_tribe_1].NumPeopleOfType[M_PERSON_RELIGIOUS] > 3) then
             local ac = G_RANDOM(#AT);
+            local shaman_away = AT[ac][9];
+            local defensive_spell = AT[ac][14];
+            local s = getShaman(ai_tribe_1);
+            local should_care = false;
+
+            if (s ~= nil) then
+              if (s.u.Pers.u.Owned.FightGroup == 0) then
+                should_care = true;
+              end
+            end
+
+            if (current_game_difficulty >= diff_experienced and should_care) then
+              if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_SHIELD) > 0) then
+                defensive_spell = M_SPELL_SHIELD;
+                shaman_away = 1;
+              end
+            end
 
             B_Atk2:setTime(AT[ac][1], AT[ac][2] << 1);
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT[ac][3])
@@ -502,8 +528,8 @@ function OnTurn()
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, AT[ac][6]);
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, AT[ac][7]);
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, AT[ac][8]);
-            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, AT[ac][9]); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
-            ATTACK(ai_tribe_1, player_tribe, AT[ac][10] + G_RANDOM(AT[ac][10] << 1), AT[ac][11], AT[ac][12], AT[ac][13], AT[ac][14], AT[ac][15], AT[ac][16], ATTACK_NORMAL, 0, AT[ac][17], AT[ac][18], 0);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, shaman_away); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
+            ATTACK(ai_tribe_1, player_tribe, AT[ac][10] + G_RANDOM(AT[ac][10] << 1), AT[ac][11], AT[ac][12], AT[ac][13], defensive_spell, AT[ac][15], AT[ac][16], ATTACK_NORMAL, 0, AT[ac][17], AT[ac][18], 0);
           else
             B_Atk2:setTime(720, 1);
           end
@@ -512,6 +538,23 @@ function OnTurn()
         if (B_Atk1:process()) then
           if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 2 or pp[ai_tribe_1].NumPeopleOfType[M_PERSON_RELIGIOUS] > 3) then
             local ac = G_RANDOM(#AT);
+            local shaman_away = AT[ac][9];
+            local defensive_spell = AT[ac][14];
+            local s = getShaman(ai_tribe_1);
+            local should_care = false;
+
+            if (s ~= nil) then
+              if (s.u.Pers.u.Owned.FightGroup == 0) then
+                should_care = true;
+              end
+            end
+
+            if (current_game_difficulty >= diff_experienced and should_care) then
+              if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_SHIELD) > 0) then
+                defensive_spell = M_SPELL_SHIELD;
+                shaman_away = 1;
+              end
+            end
 
             B_Atk1:setTime(AT[ac][1], AT[ac][2]);
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT[ac][3])
@@ -520,8 +563,8 @@ function OnTurn()
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, AT[ac][6]);
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, AT[ac][7]);
             WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, AT[ac][8]);
-            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, AT[ac][9]); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
-            ATTACK(ai_tribe_1, player_tribe, AT[ac][10], AT[ac][11], AT[ac][12], AT[ac][13], AT[ac][14], AT[ac][15], AT[ac][16], ATTACK_NORMAL, 0, AT[ac][17], AT[ac][18], 0);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, shaman_away); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
+            ATTACK(ai_tribe_1, player_tribe, AT[ac][10], AT[ac][11], AT[ac][12], AT[ac][13], defensive_spell, AT[ac][15], AT[ac][16], ATTACK_NORMAL, 0, AT[ac][17], AT[ac][18], 0);
           else
             B_Atk1:setTime(720, 1);
           end
