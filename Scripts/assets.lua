@@ -123,6 +123,50 @@ function ThingZ(thing)
 	end
 end
 
+--is thing in area
+function IsThingInArea(thingType,thingModel,thingOwner,X,Z,radius)
+	--thingOwner -1 for things of any tribe
+	local pos = MapPosXZ.new() ; pos.XZ.X = X ; pos.XZ.Z = Z
+	local exists = 0
+	SearchMapCells(SQUARE ,0, 0, radius, pos.Pos, function(me)
+		me.MapWhoList:processList( function (t)
+			if t.Type == thingType and t.Model == thingModel and exists == 0 then
+				if thingOwner == -1 then
+					exists = 1
+				else
+					if t.Owner == thingOwner then
+						exists = 1
+					end
+				end
+			end
+		return true end)
+	return true end)
+	
+	return exists
+end
+
+--count things of type in area
+function CountThingsOfTypeInArea(thingType,thingModel,thingOwner,X,Z,radius)
+	--thingOwner -1 for things of any tribe
+	local pos = MapPosXZ.new() ; pos.XZ.X = X ; pos.XZ.Z = Z
+	local count = 0
+	SearchMapCells(SQUARE ,0, 0, radius, pos.Pos, function(me)
+		me.MapWhoList:processList( function (t)
+			if t.Type == thingType and t.Model == thingModel then
+				if thingOwner == -1 then
+					count = count + 1
+				else
+					if t.Owner == thingOwner then
+						count = count + 1
+					end
+				end
+			end
+		return true end)
+	return true end)
+	
+	return count
+end
+
 --zoom to thing
 function ZoomThing(thing,angle)
 	if thing ~= nil then
