@@ -23,7 +23,7 @@ import(Module_Sound)
 include("assets.lua")
 local gns = gnsi()
 local gs = gsi()
-
+computer_init_player(_gsi.Players[TRIBE_GREEN])
 --[[
 
  0 - Stop at waypoint (if exists) and before attack
@@ -39,12 +39,12 @@ local gs = gsi()
 		
 		STATE_SET(3, TRUE, CP_AT_TYPE_BUILD_VEHICLE)
 		STATE_SET(3, TRUE, CP_AT_TYPE_FETCH_FAR_VEHICLE)
-		--[[WRITE_CP_ATTRIB(3, ATTR_PREF_BOAT_HUTS, 1)
+		WRITE_CP_ATTRIB(3, ATTR_PREF_BOAT_HUTS, 1)
 		WRITE_CP_ATTRIB(3, ATTR_PREF_BOAT_DRIVERS, 5)
-		WRITE_CP_ATTRIB(3, ATTR_PEOPLE_PER_BOAT, 5)]]
-		WRITE_CP_ATTRIB(3, ATTR_PREF_BALLOON_HUTS, 0)
-		WRITE_CP_ATTRIB(3, ATTR_PREF_BALLOON_DRIVERS, 2)
-		WRITE_CP_ATTRIB(3, ATTR_PEOPLE_PER_BALLOON, 5)
+		WRITE_CP_ATTRIB(3, ATTR_PEOPLE_PER_BOAT, 5)
+		WRITE_CP_ATTRIB(3, ATTR_PREF_BALLOON_HUTS, 1)
+		WRITE_CP_ATTRIB(3, ATTR_PREF_BALLOON_DRIVERS, 4)
+		WRITE_CP_ATTRIB(3, ATTR_PEOPLE_PER_BALLOON, 4)
 
 
 function OnTurn()
@@ -53,8 +53,8 @@ function OnTurn()
 		log_msg(0,"1st attack: group 0 (Stop before attack, and at waypoint (if exists)) - without waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		WRITE_CP_ATTRIB(TRIBE_GREEN, ATTR_FIGHT_STOP_DISTANCE, 16)
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 4, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, -1, -1, 0)
+		--WRITE_CP_ATTRIB(TRIBE_GREEN, ATTR_FIGHT_STOP_DISTANCE, 16)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 2, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BOAT, 0, -1, -1, 0)
 		--4 is sending like 8 people wtf, 3 sends like 5, 1 sends 1 nice logic
 		--LOG(GET_NUM_OF_AVAILABLE_BOATS(3))
 		--GET_NUM_OF_AVAILABLE_BOATS() WHY THIS DOESNT EXIST FOR BALLOONS???????????? GG; and i think even this func bugs
@@ -64,7 +64,7 @@ function OnTurn()
 		log_msg(0,"2nd attack: group 0 (Stop before attack, and at waypoint (if exists)) - with waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, 1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BOAT, 0, 1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 1111) then
@@ -120,7 +120,7 @@ end -- END OF ON TURN --
 
 
 -- GREEN
-computer_init_player(_gsi.Players[TRIBE_GREEN])
+
 
 
 _gsi.ThisLevelInfo.PlayerThings[TRIBE_GREEN].BuildingsAvailable = _gsi.ThisLevelInfo.PlayerThings[TRIBE_GREEN].BuildingsAvailable | (1<<M_BUILDING_TEPEE)

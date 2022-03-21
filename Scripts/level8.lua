@@ -179,7 +179,7 @@ for i = 2,3 do
 	WRITE_CP_ATTRIB(i, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
 	WRITE_CP_ATTRIB(i, ATTR_RETREAT_VALUE, 5)
 	WRITE_CP_ATTRIB(i, ATTR_FIGHT_STOP_DISTANCE, 32)
-	WRITE_CP_ATTRIB(i, ATTR_GROUP_OPTION, 2)
+	--WRITE_CP_ATTRIB(i, ATTR_GROUP_OPTION, 2)
 	--[[0 - Stop at waypoint (if exists) and before attack
 	1 - Stop before attack only
 	2 - Stop at waypoint (if exists) only
@@ -830,8 +830,8 @@ end
 
 function SendMiniAttack(attacker)
 	if (minutes() > (4-difficulty())) and (rnd() < 50+difficulty()*5 +gameStage*5) then
-		WRITE_CP_ATTRIB(attacker, ATTR_DONT_GROUP_AT_DT, math.random(0,1))
-		WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, math.random(0,3))
+		--WRITE_CP_ATTRIB(attacker, ATTR_DONT_GROUP_AT_DT, math.random(0,1))
+		--WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, math.random(0,3))
 		WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 32 + G_RANDOM(16))
 		WRITE_CP_ATTRIB(attacker, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
 		WriteAiAttackers(attacker,0,math.random(30,40)+(difficulty()*5)+(gameStage*5),math.random(25,35)+(difficulty()*4)+(gameStage*4),math.random(20,30),0,0) --(pn,b,w,r,fw,spy,sh)
@@ -891,13 +891,13 @@ function SendAttack(attacker)
 			numTroops = 3 + (difficulty()) + gameStage if difficulty() >= 2 then numTroops = numTroops + math.floor(troopAmmount/7) end
 		end
 		--group options
-		if difficulty() >= 2 then
+		--[[if difficulty() >= 2 then
 			WRITE_CP_ATTRIB(attacker, ATTR_DONT_GROUP_AT_DT, 1);
 			WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 2);
 		else
 			WRITE_CP_ATTRIB(attacker, ATTR_DONT_GROUP_AT_DT, 0);
 			WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0);
-		end
+		end]]
 		--retreat
 		if difficulty() < 2 then
 			WRITE_CP_ATTRIB(attacker, ATTR_BASE_UNDER_ATTACK_RETREAT, 1)
@@ -1000,7 +1000,7 @@ function SendAttack(attacker)
 				if atktype ~= ATTACK_NORMAL then
 					mk1 = -1
 					mk2 = -1
-					WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
+					--WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
 					returnVehicle = math.random(0,1)
 				end
 				ATTACK(attacker, target, numTroops, focus, 0, 999, spell1, spell2, spell3, atktype, returnVehicle, mk1, mk2, 0)
