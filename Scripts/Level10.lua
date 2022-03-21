@@ -571,6 +571,58 @@ function OnTurn()
         end
       end
 
+      --PRAYING STONE HEADS
+      if (getPSVar(ai_tribe_1, 2) < getTurn() and getPSVar(ai_tribe_1, 1) == 1) then
+        setPSVar(ai_tribe_1, 1, 0);
+      end
+
+      if (Engine:getVar(7) == 1 or current_game_difficulty >= diff_veteran) then
+        --firestorm stone head
+        if (getTurn() >= 720*20 and current_game_difficulty >= diff_experienced) then
+          if (getPSVar(ai_tribe_1, 1) == 0 and GET_HEAD_TRIGGER_COUNT(224, 186) > 0) then
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 99);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SPY, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 0);
+            PRAY_AT_HEAD(ai_tribe_1, 1, 21);
+            setPSVar(ai_tribe_1, 1, 1);
+            setPSVar(ai_tribe_1, 2, getTurn() + 2048);
+          end
+        end
+
+        --swamp stone head
+        if (getTurn() >= 720*10 and current_game_difficulty >= diff_veteran) then
+          if (getPSVar(ai_tribe_1, 1) == 0 and GET_HEAD_TRIGGER_COUNT(18, 94) > 0) then
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 99);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SPY, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 0);
+            PRAY_AT_HEAD(ai_tribe_1, 6, 22);
+            setPSVar(ai_tribe_1, 1, 1);
+            setPSVar(ai_tribe_1, 2, getTurn() + 2048);
+          end
+        end
+        --magical shield stone head
+        if (getTurn() % 840+ai_tribe_1 == 0 and getPSVar(ai_tribe_1, 1) == 0) then
+          --ok we want to check if magical shield stone head isn't occupied right
+          if (count_people_of_type_in_area(78, 138, -1, player_tribe, 4) == 0) then
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 99);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SPY, 1);
+            WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 0);
+            PRAY_AT_HEAD(ai_tribe_1, 5, 20);
+            setPSVar(ai_tribe_1, 1, 1);
+            setPSVar(ai_tribe_1, 2, getTurn() + 2048);
+          end
+        end
+      end
+
       if (getTurn() % 720+ai_tribe_1 == 0) then
         if (pp[ai_tribe_1].NumPeopleOfType[M_PERSON_WARRIOR] > 3) then
           MARKER_ENTRIES(player_ally_tribe, 0, 1, 2, -1);
