@@ -21,6 +21,7 @@ import(Module_Sound)
 import(Module_Commands)
 import(Module_Spells)
 import(Module_Building)
+import(Module_Helpers)
 local gs = gsi()
 local gns = gnsi()
 _gnsi = gnsi()
@@ -580,18 +581,33 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		end
 	end
 	
-	if everySeconds(44 - difficulty()*4 - (gameStage*2)) then
+	if everySeconds(32 - difficulty()*4 - (gameStage*2)) then
 		--occasionally shield troops when attacking
-		for i = 4,7 do
+		for i = 2,3 do
 			local r = 0
 			if getShaman(i) ~= nil and IS_SHAMAN_IN_AREA(i,32,18) == 1 then
-				if gameStage >= 1 and difficulty() > 0 then
+				if gameStage >= 2 and difficulty() > 0 then
 					SearchMapCells(SQUARE, 0, 0 , 6, world_coord3d_to_map_idx(getShaman(i).Pos.D3), function(me)
 						me.MapWhoList:processList(function (t)
 							if t.Type == T_PERSON and t.Owner == i and t.Model > 2 and t.Model < 7 then
 								if ((t.Flags3 & TF3_SHIELD_ACTIVE) == 0 and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON == 0)) and r == 0 then
 									createThing(T_SPELL,M_SPELL_SHIELD,i,t.Pos.D3,false,false)
 									GIVE_MANA_TO_PLAYER(i,-25000)
+									r = 1
+								end
+							end
+						return true end)
+					return true end)
+				end
+			elseif getShaman(i) ~= nil and IS_SHAMAN_IN_AREA(i,33,8) == 1 then
+				--when defending
+				if gameStage >= 3 and difficulty() > 1 then
+					SearchMapCells(SQUARE, 0, 0 , 6, world_coord3d_to_map_idx(getShaman(i).Pos.D3), function(me)
+						me.MapWhoList:processList(function (t)
+							if t.Type == T_PERSON and t.Owner == i and t.Model > 2 and t.Model < 7 then
+								if ((t.Flags3 & TF3_SHIELD_ACTIVE) == 0 and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON == 0)) and r == 0 then
+									createThing(T_SPELL,M_SPELL_SHIELD,i,t.Pos.D3,false,false)
+									GIVE_MANA_TO_PLAYER(i,-20000)
 									r = 1
 								end
 							end
@@ -871,8 +887,8 @@ function SendMiniAttack(attacker)
 			end
 			--SEND ATK
 			ATTACK(attacker, target, numTroops, focus, 0, 999, 0, 0, 0, ATTACK_BY_BALLOON, math.random(0,1), math.random(34,39), 0, 0)
-			IncrementAtkVar(attacker,turn() + 2222 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),false) 
-			log_msg(attacker,"mini atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. 2 .. "  , targetting (0mk,1bldg,2person) " .. focus)
+			IncrementAtkVar(attacker,turn() + 2100 + G_RANDOM(2100) - (difficulty()*400) - (gameStage*200),false) 
+			--log_msg(attacker,"mini atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. 2 .. "  , targetting (0mk,1bldg,2person) " .. focus)
 			
 		else
 			IncrementAtkVar(attacker,turn() + 555, false)
@@ -957,7 +973,7 @@ function SendAttack(attacker)
 			if targBldgs > 0 then
 				--bldg by land
 				if navBldg > 0 then
-					wait = -1 ; focus = ATTACK_BUILDING ; atktype = ATTACK_NORMAL
+					wait = -1 ; focus = ATTACK_BUILDING ; atktype = ATTACK_BY_BALLOON--ATTACK_NORMAL
 				else
 					--bldg with vehicle
 					if vehicles > math.ceil(numTroops/3) then
@@ -969,7 +985,7 @@ function SendAttack(attacker)
 							--will then target a person
 							if navPpl > 0 then
 								--ppl by land
-								wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_NORMAL
+								wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_BY_BALLOON--ATTACK_NORMAL
 							else
 								--ppl with vehicle
 								if vehicles > math.ceil(numTroops/3) then
@@ -989,7 +1005,7 @@ function SendAttack(attacker)
 					--will then target a person
 					if navPpl > 0 then
 						--ppl by land
-						wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_NORMAL
+						wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_BY_BALLOON--ATTACK_NORMAL
 					else
 						--ppl with vehicle
 						if vehicles > math.ceil(numTroops/3) then
@@ -1011,8 +1027,8 @@ function SendAttack(attacker)
 					returnVehicle = math.random(0,1)
 				end
 				ATTACK(attacker, target, numTroops, focus, 0, 999, spell1, spell2, spell3, atktype, returnVehicle, mk1, mk2, 0)
-				IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(3333) - (difficulty()*256) - (gameStage*150),true) 
-				log_msg(attacker,"main atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. atktype .. "  , targetting (0mk,1bldg,2person) " .. focus)
+				IncrementAtkVar(attacker,turn() + 3100 + G_RANDOM(3100) - (difficulty()*400) - (gameStage*200),true) 
+				--log_msg(attacker,"main atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. atktype .. "  , targetting (0mk,1bldg,2person) " .. focus)
 			elseif wait == 1 then
 				IncrementAtkVar(attacker,turn()+100, true)
 			else
