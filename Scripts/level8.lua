@@ -81,7 +81,7 @@ if turn() == 0 then
 	Csh = createThing(T_PERSON,M_PERSON_MEDICINE_MAN,4,marker_to_coord3d(16),false,false)
 	local fireplace = createThing(T_EFFECT,M_EFFECT_FIRESTORM_SMOKE,8,marker_to_coord3d(2),false,false) fireplace.DrawInfo.Alpha = 1 centre_coord3d_on_block(fireplace.Pos.D3)
 	local bf = createThing(T_EFFECT,M_EFFECT_BIG_FIRE,8,marker_to_coord3d(2),false,false) bf.u.Effect.Duration = -1 centre_coord3d_on_block(bf.Pos.D3)
-	bf.Pos.D3.Ypos = bf.Pos.D3.Ypos - 2 ;	 bf.Pos.D3.Xpos = 6396
+	bf.Pos.D3.Ypos = bf.Pos.D3.Ypos - 2 ;	 bf.Pos.D3.Xpos = 6404
 	ProcessGlobalTypeList(T_SCENERY, function(t)
 		if t.Model == M_SCENERY_WOOD_PILE then
 			t.DrawInfo.Flags = t.DrawInfo.Flags ~ DF_USE_ENGINE_SHADOW
@@ -89,6 +89,13 @@ if turn() == 0 then
 	return true end)
 	for i = 40,59-difficulty()*3 do
 		createThing(T_SCENERY,M_SCENERY_WOOD_PILE,8,marker_to_coord3d(i),false,false)
+	end
+	--fog reveals
+	for i = 79,109 do
+		if i <= 82 and difficulty() == 3 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false)
+		elseif i <= 87 and difficulty() == 2 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false)
+		elseif i <= 98 and difficulty() == 1 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false)
+		elseif i <= 109 and difficulty() == 0 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false) end
 	end
 end
 --atk turns
@@ -178,7 +185,7 @@ for i = 2,3 do
 	WRITE_CP_ATTRIB(i, ATTR_MAX_ATTACKS, 999)
 	WRITE_CP_ATTRIB(i, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
 	WRITE_CP_ATTRIB(i, ATTR_RETREAT_VALUE, 5)
-	WRITE_CP_ATTRIB(i, ATTR_FIGHT_STOP_DISTANCE, 32)
+	--WRITE_CP_ATTRIB(i, ATTR_FIGHT_STOP_DISTANCE, 32)
 	--WRITE_CP_ATTRIB(i, ATTR_GROUP_OPTION, 2)
 	--[[0 - Stop at waypoint (if exists) and before attack
 	1 - Stop before attack only
@@ -347,7 +354,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		end
 	end
 	if turn() == 10 then
-		--[[FLYBY_CREATE_NEW()
+		FLYBY_CREATE_NEW()
 		FLYBY_ALLOW_INTERRUPT(FALSE)
 
 		--start
@@ -380,12 +387,12 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		FLYBY_SET_EVENT_POS(20, 250, 1030, 10)
 		--
 		
-		FLYBY_START()]]
+		FLYBY_START()
 		DEFEND_SHAMEN(4,2)
 	end
 	if turn() == 24 then
-		--Engine:hidePanel()
-		--Engine:addCommand_CinemaRaise(0)
+		Engine:hidePanel()
+		Engine:addCommand_CinemaRaise(0)
 		Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1500, 36);
 		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*1);
 		Engine:addCommand_MoveThing(getShaman(4).ThingNum, marker_to_coord2d_centre(21), 1);
@@ -832,7 +839,7 @@ function SendMiniAttack(attacker)
 	if (minutes() > (4-difficulty())) and (rnd() < 50+difficulty()*5 +gameStage*5) then
 		--WRITE_CP_ATTRIB(attacker, ATTR_DONT_GROUP_AT_DT, math.random(0,1))
 		--WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, math.random(0,3))
-		WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 32 + G_RANDOM(16))
+		--WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 32 + G_RANDOM(16))
 		WRITE_CP_ATTRIB(attacker, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
 		WriteAiAttackers(attacker,0,math.random(30,40)+(difficulty()*5)+(gameStage*5),math.random(25,35)+(difficulty()*4)+(gameStage*4),math.random(20,30),0,0) --(pn,b,w,r,fw,spy,sh)
 		local target = player
@@ -877,7 +884,7 @@ end
 
 function SendAttack(attacker)
 	if (minutes() > 5-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
-		WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 28 + G_RANDOM(16))
+		--WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 28 + G_RANDOM(16))
 		WriteAiAttackers(attacker,0,15+G_RANDOM(10)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(5)+(difficulty()*5)+(gameStage*4),15+G_RANDOM(7)+(difficulty()*7)+(gameStage*4),0,100) --(pn,b,w,r,fw,spy,sh)
 		local target = player
 		local numTroops = 0
@@ -1061,17 +1068,6 @@ function OnFrame()
 	local box = math.floor(h/24)
 	local offset = 8
 	
-	--HELPER--
-	PopSetFont(4)
-	LbDraw_Text(guiW+2,100+10*1,"turn: " .. turn(),0)
-	LbDraw_Text(guiW+2,100+10*2,"seconds: " .. seconds(),0)
-	PopSetFont(11) LbDraw_Text(guiW+2,100+10*3,"gameStage: " .. gameStage,0)
-	PopSetFont(3)
-	LbDraw_Text(guiW+2,100+14*4,"tribe1Atk1: " .. tribe1Atk1,0)
-	LbDraw_Text(guiW+2,100+14*5,"tribe1MiniAtk1: " .. tribe1MiniAtk1,0)
-	--[[LbDraw_Text(guiW+2,100+14*7,"tribe1NavStress: " .. tribe1NavStress,0)]]
-	--HELPER--
-	
 	--honor save timer
 	if turn() < honorSaveTurnLimit and honorSaveTurnLimit ~= 0 and difficulty() == 3 then
 		PopSetFont(3)
@@ -1230,35 +1226,3 @@ function OnLoad(load_data)
 		 tribe1AtkSpells[i] = load_data:pop_int();
 	end
 end
-
-import(Module_Helpers)
-function OnKeyDown(k)
-    if (k == LB_KEY_1) then
-		LOG("pop: " .. GetPop(2) .. "    troops: " .. GetTroops(2))
-		ReadAIAttackers(2)
-		ReadAITroops(2)
-	end
-	if k == LB_KEY_A then	
-		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
-		--log_msg(2,"nav check: " .. (NAV_CHECK(2,player,ATTACK_PERSON,0,0)))
-		--LOG(CountThingsOfTypeInArea(T_VEHICLE,M_VEHICLE_AIRSHIP_1,player,38,224,16))
-		for k,v in ipairs(tribe1AtkSpells) do
-			LOG(v)
-		end
-		
-	end
-end
-
-
---[[
-		--possible bug(?) sometimes (usually later in game) units inside balloons wont move, only move if the balloon has 2 people (1 inside balloon = not move gg)
-		-- balloon attacks bugged as fuck lol need fixerino
-		
-		
-		
-		
-		------to do:
-		
-		--add fog and fog reveals (including at stone head)
-		--reenable the cinematic
-]]

@@ -54,7 +54,7 @@ function OnTurn()
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
 		--WRITE_CP_ATTRIB(TRIBE_GREEN, ATTR_FIGHT_STOP_DISTANCE, 16)
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 2, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BOAT, 0, -1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 2, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BOAT, 0, -1, -1, 0)
 		--4 is sending like 8 people wtf, 3 sends like 5, 1 sends 1 nice logic
 		--LOG(GET_NUM_OF_AVAILABLE_BOATS(3))
 		--GET_NUM_OF_AVAILABLE_BOATS() WHY THIS DOESNT EXIST FOR BALLOONS???????????? GG; and i think even this func bugs
@@ -64,7 +64,7 @@ function OnTurn()
 		log_msg(0,"2nd attack: group 0 (Stop before attack, and at waypoint (if exists)) - with waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BOAT, 0, 1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BOAT, 0, 1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 1111) then
@@ -72,7 +72,7 @@ function OnTurn()
 		log_msg(0,"3rd attack: group 1 (Stop before attack only)")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, -1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BALLOON, 0, -1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 1666) then
@@ -80,7 +80,7 @@ function OnTurn()
 		log_msg(0,"4th attack: group 1 (Stop before attack only - but this time using a waypoint on island (shouldn't affect))")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, 1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BALLOON, 0, 1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 2111) then
@@ -88,7 +88,7 @@ function OnTurn()
 		log_msg(0,"5th attack: group 2 (Stop at waypoint (if exists) only) - without waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, -1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BALLOON, 0, -1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 2666) then
@@ -96,7 +96,7 @@ function OnTurn()
 		log_msg(0,"6th attack: group 2 (Stop at waypoint (if exists) only) - now with waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, 1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BALLOON, 0, 1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 3111) then
@@ -104,7 +104,7 @@ function OnTurn()
 		log_msg(0,"7th attack: group 3 (Don't stop anywhere) - without waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, -1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BALLOON, 0, -1, -1, 0)
 	end
 	
 	if (gs.Counts.ProcessThings == 3666) then
@@ -112,7 +112,7 @@ function OnTurn()
 		log_msg(0,"8th attack: group 3 (Don't stop anywhere) - with waypoint")
 		log_msg(1,"the fire is the ATTR_FIGHT_STOP_DISTANCE (13 radius from target)")
 		log_msg(3,"the mini island is the waypoint")
-		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL, INT_NO_SPECIFIC_SPELL , ATTACK_BY_BALLOON, 0, 1, -1, 0)
+		ATTACK(TRIBE_GREEN, TRIBE_BLUE, 1, ATTACK_BUILDING, 0, 999, 0, 0, 0 , ATTACK_BY_BALLOON, 0, 1, -1, 0)
 	end
 
 
@@ -161,8 +161,8 @@ WRITE_CP_ATTRIB(3, ATTR_PREF_SPY_PEOPLE, 0)
 WRITE_CP_ATTRIB(3, ATTR_GROUP_OPTION, 0)
 WRITE_CP_ATTRIB(3, ATTR_AWAY_BRAVE, 0)
 WRITE_CP_ATTRIB(3, ATTR_AWAY_WARRIOR, 100)
-WRITE_CP_ATTRIB(3, ATTR_AWAY_RELIGIOUS, 50)
-WRITE_CP_ATTRIB(3, ATTR_AWAY_SUPER_WARRIOR, 50)
+WRITE_CP_ATTRIB(3, ATTR_AWAY_RELIGIOUS, 100)
+WRITE_CP_ATTRIB(3, ATTR_AWAY_SUPER_WARRIOR, 100)
 WRITE_CP_ATTRIB(3, ATTR_AWAY_SPY, 0)
 WRITE_CP_ATTRIB(3, ATTR_AWAY_MEDICINE_MAN, 0)
 
