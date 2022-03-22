@@ -161,7 +161,7 @@ local ATY =
 {
   [0] = {2320, 1024, 2, 0, 0, 25, 5, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 39, -1},
   [1] = {2599, 1024, 2, 0, 0, 5, 5, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 40, -1},
-  [2] = {2999, 1024, 2, 0, 5, 0, 5, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_INSECT_PLAGUE, M_SPELL_NONE, M_SPELL_INSECT_PLAGUE, 41, -1},
+  [2] = {2999, 1024, 2, 0, 5, 0, 5, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_INSECT_PLAGUE, M_SPELL_HYPNOTISM, M_SPELL_INSECT_PLAGUE, 41, -1},
   [3] = {2999, 1024, 2, 0, 0, 50, 5, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, 39, -1},
   [4] = {3800, 1024, 3, 0, 25, 25, 5, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, -1, -1},
   [5] = {3800, 1024, 2, 0, 25, 25, 5, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 900, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, 41, -1},
@@ -373,6 +373,7 @@ function OnTurn()
     STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_DEFEND_BASE);
     STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_SUPER_DEFEND);
     STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_PREACH);
+    STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_FETCH_LOST_PEOPLE);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_USE_PREACHER_FOR_DEFENCE, 1);
     WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 32);
 
@@ -455,6 +456,7 @@ function OnTurn()
     STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_DEFEND_BASE);
     STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_SUPER_DEFEND);
     STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_PREACH);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_FETCH_LOST_PEOPLE);
     WRITE_CP_ATTRIB(ai_tribe_2, ATTR_USE_PREACHER_FOR_DEFENCE, 1);
     WRITE_CP_ATTRIB(ai_tribe_2, ATTR_SHAMEN_BLAST, 32);
 
@@ -654,6 +656,8 @@ function OnTurn()
             local ac = G_RANDOM(#ATY);
             local shaman_away = ATY[ac][9];
             local defensive_spell = ATY[ac][14];
+            local spell2 = ATY[ac][15];
+            local spell3 = ATY[ac][16];
             local s = getShaman(ai_tribe_2);
             local should_care = false;
 
@@ -663,12 +667,44 @@ function OnTurn()
               end
             end
 
-            if (current_game_difficulty >= diff_experienced and should_care) then
+            if (should_care) then
+              local num_winds = GET_NUM_ONE_OFF_SPELLS(ai_tribe_2, M_SPELL_WHIRLWIND);
+              local num_eqs = GET_NUM_ONE_OFF_SPELLS(ai_tribe_2, M_SPELL_EARTHQUAKE);
+
               if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_2, M_SPELL_SHIELD) > 0) then
                 defensive_spell = M_SPELL_SHIELD;
                 shaman_away = 1;
+              elseif (defensive_spell ~= M_SPELL_NONE) then
+                if (num_winds > 0) then
+                  defensive_spell = M_SPELL_WHIRLWIND;
+                  num_winds = num_winds - 1;
+                elseif (num_eqs > 0) then
+                  defensive_spell = M_SPELL_EARTHQUAKE;
+                  num_eqs = num_eqs - 1;
+                end
+              end
+
+              if (spell2 ~= M_SPELL_NONE) then
+                if (num_winds > 0) then
+                  spell2 = M_SPELL_WHIRLWIND;
+                  num_winds = num_winds - 1;
+                elseif (num_eqs > 0) then
+                  spell2 = M_SPELL_EARTHQUAKE;
+                  num_eqs = num_eqs - 1;
+                end
+              end
+
+              if (spell3 ~= M_SPELL_NONE) then
+                if (num_winds > 0) then
+                  spell3 = M_SPELL_WHIRLWIND;
+                  num_winds = num_winds - 1;
+                elseif (num_eqs > 0) then
+                  spell3 = M_SPELL_EARTHQUAKE;
+                  num_eqs = num_eqs - 1;
+                end
               end
             end
+
 
             Y_Atk2:setTime(ATY[ac][1], ATY[ac][2]);
             WRITE_CP_ATTRIB(ai_tribe_2, ATTR_GROUP_OPTION, ATY[ac][3])
@@ -678,7 +714,7 @@ function OnTurn()
             WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, ATY[ac][7]);
             WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_RELIGIOUS, ATY[ac][8]);
             WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, shaman_away); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
-            ATTACK(ai_tribe_2, player_tribe, ATY[ac][10] + G_RANDOM(AT[ac][10] << 1), ATY[ac][11], ATY[ac][12], ATY[ac][13], defensive_spell, ATY[ac][15], ATY[ac][16], ATTACK_NORMAL, 0, ATY[ac][17], ATY[ac][18], 0);
+            ATTACK(ai_tribe_2, player_tribe, ATY[ac][10] + G_RANDOM(AT[ac][10] << 1), ATY[ac][11], ATY[ac][12], ATY[ac][13], defensive_spell, spell2, spell3, ATTACK_NORMAL, 0, ATY[ac][17], ATY[ac][18], 0);
           else
             Y_Atk2:setTime(720, 1);
           end
@@ -700,7 +736,7 @@ function OnTurn()
               end
             end
 
-            if (current_game_difficulty >= diff_experienced and should_care) then
+            if (should_care) then
               if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_2, M_SPELL_SHIELD) > 0) then
                 defensive_spell = M_SPELL_SHIELD;
                 shaman_away = 1;
@@ -822,6 +858,22 @@ function OnTurn()
           if (should_care) then
             if (MANA(ai_tribe_1) > 200000) then
               local ac = G_RANDOM(#AT_S);
+              local spell1 = AT_S[ac][8];
+              local spell2 = AT_S[ac][9];
+
+              if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_SWAMP) > 0) then
+                spell1 = M_SPELL_SWAMP;
+              end
+
+              if (spell1 == AT_S[ac][8]) then
+                if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_FIRESTORM) > 0) then
+                  spell1 = M_SPELL_FIRESTORM;
+                end
+              else
+                if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_FIRESTORM) > 0) then
+                  spell2 = M_SPELL_FIRESTORM;
+                end
+              end
 
               B_Atk3:setTime(AT_S[ac][1], AT_S[ac][2]);
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT_S[ac][3]);
@@ -831,7 +883,7 @@ function OnTurn()
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 0);
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 0);
               WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 1);
-              ATTACK(ai_tribe_1, player_tribe, 0, AT_S[ac][5], AT_S[ac][6], AT_S[ac][7], AT_S[ac][8], AT_S[ac][9], AT_S[ac][10], ATTACK_NORMAL, 0, AT_S[ac][11], AT_S[ac][12], 0);
+              ATTACK(ai_tribe_1, player_tribe, 0, AT_S[ac][5], AT_S[ac][6], AT_S[ac][7], spell1, spell2, AT_S[ac][10], ATTACK_NORMAL, 0, AT_S[ac][11], AT_S[ac][12], 0);
             else
               B_Atk3:setTime(720, 1);
             end
@@ -853,7 +905,7 @@ function OnTurn()
               end
             end
 
-            if (current_game_difficulty >= diff_experienced and should_care) then
+            if (should_care) then
               if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_SHIELD) > 0) then
                 defensive_spell = M_SPELL_SHIELD;
                 shaman_away = 1;
@@ -888,7 +940,7 @@ function OnTurn()
               end
             end
 
-            if (current_game_difficulty >= diff_experienced and should_care) then
+            if (should_care) then
               if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_1, M_SPELL_SHIELD) > 0) then
                 defensive_spell = M_SPELL_SHIELD;
                 shaman_away = 1;
