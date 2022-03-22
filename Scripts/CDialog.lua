@@ -366,7 +366,37 @@ function CDialog:formatString(_str)
   local str_width = string_width(_str);
 
   if (str_width < self.DialogWidth) then
-    table.insert(self.DlgLines, _str);
+    -- ok we want to scan for tags again...
+    local new_line_str = "";
+    local new_line_str_width = 0;
+    for w in _str:gmatch("%S+") do
+      if (w == "<br>") then
+        if (string.len(new_line_str) > 0) then
+          table.insert(self.DlgLines, new_line_str);
+          new_line_str = "";
+        end
+        table.insert(self.DlgLines, " ");
+        new_line_str_width = 0;
+      elseif (w == "<bp>") then
+        if (string.len(new_line_str) > 0) then
+          table.insert(self.DlgLines, new_line_str);
+          new_line_str = "";
+        end
+        new_line_str_width = 0;
+      else
+        new_line_str_width = string_width(new_line_str) + string_width(w);
+
+        if (new_line_str_width < self.DialogWidth) then
+          new_line_str = new_line_str .. w .. " ";
+        else
+          table.insert(self.DlgLines, new_line_str);
+          new_line_str = w .. " ";
+          new_line_str_width = 0;
+        end
+      end
+    end
+
+    table.insert(self.DlgLines, new_line_str);
 
     -- ok figure out required height for dialog box
     local height = 0;
