@@ -314,6 +314,10 @@ function OnTurn()
     Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(8), 0);
     Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(6), 12*12);
 
+    Engine:addCommand_ClearThingBuf(1, 0);
+    Engine:addCommand_ClearThingBuf(2, 0);
+    Engine:addCommand_ClearThingBuf(3, 0);
+    Engine:addCommand_ClearThingBuf(4, 0);
     Engine:addCommand_QueueMsg("Maybe we can setup a temporary base here?", "Matak", 36, false, 6943, 1, 229, 12*4);
 
     Engine:addCommand_CinemaHide(15);
@@ -564,6 +568,7 @@ function OnTurn()
 
       if (Engine:getVar(5) == 1 and Engine:getVar(6) == 1) then
         Engine:addCommand_QueueMsg("We're not alone here, as i thought. Tiyao should arrive soon or late to help us.", "Matak", 36, false, 6943, 1, 229, 12*4);
+        Engine:addCommand_QueueMsg("Destroy your enemies without losing your own shaman.", "Objective", 256, true, 174, 0, 128, 0);
         Engine:setVar(7, 1);
         Engine:setVar(1, 2);
         B_Atk1:setTime(1440, 1);
@@ -580,6 +585,7 @@ function OnTurn()
     end
 
     if (getTurn() >= 720*8 and Engine:getVar(7) == 0) then
+      Engine:addCommand_QueueMsg("Destroy your enemies without losing your own shaman. <br> But enemies are already coming...", "Objective", 256, true, 174, 0, 128, 0);
       Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
       Engine:setVar(1, 2);
       B_Atk1:setTime(256, 1);
@@ -592,6 +598,18 @@ function OnTurn()
           Y_Atk3:setTime(4096, 1); -- super annoying
         end
       end
+    end
+
+    if (Engine:getVar(9) == 1 and Engine:getVar(10) == 1 and Engine:getVar(11) == 0) then
+      Engine:addCommand_ClearThingBuf(1, 12*6);
+      Engine:addCommand_QueueMsg("We were victorious, but... Where is Tiyao?", "Matak", 36, false, 6943, 1, 229, 12*6);
+      Engine:addCommand_SetVar(11, 1, 0);
+    end
+
+    if (Engine:getVar(11) == 1) then
+      Engine:setVar(11, 2);
+      gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
+      Engine:addCommand_QueueMsg("Well done shaman!", "Mission Complete", 512, true, nil, nil, 128, 0);
     end
 
     if (current_game_difficulty >= diff_experienced) then
@@ -1080,6 +1098,26 @@ function OnTurn()
   end
 end
 
+function OnPlayerDeath(pn)
+  if (pn == player_tribe) then
+    if (current_game_difficulty == diff_honour) then
+      Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
+    else
+      Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
+    end
+  end
+
+  if (pn == ai_tribe_2) then
+    Engine:setVar(10, 1);
+    Engine.DialogObj:queueMessage("... ... ... <br> Is this really happening to us? I hope it's just a bad nightmare.", "Chumara", 36, false, 7869, 1, 238);
+  end
+
+  if (pn == ai_tribe_1) then
+    Engine:setVar(9, 1);
+    Engine.DialogObj:queueMessage("... ... ... <br> I've proven myself... That my sidekick is an absolute idiot...", "Ikani", 36, false, 7809, 1, 222);
+  end
+end
+
 function OnCreateThing(t_thing)
   if ((t_thing.Flags3 & TF3_LOCAL) == 0) then
     if (t_thing.Type == T_INTERNAL and t_thing.Model == M_INTERNAL_SOUL_CONVERT_2) then
@@ -1095,7 +1133,7 @@ end
 function OnFrame()
   if (gns.Flags3 & GNS3_INGAME_OPTIONS == 0) then
     local gui_width = GFGetGuiWidth();
-    
+
     Engine.CinemaObj:renderView();
 
     Engine.DialogObj:setDimensions(ScreenWidth() >> 1, Engine.DialogObj.DialogHeight);
