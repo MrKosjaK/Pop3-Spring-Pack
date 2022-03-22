@@ -5,9 +5,6 @@ Level 5:
 Level 7:
   - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still easy i'll do it)
 
-Level 8:
-  - Convert texture to beta (for orange magical shields)
-
 Level 10:
   - Populate level with wilds
   - Cutscene & Flyby
