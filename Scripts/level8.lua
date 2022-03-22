@@ -36,6 +36,7 @@ ency[22].StrId = 1005
 ency[35].StrId = 695
 ency[38].StrId = 696
 include("assets.lua")
+gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
 sti[M_SPELL_GHOST_ARMY].NetworkOnly = 1
@@ -671,6 +672,9 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 				WRITE_CP_ATTRIB(tribe1, ATTR_PEOPLE_PER_BALLOON, 2+difficulty())
 			end
 		end
+	end
+	
+	if everySeconds(32-difficulty()*3) then
 		--more frequently explode solo balloons in player's base (if too many)
 		local pos = MapPosXZ.new() ; pos.XZ.X = 24 ; pos.XZ.Z = 224
 		local r = 0
@@ -732,6 +736,15 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 				if getShaman(tribe1) ~= nil and IS_SHAMAN_AVAILABLE_FOR_ATTACK(tribe1) > 0 then
 					GIVE_ONE_SHOT(M_SPELL_ANGEL_OF_DEATH,tribe1) ; SPELL_ATTACK(tribe1,M_SPELL_ANGEL_OF_DEATH,99,99) ; tribe1NavStress = 0
 				end
+			end
+		end
+	end
+	
+	--casts aod sometimes
+	if everySeconds(1200-(difficulty()*80)-(gameStage*50)) then
+		if gameStage > 2 and difficulty() > 0 then
+			if getShaman(tribe1) ~= nil and IS_SHAMAN_AVAILABLE_FOR_ATTACK(tribe1) > 0 then
+				GIVE_ONE_SHOT(M_SPELL_ANGEL_OF_DEATH,tribe1) ; SPELL_ATTACK(tribe1,M_SPELL_ANGEL_OF_DEATH,99,99)
 			end
 		end
 	end
@@ -927,9 +940,9 @@ function SendAttack(attacker)
 		local stress = 0
 		--check if enough pop and troops to attack
 		local troopAmmount = GetTroops(attacker)
-		if _gsi.Players[attacker].NumPeople > 20 and troopAmmount > 10 then
-			numTroops = 3 + (difficulty()) + gameStage if difficulty() >= 2 then numTroops = numTroops + math.floor(troopAmmount/7) end
-			if numTroops > 10 then numTroops = 10 end
+		if _gsi.Players[attacker].NumPeople > 40 and troopAmmount > 15 then
+			numTroops = 2 + (difficulty()) + gameStage --if difficulty() >= 2 then numTroops = numTroops + math.floor(troopAmmount/7) end
+			if numTroops > 6 then numTroops = 6 end
 		end
 		--group options
 		--[[if difficulty() >= 2 then
@@ -948,8 +961,8 @@ function SendAttack(attacker)
 			WRITE_CP_ATTRIB(attacker, ATTR_RETREAT_VALUE, 0)
 		end
 		--is shaman going
-		if getShaman(attacker) ~= nil and gameStage >= 1 and IS_SHAMAN_AVAILABLE_FOR_ATTACK(attacker) == 1 then
-			WRITE_CP_ATTRIB(attacker, ATTR_AWAY_MEDICINE_MAN, 100);
+		if getShaman(attacker) ~= nil and gameStage >= 1 and IS_SHAMAN_AVAILABLE_FOR_ATTACK(attacker) > 0 then
+			WRITE_CP_ATTRIB(attacker, ATTR_AWAY_MEDICINE_MAN, 1)
 			--lategame and hard and shaman, might cast invi/shield
 			if difficulty() >= 2 and gameStage >= 2 then
 				if rnd() > 50 then
@@ -968,7 +981,7 @@ function SendAttack(attacker)
 			mk2 = -1
 		end
 		--give spell 1, 2 AND 3
-		if READ_CP_ATTRIB(attacker,ATTR_AWAY_MEDICINE_MAN) == 100 then
+		if READ_CP_ATTRIB(attacker,ATTR_AWAY_MEDICINE_MAN) > 0 then
 			if spell1 == 0 then
 				spell1 = tribe1AtkSpells[math.random(#tribe1AtkSpells)]
 			end
@@ -1104,6 +1117,9 @@ function OnFrame()
 	
 	PopSetFont(4)
 	LbDraw_Text(guiW+2,100+10*2,"seconds: " .. seconds(),0)    --104
+	PopSetFont(1)
+	LbDraw_Text(guiW+2,100+12*7,"atk: " .. tribe1Atk1,0)
+	LbDraw_Text(guiW+2,100+12*9,"mini: " .. tribe1MiniAtk1,0)
 	
 	--honor save timer
 	if turn() < honorSaveTurnLimit and honorSaveTurnLimit ~= 0 and difficulty() == 3 then

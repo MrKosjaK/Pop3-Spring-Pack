@@ -36,6 +36,7 @@ ency[22].StrId = 701
 ency[35].StrId = 699
 ency[38].StrId = 700
 include("assets.lua")
+gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
 sti[M_SPELL_GHOST_ARMY].NetworkOnly = 1

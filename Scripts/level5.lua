@@ -37,6 +37,7 @@ ency[38].StrId = 696
 include("assets.lua")
 change_sprite_bank(0,0)
 set_level_type(10) --A
+gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
 --------------------
 sti[M_SPELL_INVISIBILITY].OneOffMaximum = 4
 sti[M_SPELL_INVISIBILITY].WorldCoordRange = 4096
