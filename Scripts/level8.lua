@@ -259,7 +259,7 @@ SET_DRUM_TOWER_POS(tribe1, 130, 88)
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"This planet looks dull. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
+  [0] = {"This planet looks lifeless. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
   [1] = {"It is, indeed. You must be congratulated. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your decision was to become... a bard.", "Tiyao", 6883, 2, 146},
   [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create and restore life.", "Tiyao", 6883, 2, 146},
   [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
@@ -903,7 +903,7 @@ function SendMiniAttack(attacker)
 				focus = ATTACK_PERSON
 			end
 			--SEND ATK
-			ATTACK(attacker, target, numTroops, focus, 0, 999, 0, 0, 0, ATTACK_BY_BALLOON, math.random(0,1), math.random(34,39), 0, 0)
+			ATTACK(attacker, target, numTroops, focus, 0, 999, 0, 0, 0, ATTACK_BY_BALLOON, 0, math.random(34,39), 0, 0)
 			IncrementAtkVar(attacker,turn() + 2100 + G_RANDOM(2100) - (difficulty()*400) - (gameStage*200),false) 
 			--log_msg(attacker,"mini atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. 2 .. "  , targetting (0mk,1bldg,2person) " .. focus)
 			
@@ -929,6 +929,7 @@ function SendAttack(attacker)
 		local troopAmmount = GetTroops(attacker)
 		if _gsi.Players[attacker].NumPeople > 20 and troopAmmount > 10 then
 			numTroops = 3 + (difficulty()) + gameStage if difficulty() >= 2 then numTroops = numTroops + math.floor(troopAmmount/7) end
+			if numTroops > 10 then numTroops = 10 end
 		end
 		--group options
 		--[[if difficulty() >= 2 then
@@ -993,7 +994,7 @@ function SendAttack(attacker)
 					wait = -1 ; focus = ATTACK_BUILDING ; atktype = ATTACK_BY_BALLOON--ATTACK_NORMAL
 				else
 					--bldg with vehicle
-					if vehicles > math.ceil(numTroops/3) then
+					if vehicles >= math.floor(numTroops/3) then
 						--has vehicles
 						wait = -1 ; focus = ATTACK_BUILDING ; atktype = ATTACK_BY_BALLOON
 					else
@@ -1005,7 +1006,7 @@ function SendAttack(attacker)
 								wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_BY_BALLOON--ATTACK_NORMAL
 							else
 								--ppl with vehicle
-								if vehicles > math.ceil(numTroops/3) then
+								if vehicles >= math.floor(numTroops/3) then
 									wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_BY_BALLOON
 								else
 									wait = 0
@@ -1025,7 +1026,7 @@ function SendAttack(attacker)
 						wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_BY_BALLOON--ATTACK_NORMAL
 					else
 						--ppl with vehicle
-						if vehicles > math.ceil(numTroops/3) then
+						if vehicles >= math.floor(numTroops/3) then
 							wait = -1 ; focus = ATTACK_PERSON ; atktype = ATTACK_BY_BALLOON
 						else
 							wait = 0
@@ -1041,7 +1042,7 @@ function SendAttack(attacker)
 					mk1 = -1
 					mk2 = -1
 					--WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
-					returnVehicle = math.random(0,1)
+					returnVehicle = 0
 				end
 				ATTACK(attacker, target, numTroops, focus, 0, 999, spell1, spell2, spell3, atktype, returnVehicle, mk1, mk2, 0)
 				IncrementAtkVar(attacker,turn() + 3100 + G_RANDOM(3100) - (difficulty()*400) - (gameStage*200),true) 
@@ -1100,6 +1101,9 @@ function OnFrame()
 	local middle2 = math.floor((w+guiW)/2)
 	local box = math.floor(h/24)
 	local offset = 8
+	
+	PopSetFont(4)
+	LbDraw_Text(guiW+2,100+10*2,"seconds: " .. seconds(),0)    --104
 	
 	--honor save timer
 	if turn() < honorSaveTurnLimit and honorSaveTurnLimit ~= 0 and difficulty() == 3 then
