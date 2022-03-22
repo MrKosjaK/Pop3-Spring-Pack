@@ -84,6 +84,7 @@ ency[38].StrId = 696;
 --disable wins on this level
 gns.GameParams.Flags2 = gns.GameParams.Flags2 | GPF2_GAME_NO_WIN;
 gns.GameParams.Flags3 = gns.GameParams.Flags3 & ~GPF3_NO_GAME_OVER_PROCESS;
+gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE;
 
 --main engine
 local Engine = CSequence:createNew();
