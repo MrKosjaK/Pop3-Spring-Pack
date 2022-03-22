@@ -116,8 +116,12 @@ local honour_saved_once = false;
 local B_Atk1 = CTimer:register(); --small cripple attacks
 local B_Atk2 = CTimer:register();
 local B_Atk3 = CTimer:register(); -- shaman attack
+local Y_Atk1 = CTimer:register(); -- small cripple attack
+local Y_Atk2 = CTimer:register(); -- shaman attack with troops
+local Y_Atk3 = CTimer:register(); -- annoying bullshit just to make life easier for computer players ofc not player lmao
 
 --attack types
+--BLUE DATA
 local AT =
 {
   --[0] = {TIMER_TIME, RANDOMNESS, GROUP_TYPE, DONT_GROUP_AT_DT, BRAVES, WARS, FWS, PRIESTS, SHAMAN, NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2},
@@ -135,6 +139,17 @@ local AT_S =
   [2] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, M_SPELL_LIGHTNING_BOLT, 19, -1},
   [3] = {2172, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, -1, -1},
   [4] = {1958, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, -1, -1},
+};
+
+--YELLOW DATA
+local ATY =
+{
+  [0] = {2320, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 39, -1},
+  [1] = {2599, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 40, -1},
+  [2] = {2999, 1024, 2, 0, 5, 0, 50, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_INSECT_PLAGUE, M_SPELL_NONE, M_SPELL_INSECT_PLAGUE, 41, -1},
+  [3] = {2999, 1024, 2, 0, 0, 50, 50, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, 39, -1},
+  [4] = {3800, 1024, 3, 0, 25, 25, 25, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, -1, -1},
+  [5] = {3800, 1024, 2, 0, 25, 25, 25, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 900, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, 41, -1},
 };
 
 function OnSave(save_data)
@@ -160,11 +175,17 @@ function OnSave(save_data)
   B_Atk1:saveData(save_data);
   B_Atk2:saveData(save_data);
   B_Atk3:saveData(save_data);
+  Y_Atk1:saveData(save_data);
+  Y_Atk2:saveData(save_data);
+  Y_Atk3:saveData(save_data);
   log("[INFO] Timers saved.");
 end
 
 function OnLoad(load_data)
   --Timers
+  Y_Atk3:loadData(load_data);
+  Y_Atk2:loadData(load_data);
+  Y_Atk1:loadData(load_data);
   B_Atk3:loadData(load_data);
   B_Atk2:loadData(load_data);
   B_Atk1:loadData(load_data);
@@ -519,9 +540,12 @@ function OnTurn()
         Engine:setVar(7, 1);
         Engine:setVar(1, 2);
         B_Atk1:setTime(1440, 1);
+        Y_Atk2:setTime(4096, 1);
         if (current_game_difficulty >= diff_experienced) then
           B_Atk2:setTime(2280, 1);
           B_Atk3:setTime(3000, 1);
+          Y_Atk1:setTime(2048, 1);
+          Y_Atk3:setTime(5155, 1);
         end
       end
     end
@@ -530,9 +554,12 @@ function OnTurn()
       Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
       Engine:setVar(1, 2);
       B_Atk1:setTime(256, 1);
+      Y_Atk2:setTime(2048, 1);
       if (current_game_difficulty >= diff_experienced) then
         B_Atk2:setTime(2280, 1);
         B_Atk3:setTime(512, 1);
+        Y_Atk1:setTime(1024, 1);
+        Y_Atk3:setTime(4096, 1);
       end
     end
 
@@ -554,6 +581,111 @@ function OnTurn()
 
     --YELLOW CODE BRUH
     if (pp[ai_tribe_2].NumPeople > 0) then
+      if (Engine:getVar(7) == 1) then
+        --ATTACKING HERE M8
+        -- if (B_Atk3:process()) then
+        --   local s = getShaman(ai_tribe_1);
+        --   local should_care = false;
+        --
+        --   if (s ~= nil) then
+        --     if (s.u.Pers.u.Owned.FightGroup == 0) then
+        --       should_care = true;
+        --     end
+        --   end
+        --
+        --   if (should_care) then
+        --     if (MANA(ai_tribe_1) > 200000) then
+        --       local ac = G_RANDOM(#AT_S);
+        --
+        --       B_Atk3:setTime(AT_S[ac][1], AT_S[ac][2]);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT_S[ac][3]);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_DONT_GROUP_AT_DT, AT_S[ac][4]);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 0);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 0);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 0);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 0);
+        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 1);
+        --       ATTACK(ai_tribe_1, player_tribe, 0, AT_S[ac][5], AT_S[ac][6], AT_S[ac][7], AT_S[ac][8], AT_S[ac][9], AT_S[ac][10], ATTACK_NORMAL, 0, AT_S[ac][11], AT_S[ac][12], 0);
+        --     else
+        --       B_Atk3:setTime(720, 1);
+        --     end
+        --   else
+        --     B_Atk3:setTime(720, 1);
+        --   end
+        -- end
+        if (Y_Atk2:process()) then
+          if (pp[ai_tribe_2].NumPeopleOfType[M_PERSON_WARRIOR] > 5 or pp[ai_tribe_2].NumPeopleOfType[M_PERSON_RELIGIOUS] > 6) then
+            local ac = G_RANDOM(#ATY);
+            local shaman_away = ATY[ac][9];
+            local defensive_spell = ATY[ac][14];
+            local s = getShaman(ai_tribe_2);
+            local should_care = false;
+
+            if (s ~= nil) then
+              if (s.u.Pers.u.Owned.FightGroup == 0) then
+                should_care = true;
+              end
+            end
+
+            if (current_game_difficulty >= diff_experienced and should_care) then
+              if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_2, M_SPELL_SHIELD) > 0) then
+                defensive_spell = M_SPELL_SHIELD;
+                shaman_away = 1;
+              end
+            end
+
+            Y_Atk2:setTime(ATY[ac][1], ATY[ac][2]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_GROUP_OPTION, ATY[ac][3])
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_DONT_GROUP_AT_DT, ATY[ac][4]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, ATY[ac][5]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, ATY[ac][6]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, ATY[ac][7]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_RELIGIOUS, ATY[ac][8]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, shaman_away); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
+            ATTACK(ai_tribe_2, player_tribe, ATY[ac][10] + G_RANDOM(AT[ac][10] << 1), ATY[ac][11], ATY[ac][12], ATY[ac][13], defensive_spell, ATY[ac][15], ATY[ac][16], ATTACK_NORMAL, 0, ATY[ac][17], ATY[ac][18], 0);
+          else
+            Y_Atk2:setTime(720, 1);
+          end
+        end
+
+        if (Y_Atk1:process()) then
+          if (pp[ai_tribe_2].NumPeopleOfType[M_PERSON_WARRIOR] > 2 or pp[ai_tribe_2].NumPeopleOfType[M_PERSON_RELIGIOUS] > 3) then
+            local ac = G_RANDOM(#AT);
+            local shaman_away = ATY[ac][9];
+            local defensive_spell = ATY[ac][14];
+            local spell2 = M_SPELL_NONE;
+            local spell3 = M_SPELL_NONE
+            local s = getShaman(ai_tribe_2);
+            local should_care = false;
+
+            if (s ~= nil) then
+              if (s.u.Pers.u.Owned.FightGroup == 0) then
+                should_care = true;
+              end
+            end
+
+            if (current_game_difficulty >= diff_experienced and should_care) then
+              if (GET_NUM_ONE_OFF_SPELLS(ai_tribe_2, M_SPELL_SHIELD) > 0) then
+                defensive_spell = M_SPELL_SHIELD;
+                shaman_away = 1;
+              end
+            end
+
+            Y_Atk1:setTime(ATY[ac][1], ATY[ac][2]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_GROUP_OPTION, ATY[ac][3])
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_DONT_GROUP_AT_DT, ATY[ac][4]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, ATY[ac][5]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, ATY[ac][6]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, ATY[ac][7]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_RELIGIOUS, ATY[ac][8]);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, shaman_away); --NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2
+            ATTACK(ai_tribe_2, player_tribe, ATY[ac][10], ATY[ac][11], ATY[ac][12], ATY[ac][13], defensive_spell, spell2, spell3, ATTACK_NORMAL, 0, ATY[ac][17], ATY[ac][18], 0);
+          else
+            Y_Atk1:setTime(720, 1);
+          end
+        end
+      end
+
       --converting :n
       if (getTurn() % (72 << 1) == 0) then
         if (pp[ai_tribe_2].NumPeople < 35 and getTurn() < 720*2) then
@@ -874,6 +1006,12 @@ function OnFrame()
     LbDraw_Text(gui_width, y, string.format("Blue small attack #2: %i", B_Atk2.CurrentTime), 0);
     y = y + CharHeight2();
     LbDraw_Text(gui_width, y, string.format("Blue shaman attack #1: %i", B_Atk3.CurrentTime), 0);
+    y = y + CharHeight2();
+    LbDraw_Text(gui_width, y, string.format("Yellow small attack #1: %i", Y_Atk1.CurrentTime), 0);
+    y = y+ CharHeight2();
+    LbDraw_Text(gui_width, y, string.format("Yellow medium attack #1: %i", Y_Atk2.CurrentTime), 0);
+    y = y+ CharHeight2();
+    LbDraw_Text(gui_width, y, string.format("Yellow annoying attack #1: %i", Y_Atk3.CurrentTime), 0);
     --DEbug STUFF
     Engine.CinemaObj:renderView();
 
