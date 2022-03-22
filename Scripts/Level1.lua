@@ -398,7 +398,7 @@ function OnTurn()
       set_player_can_cast(M_SPELL_CONVERT_WILD, ai_tribe_1);
 
       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_EXPANSION, 28);
-      WRITE_CP_ATTRIB(ai_tribe_2, ATTR_SHAMEN_BLAST, 16);
+      WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 16);
       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_PREF_SUPER_WARRIOR_TRAINS, 1);
       STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_MED_MAN_GET_WILD_PEEPS);
       STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_FETCH_WOOD);
