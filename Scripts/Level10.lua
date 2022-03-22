@@ -552,8 +552,93 @@ function OnTurn()
       end
     end
 
+    --YELLOW CODE BRUH
+    if (pp[ai_tribe_2].NumPeople > 0) then
+      --converting :n
+      if (getTurn() % (72 << 1) == 0) then
+        if (pp[ai_tribe_2].NumPeople < 35 and getTurn() < 720*2) then
+          CONVERT_AT_MARKER(ai_tribe_2, 27 + G_RANDOM(5));
+        end
+      end
+
+      if (getPSVar(ai_tribe_2, 2) < getTurn() and getPSVar(ai_tribe_2, 1) == 1) then
+        setPSVar(ai_tribe_2, 1, 0);
+      end
+
+      if ((getTurn() % (360+ai_tribe_2)) == 0) then
+        if (pp[ai_tribe_2].NumPeopleOfType[M_PERSON_BRAVE] > 44 and current_game_difficulty >= diff_experienced) then
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 40);
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_PEOPLE, 25);
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_RELIGIOUS_PEOPLE, 25);
+        elseif (pp[ai_tribe_2].NumPeopleOfType[M_PERSON_BRAVE] > 20) then
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 25);
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_PEOPLE, 13);
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_RELIGIOUS_PEOPLE, 12);
+        else
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 0);
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_PEOPLE, 0);
+          WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_RELIGIOUS_PEOPLE, 0);
+        end
+      end
+
+      --pray at moyai
+      if (Engine:getVar(7) == 1 or current_game_difficulty >= diff_veteran) then
+        --earthquake stone head
+        if (getTurn() >= 720*20 and current_game_difficulty >= diff_veteran) then
+          if (getPSVar(ai_tribe_2, 1) == 0 and GET_HEAD_TRIGGER_COUNT(118, 104) > 0) then
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, 99);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_RELIGIOUS, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SPY, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, 0);
+            PRAY_AT_HEAD(ai_tribe_2, 6, 38);
+            setPSVar(ai_tribe_2, 1, 1);
+            setPSVar(ai_tribe_2, 2, getTurn() + 2048);
+          end
+        end
+
+        --tornado stone head
+        if (getTurn() >= 720*10 and current_game_difficulty >= diff_experienced) then
+          if (getPSVar(ai_tribe_2, 1) == 0 and GET_HEAD_TRIGGER_COUNT(152, 42) > 0) then
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, 99);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_RELIGIOUS, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SPY, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, 0);
+            PRAY_AT_HEAD(ai_tribe_2, 3, 37);
+            setPSVar(ai_tribe_2, 1, 1);
+            setPSVar(ai_tribe_2, 2, getTurn() + 2048);
+          end
+        end
+        --magical shield stone head
+        if (getTurn() % 840 == 0 and getPSVar(ai_tribe_2, 1) == 0) then
+          --ok we want to check if magical shield stone head isn't occupied right
+          if (count_people_of_type_in_area(204, 38, -1, player_tribe, 4) == 0) then
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_BRAVE, 99);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SUPER_WARRIOR, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_RELIGIOUS, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_SPY, 1);
+            WRITE_CP_ATTRIB(ai_tribe_2, ATTR_AWAY_MEDICINE_MAN, 0);
+            PRAY_AT_HEAD(ai_tribe_2, 5, 36);
+            setPSVar(ai_tribe_2, 1, 1);
+            setPSVar(ai_tribe_2, 2, getTurn() + 2048);
+          end
+        end
+      end
+    end
+
     --BLUE CODE PART
     if (pp[ai_tribe_1].NumPeople > 0) then
+      --converting :n
+      if (getTurn() % (72 << 1) == 0) then
+        if (pp[ai_tribe_1].NumPeople < 35 and getTurn() < 720*2) then
+          CONVERT_AT_MARKER(ai_tribe_1, 32 + G_RANDOM(4));
+        end
+      end
+
       if (Engine:getVar(7) == 1) then
         --ATTACKING HERE M8
         if (B_Atk3:process()) then
