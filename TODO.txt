@@ -5,12 +5,6 @@ Level 5:
 Level 7:
   - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still easy i'll do it)
 
-Level 10:
-  - Populate level with wilds
-  - Cutscene & Flyby
-  - Fill stone heads with something
-  - Ending cutscene mentioning siberia
-
 
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
