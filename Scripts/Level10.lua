@@ -140,31 +140,31 @@ local Y_Atk3 = CTimer:register(); -- annoying bullshit just to make life easier 
 local AT =
 {
   --[0] = {TIMER_TIME, RANDOMNESS, GROUP_TYPE, DONT_GROUP_AT_DT, BRAVES, WARS, FWS, PRIESTS, SHAMAN, NUM_PEEPS, ATK_TYPE, ATK_TARGET, ATK_DMG, S1, S2, S3, MRK1, MRK2},
-  [0] = {1840, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 17, -1},
-  [1] = {1840, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
-  [2] = {1840, 1024, 2, 0, 5, 0, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 19, -1},
-  [3] = {1840, 1024, 2, 0, 0, 50, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
+  [0] = {2384, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 17, -1},
+  [1] = {1811, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
+  [2] = {2480, 1024, 2, 0, 5, 0, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 19, -1},
+  [3] = {2745, 1024, 2, 0, 0, 50, 50, 50, 0, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 18, -1},
   [4] = {2820, 1024, 3, 0, 25, 25, 25, 25, 0, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, -1, -1},
 };
 
 local AT_S =
 {
-  [0] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, 17, -1},
+  [0] = {3199, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, 17, -1},
   [1] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_INSECT_PLAGUE, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, 18, -1},
-  [2] = {2899, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, M_SPELL_LIGHTNING_BOLT, 19, -1},
-  [3] = {2172, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, -1, -1},
-  [4] = {1958, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, -1, -1},
+  [2] = {3299, 1024, 2, 0, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_INSECT_PLAGUE, M_SPELL_LIGHTNING_BOLT, 19, -1},
+  [3] = {2472, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, M_SPELL_LIGHTNING_BOLT, -1, -1},
+  [4] = {2058, 1024, 3, 1, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 999, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, -1, -1},
 };
 
 --YELLOW DATA
 local ATY =
 {
-  [0] = {2320, 1024, 2, 0, 0, 25, 10, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 39, -1},
-  [1] = {2599, 1024, 2, 0, 0, 5, 10, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 40, -1},
-  [2] = {2999, 1024, 2, 0, 5, 0, 50, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_INSECT_PLAGUE, M_SPELL_NONE, M_SPELL_INSECT_PLAGUE, 41, -1},
-  [3] = {2999, 1024, 2, 0, 0, 50, 50, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, 39, -1},
-  [4] = {3800, 1024, 3, 0, 25, 25, 25, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, -1, -1},
-  [5] = {3800, 1024, 2, 0, 25, 25, 25, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 900, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, 41, -1},
+  [0] = {2320, 1024, 2, 0, 0, 25, 5, 10, 0, 5, ATTACK_BUILDING, M_BUILDING_DRUM_TOWER, 233, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 39, -1},
+  [1] = {2599, 1024, 2, 0, 0, 5, 5, 50, 0, 4, ATTACK_BUILDING, M_BUILDING_TEMPLE, 453, M_SPELL_NONE, M_SPELL_NONE, M_SPELL_NONE, 40, -1},
+  [2] = {2999, 1024, 2, 0, 5, 0, 5, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 322, M_SPELL_INSECT_PLAGUE, M_SPELL_NONE, M_SPELL_INSECT_PLAGUE, 41, -1},
+  [3] = {2999, 1024, 2, 0, 0, 50, 5, 50, 1, 6, ATTACK_BUILDING, M_BUILDING_SUPER_TRAIN, 513, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, M_SPELL_INSECT_PLAGUE, 39, -1},
+  [4] = {3800, 1024, 3, 0, 25, 25, 5, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 800, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, -1, -1},
+  [5] = {3800, 1024, 2, 0, 25, 25, 5, 25, 1, 12, ATTACK_BUILDING, M_BUILDING_TEPEE, 900, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, M_SPELL_HYPNOTISM, 41, -1},
 };
 
 function OnSave(save_data)
@@ -560,7 +560,9 @@ function OnTurn()
           B_Atk2:setTime(2280, 1);
           B_Atk3:setTime(3000, 1);
           Y_Atk1:setTime(2048, 1);
-          Y_Atk3:setTime(5155, 1);
+          if (current_game_difficulty >= diff_veteran) then
+            Y_Atk3:setTime(5155, 1); -- very bad man
+          end
         end
       end
     end
@@ -574,7 +576,9 @@ function OnTurn()
         B_Atk2:setTime(2280, 1);
         B_Atk3:setTime(512, 1);
         Y_Atk1:setTime(1024, 1);
-        Y_Atk3:setTime(4096, 1);
+        if (current_game_difficulty >= diff_veteran) then
+          Y_Atk3:setTime(4096, 1); -- super annoying
+        end
       end
     end
 
@@ -598,36 +602,53 @@ function OnTurn()
     if (pp[ai_tribe_2].NumPeople > 0) then
       if (Engine:getVar(7) == 1) then
         --ATTACKING HERE M8
-        -- if (B_Atk3:process()) then
-        --   local s = getShaman(ai_tribe_1);
-        --   local should_care = false;
-        --
-        --   if (s ~= nil) then
-        --     if (s.u.Pers.u.Owned.FightGroup == 0) then
-        --       should_care = true;
-        --     end
-        --   end
-        --
-        --   if (should_care) then
-        --     if (MANA(ai_tribe_1) > 200000) then
-        --       local ac = G_RANDOM(#AT_S);
-        --
-        --       B_Atk3:setTime(AT_S[ac][1], AT_S[ac][2]);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_GROUP_OPTION, AT_S[ac][3]);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_DONT_GROUP_AT_DT, AT_S[ac][4]);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_BRAVE, 0);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_WARRIOR, 0);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_SUPER_WARRIOR, 0);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_RELIGIOUS, 0);
-        --       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_AWAY_MEDICINE_MAN, 1);
-        --       ATTACK(ai_tribe_1, player_tribe, 0, AT_S[ac][5], AT_S[ac][6], AT_S[ac][7], AT_S[ac][8], AT_S[ac][9], AT_S[ac][10], ATTACK_NORMAL, 0, AT_S[ac][11], AT_S[ac][12], 0);
-        --     else
-        --       B_Atk3:setTime(720, 1);
-        --     end
-        --   else
-        --     B_Atk3:setTime(720, 1);
-        --   end
-        -- end
+        if (Y_Atk3:process()) then
+          if (pp[ai_tribe_2].NumPeopleOfType[M_PERSON_SUPER_WARRIOR] > 12) then
+            if (FREE_ENTRIES(ai_tribe_2) > 3) then
+              --so now we want to annoy player .. check if area is clear.
+              local should_care = true;
+              if (getPSVar(ai_tribe_2, 3) == 1) then
+                -- lets check if fws still alive
+                if (count_people_of_type_in_area(82, 18, M_PERSON_SUPER_WARRIOR, ai_tribe_2, 5) >= 2) then
+                  -- they're alive still, then don't check.
+                  should_care = false;
+                else
+                  -- ok there's few fws left, check then!
+                  setPSVar(ai_tribe_2, 3, 0);
+                  should_care = true;
+                end
+              end
+
+              if (should_care) then
+                if (count_people_of_type_in_area(82, 18, -1, player_tribe, 3) < 5) then
+                  local mk = 42 + G_RANDOM(5);
+
+                  SET_MARKER_ENTRY(ai_tribe_2, 3, mk, mk, 0, 0, 2, 0);
+
+                  local mk2 = 42 + G_RANDOM(5);
+
+                  while (mk2 == mk) do
+                    mk2 = 42 + G_RANDOM(5);
+                  end
+
+                  SET_MARKER_ENTRY(ai_tribe_2, 4, mk2, mk2, 0, 0, 2, 0);
+                  MARKER_ENTRIES(ai_tribe_2, 3, 4, -1 ,-1);
+                  Y_Atk3:setTime(4096, 2048);
+                  setPSVar(ai_tribe_2, 3, 1);
+                else
+                  Y_Atk3:setTime(1440, 1);
+                end
+              else
+                Y_Atk3:setTime(1440, 1);
+              end
+            else
+              Y_Atk3:setTime(720, 1);
+            end
+          else
+            Y_Atk3:setTime(1440, 1);
+          end
+        end
+
         if (Y_Atk2:process()) then
           if (pp[ai_tribe_2].NumPeopleOfType[M_PERSON_WARRIOR] > 5 or pp[ai_tribe_2].NumPeopleOfType[M_PERSON_RELIGIOUS] > 6) then
             local ac = G_RANDOM(#ATY);
