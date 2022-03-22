@@ -248,6 +248,14 @@ local function process_area(x, z)
   return stop_now;
 end
 
+local function reveal_fog_at(x, z)
+  SearchMapCells(CIRCULAR, 0, 0, 2, world_coord3d_to_map_idx(MAP_XZ_2_WORLD_XYZ(x, z)), function(me)
+    gs.FogOfWar:perm_uncover(player_tribe, me);
+    return true;
+  end);
+  set_square_map_params(world_coord3d_to_map_idx(MAP_XZ_2_WORLD_XYZ(x, z)), 3, TRUE);
+end
+
 function OnTurn()
   if (init) then
     init = false;
@@ -278,6 +286,8 @@ function OnTurn()
 
     set_player_reinc_site_off(pp[player_tribe]);
     mark_reincarnation_site_mes(gs.Players[player_tribe].ReincarnSiteCoord, OWNER_NONE, UNMARK);
+
+    reveal_fog_at(224, 186);
 
     -- ITS TALE TIME
 
@@ -1085,22 +1095,7 @@ end
 function OnFrame()
   if (gns.Flags3 & GNS3_INGAME_OPTIONS == 0) then
     local gui_width = GFGetGuiWidth();
-
-    --DEBUg STUFF
-    PopSetFont(4);
-    local y = 0;
-    LbDraw_Text(gui_width, y, string.format("Blue small attack #1: %i", B_Atk1.CurrentTime), 0);
-    y = y + CharHeight2();
-    LbDraw_Text(gui_width, y, string.format("Blue small attack #2: %i", B_Atk2.CurrentTime), 0);
-    y = y + CharHeight2();
-    LbDraw_Text(gui_width, y, string.format("Blue shaman attack #1: %i", B_Atk3.CurrentTime), 0);
-    y = y + CharHeight2();
-    LbDraw_Text(gui_width, y, string.format("Yellow small attack #1: %i", Y_Atk1.CurrentTime), 0);
-    y = y+ CharHeight2();
-    LbDraw_Text(gui_width, y, string.format("Yellow medium attack #1: %i", Y_Atk2.CurrentTime), 0);
-    y = y+ CharHeight2();
-    LbDraw_Text(gui_width, y, string.format("Yellow annoying attack #1: %i", Y_Atk3.CurrentTime), 0);
-    --DEbug STUFF
+    
     Engine.CinemaObj:renderView();
 
     Engine.DialogObj:setDimensions(ScreenWidth() >> 1, Engine.DialogObj.DialogHeight);
