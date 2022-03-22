@@ -32,6 +32,8 @@ ency = encyclopedia_info()
 ency[27].StrId = 690
 ency[32].StrId = 691
 ency[22].StrId = 692
+ency[35].StrId = 695
+ency[38].StrId = 696
 include("assets.lua")
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
@@ -51,6 +53,19 @@ sti[M_SPELL_SWAMP].AvailableSpriteIdx = 364
 sti[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
 sti[M_SPELL_SWAMP].ClickedSpriteIdx = 400
 bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
+sti[M_SPELL_EROSION].Cost = 250000
+sti[M_SPELL_EROSION].CursorSpriteNum = 50
+sti[M_SPELL_EROSION].ToolTipStrIdx = 822
+sti[M_SPELL_EROSION].AvailableSpriteIdx = 363
+sti[M_SPELL_EROSION].NotAvailableSpriteIdx = 381
+sti[M_SPELL_EROSION].ClickedSpriteIdx = 399
+sti[M_SPELL_VOLCANO].Cost = 800000
+sti[M_SPELL_VOLCANO].WorldCoordRange = 3072
+sti[M_SPELL_VOLCANO].CursorSpriteNum = 56
+sti[M_SPELL_VOLCANO].ToolTipStrIdx = 828
+sti[M_SPELL_VOLCANO].AvailableSpriteIdx = 369
+sti[M_SPELL_VOLCANO].NotAvailableSpriteIdx = 387
+sti[M_SPELL_VOLCANO].ClickedSpriteIdx = 405
 --------------------
 local tribe1 = TRIBE_RED
 local tribe2 = TRIBE_BLACK
@@ -1138,12 +1153,14 @@ function OnTurn()
 		--update game stage (early,mid,late,very late)
 		if minutes() < 6 then
 			gameStage = 0
-		elseif minutes() >= 6 and minutes() < 12 then
+		elseif minutes() < 12 then
 			gameStage = 1
-		elseif minutes() >= 12 and minutes() < 18 then
+		elseif minutes() < 18 then
 			gameStage = 2
-		else
+		elseif minutes() < 24 then
 			gameStage = 3
+		else
+			gameStage = 4
 		end
 		--update AI ATTRS
 		SET_MARKER_ENTRY(tribe1,0,38,39,0,2+gameStage,0,0) --war,fw,pre

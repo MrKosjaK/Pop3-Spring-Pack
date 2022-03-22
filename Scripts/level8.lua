@@ -33,6 +33,8 @@ ency = encyclopedia_info()
 ency[27].StrId = 1010
 ency[32].StrId = 1015
 ency[22].StrId = 1005
+ency[35].StrId = 695
+ency[38].StrId = 696
 include("assets.lua")
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
@@ -56,6 +58,19 @@ sti[seed].AvailableSpriteIdx = 1777
 sti[seed].NotAvailableSpriteIdx = 1781
 sti[seed].ClickedSpriteIdx = 1779
 bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
+sti[M_SPELL_EROSION].Cost = 250000
+sti[M_SPELL_EROSION].CursorSpriteNum = 50
+sti[M_SPELL_EROSION].ToolTipStrIdx = 822
+sti[M_SPELL_EROSION].AvailableSpriteIdx = 363
+sti[M_SPELL_EROSION].NotAvailableSpriteIdx = 381
+sti[M_SPELL_EROSION].ClickedSpriteIdx = 399
+sti[M_SPELL_VOLCANO].Cost = 800000
+sti[M_SPELL_VOLCANO].WorldCoordRange = 3072
+sti[M_SPELL_VOLCANO].CursorSpriteNum = 56
+sti[M_SPELL_VOLCANO].ToolTipStrIdx = 828
+sti[M_SPELL_VOLCANO].AvailableSpriteIdx = 369
+sti[M_SPELL_VOLCANO].NotAvailableSpriteIdx = 387
+sti[M_SPELL_VOLCANO].ClickedSpriteIdx = 405
 --------------------
 local player = TRIBE_ORANGE
 local tribe1 = TRIBE_YELLOW
@@ -702,7 +717,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		return true end)
 		--buildings faster green red bar if hard
 		ProcessGlobalSpecialListAll(BUILDINGLIST, function(b)
-			if (b.Model <= 3) and b.Owner ~= 0 then
+			if (b.Model <= 3) and b.Owner ~= player then
 				if (b.u.Bldg.UpgradeCount < 1850) then
 					b.u.Bldg.UpgradeCount = b.u.Bldg.UpgradeCount + (difficulty()*4)
 				end
@@ -763,8 +778,10 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 			gameStage = 1
 		elseif minutes() < 30 then
 			gameStage = 2
-		else
+		elseif minutes() < 40 then
 			gameStage = 3
+		else
+			gameStage = 4
 		end
 
 		for i,v in ipairs(AItribes) do
@@ -1098,7 +1115,6 @@ function OnFrame()
 			LbDraw_ScaledSprite(guiW+((i-1)*4)+((i-1)*box),4,get_sprite(0,1782),box,box)
 		end
 	end
-	
 end
 
 

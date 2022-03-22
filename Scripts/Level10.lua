@@ -61,10 +61,25 @@ spell_const[M_SPELL_SWAMP].ToolTipStrIdx = 823
 spell_const[M_SPELL_SWAMP].AvailableSpriteIdx = 364
 spell_const[M_SPELL_SWAMP].NotAvailableSpriteIdx = 382
 spell_const[M_SPELL_SWAMP].ClickedSpriteIdx = 400
+spell_const[M_SPELL_EROSION].Cost = 250000
+spell_const[M_SPELL_EROSION].CursorSpriteNum = 50
+spell_const[M_SPELL_EROSION].ToolTipStrIdx = 822
+spell_const[M_SPELL_EROSION].AvailableSpriteIdx = 363
+spell_const[M_SPELL_EROSION].NotAvailableSpriteIdx = 381
+spell_const[M_SPELL_EROSION].ClickedSpriteIdx = 399
+spell_const[M_SPELL_VOLCANO].Cost = 800000
+spell_const[M_SPELL_VOLCANO].WorldCoordRange = 3072
+spell_const[M_SPELL_VOLCANO].CursorSpriteNum = 56
+spell_const[M_SPELL_VOLCANO].ToolTipStrIdx = 828
+spell_const[M_SPELL_VOLCANO].AvailableSpriteIdx = 369
+spell_const[M_SPELL_VOLCANO].NotAvailableSpriteIdx = 387
+spell_const[M_SPELL_VOLCANO].ClickedSpriteIdx = 405
 bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641;
 ency[27].StrId = 690;
 ency[32].StrId = 691;
 ency[22].StrId = 692;
+ency[35].StrId = 695;
+ency[38].StrId = 696;
 
 --disable wins on this level
 gns.GameParams.Flags2 = gns.GameParams.Flags2 | GPF2_GAME_NO_WIN;
