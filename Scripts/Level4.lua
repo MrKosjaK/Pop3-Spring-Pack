@@ -202,6 +202,15 @@ function OnTurn()
     FIX_WILD_IN_AREA(156, 78, 11);
     FIX_WILD_IN_AREA(182, 110, 11);
 
+    --plants
+    ProcessGlobalTypeList(T_SCENERY, function(t)
+      if (t.Model == M_SCENERY_PLANT_1) then
+        t.DrawInfo.DrawNum = 1786 + G_RANDOM(5);
+        return true;
+      end
+      return true;
+    end);
+
     --delete initial brave lol
     ProcessGlobalSpecialList(player_tribe, PEOPLELIST, function(t)
       delete_thing_type(t);

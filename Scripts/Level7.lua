@@ -225,6 +225,15 @@ function OnTurn()
 
     set_correct_gui_menu();
 
+    --plants
+    ProcessGlobalTypeList(T_SCENERY, function(t)
+      if (t.Model == M_SCENERY_PLANT_2) then
+        t.DrawInfo.DrawNum = 1791 + G_RANDOM(5);
+        return true;
+      end
+      return true;
+    end);
+
     --delete initial brave lol
     ProcessGlobalSpecialList(player_tribe, PEOPLELIST, function(t)
       delete_thing_type(t);

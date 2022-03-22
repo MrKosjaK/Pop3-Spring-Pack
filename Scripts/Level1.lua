@@ -196,6 +196,15 @@ function OnTurn()
   if (init) then
     init = false;
 
+    --plants
+    ProcessGlobalTypeList(T_SCENERY, function(t)
+      if (t.Model == M_SCENERY_PLANT_1) then
+        t.DrawInfo.DrawNum = 1786 + G_RANDOM(5);
+        return true;
+      end
+      return true;
+    end);
+
     --portals (decor)
     local p1 = createThing(T_SCENERY, M_SCENERY_TOP_LEVEL_SCENERY, TRIBE_HOSTBOT, marker_to_coord3d_centre(13), false, false);
     set_map_elem_object_shadow(world_coord2d_to_map_ptr(p1.Pos.D2), 8);
