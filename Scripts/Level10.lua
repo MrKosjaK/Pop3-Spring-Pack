@@ -358,6 +358,7 @@ function OnTurn()
     SET_SPELL_ENTRY(ai_tribe_1, 3, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> 4, 128, 5, 0);
 
     if (current_game_difficulty >= diff_experienced) then
+      set_player_can_cast(M_SPELL_LIGHTNING_BOLT, ai_tribe_1);
       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_MAX_ATTACKS, 3);
       WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 16);
       SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_1, M_SPELL_LIGHTNING_BOLT, 10);
@@ -373,6 +374,85 @@ function OnTurn()
         WRITE_CP_ATTRIB(ai_tribe_1, ATTR_SHAMEN_BLAST, 8);
         TARGET_SHAMAN(ai_tribe_1);
         TARGET_S_WARRIORS(ai_tribe_1);
+      end
+    end
+
+    --BEE BOO BEEP ME ACTIVATE
+    set_player_can_build(M_BUILDING_TEPEE, ai_tribe_2);
+    set_player_can_build(M_BUILDING_DRUM_TOWER, ai_tribe_2);
+    set_player_can_build(M_BUILDING_WARRIOR_TRAIN, ai_tribe_2)
+    set_player_can_build(M_BUILDING_SUPER_TRAIN, ai_tribe_2);
+    set_player_can_build(M_BUILDING_TEMPLE, ai_tribe_2);
+    set_player_can_cast(M_SPELL_BLAST, ai_tribe_2);
+    set_player_can_cast(M_SPELL_INSECT_PLAGUE, ai_tribe_2);
+    set_player_can_cast(M_SPELL_CONVERT_WILD, ai_tribe_2);
+    set_player_can_cast(M_SPELL_HYPNOTISM, ai_tribe_2);
+
+    computer_init_player(pp[ai_tribe_2]);
+
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_CONSTRUCT_BUILDING);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_AUTO_ATTACK);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_TRAIN_PEOPLE);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_POPULATE_DRUM_TOWER);
+    SET_ATTACK_VARIABLE(ai_tribe_2, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_BUILDINGS_ON_GO, 3);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_HOUSE_PERCENTAGE, 60);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_TRAINS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_TRAINS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_SUPER_WARRIOR_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_RELIGIOUS_TRAINS, 1);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_PREF_RELIGIOUS_PEOPLE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_TRAIN_AT_ONCE, 4);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_ATTACKS, 2);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_ATTACK_PERCENTAGE, 100);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_DEFENSIVE_ACTIONS, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_RETREAT_VALUE, 0);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_BASE_UNDER_ATTACK_RETREAT, 0);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_DEFEND);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_DEFEND_BASE);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_SUPER_DEFEND);
+    STATE_SET(ai_tribe_2, TRUE, CP_AT_TYPE_PREACH);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_USE_PREACHER_FOR_DEFENCE, 1);
+    WRITE_CP_ATTRIB(ai_tribe_2, ATTR_SHAMEN_BLAST, 32);
+
+    SET_DRUM_TOWER_POS(ai_tribe_2, 194, 84);
+    SHAMAN_DEFEND(ai_tribe_2, 194, 84, TRUE);
+    SET_DEFENCE_RADIUS(ai_tribe_2, 5);
+
+    SET_MARKER_ENTRY(ai_tribe_2, 0, 24, -1, 0, 2, 0, 0);
+    SET_MARKER_ENTRY(ai_tribe_2, 1, 25, -1, 0, 2, 0, 0);
+    SET_MARKER_ENTRY(ai_tribe_2, 2, 26, -1, 0, 2, 0, 0);
+    MARKER_ENTRIES(ai_tribe_2, 0, 1, 2, -1);
+
+    SET_BUCKET_USAGE(ai_tribe_2, TRUE);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_2, M_SPELL_CONVERT_WILD, 1);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_2, M_SPELL_BLAST, 1);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_2, M_SPELL_INSECT_PLAGUE, 8);
+    SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_2, M_SPELL_HYPNOTISM, 12);
+
+    SET_SPELL_ENTRY(ai_tribe_2, 0, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> 4, 128, 2, 1);
+    SET_SPELL_ENTRY(ai_tribe_2, 1, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> 4, 128, 2, 0);
+    SET_SPELL_ENTRY(ai_tribe_2, 2, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> 4, 128, 5, 1);
+    SET_SPELL_ENTRY(ai_tribe_2, 3, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> 4, 128, 5, 0);
+
+    if (current_game_difficulty >= diff_experienced) then
+      set_player_can_cast(M_SPELL_LIGHTNING_BOLT, ai_tribe_2);
+      WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_ATTACKS, 3);
+      WRITE_CP_ATTRIB(ai_tribe_2, ATTR_SHAMEN_BLAST, 16);
+      SET_BUCKET_COUNT_FOR_SPELL(ai_tribe_2, M_SPELL_LIGHTNING_BOLT, 10);
+
+      SET_SPELL_ENTRY(ai_tribe_2, 4, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> 4, 128, 3, 1);
+      SET_SPELL_ENTRY(ai_tribe_2, 5, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> 4, 128, 3, 0);
+
+      TARGET_PLAYER_DT_AND_S(ai_tribe_2, player_tribe);
+      TARGET_DRUM_TOWERS(ai_tribe_2);
+
+      if (current_game_difficulty >= diff_veteran) then
+        WRITE_CP_ATTRIB(ai_tribe_2, ATTR_MAX_ATTACKS, 4); --really wow!
+        WRITE_CP_ATTRIB(ai_tribe_2, ATTR_SHAMEN_BLAST, 8);
+        TARGET_SHAMAN(ai_tribe_2);
+        TARGET_S_WARRIORS(ai_tribe_2);
       end
     end
   else
