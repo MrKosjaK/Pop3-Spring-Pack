@@ -840,7 +840,21 @@ function OnTurn()
     end
 
     --BLUE CODE
-    if (pp[ai_tribe_1].NumPeople > 0) then
+    if (pp[ai_tribe_1].NumPeople > 0 and is_player_in_submit_mode(pp[ai_tribe_1]) == 0) then
+      --gib down and sink
+      if (getTurn() % (32+ai_tribe_1) == 0) then
+        local num_dead = pp[player_tribe].PeopleKilled[ai_tribe_1];
+        num_dead = num_dead + pp[player_ally_tribe].PeopleKilled[ai_tribe_1];
+
+        local num_braves = pp[ai_tribe_1].NumPeopleOfType[M_PERSON_BRAVE];
+        local num_huts = pp[ai_tribe_1].NumBuildingsOfType[1];
+        num_huts = num_huts + pp[ai_tribe_1].NumBuildingsOfType[2];
+        num_huts = num_huts + pp[ai_tribe_1].NumBuildingsOfType[3];
+
+        if (num_braves < 1 and num_huts == 0 and num_dead > 70) then
+          GIVE_UP_AND_SULK(ai_tribe_1, TRUE);
+        end
+      end
       --patrolling
       if ((getTurn() % 720) == 0 and Engine:getVar(1) == 2) then
         local enemies = count_people_of_type_in_area(124, 190, -1, player_tribe, 9);
@@ -935,7 +949,21 @@ function OnTurn()
     end
 
     --YELLOW CODE
-    if (pp[ai_tribe_2].NumPeople > 0) then
+    if (pp[ai_tribe_2].NumPeople > 0 and is_player_in_submit_mode(pp[ai_tribe_2]) == 0) then
+      --gib down and sink
+      if (getTurn() % (32+ai_tribe_2) == 0) then
+        local num_dead = pp[player_tribe].PeopleKilled[ai_tribe_2];
+        num_dead = num_dead + pp[player_ally_tribe].PeopleKilled[ai_tribe_2];
+
+        local num_braves = pp[ai_tribe_2].NumPeopleOfType[M_PERSON_BRAVE];
+        local num_huts = pp[ai_tribe_2].NumBuildingsOfType[1];
+        num_huts = num_huts + pp[ai_tribe_2].NumBuildingsOfType[2];
+        num_huts = num_huts + pp[ai_tribe_2].NumBuildingsOfType[3];
+
+        if (num_braves < 1 and num_huts == 0 and num_dead > 80) then
+          GIVE_UP_AND_SULK(ai_tribe_2, TRUE);
+        end
+      end
       --patrolling
       if ((getTurn() % 722) == 0 and Engine:getVar(1) == 2) then
         local enemies = count_people_of_type_in_area(124, 190, -1, player_tribe, 9);

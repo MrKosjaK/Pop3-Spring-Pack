@@ -630,7 +630,22 @@ function OnTurn()
     end
 
     --YELLOW CODE BRUH
-    if (pp[ai_tribe_2].NumPeople > 0) then
+    if (pp[ai_tribe_2].NumPeople > 0 and is_player_in_submit_mode(pp[ai_tribe_2]) == 0) then
+      --gib down and sink
+      if (getTurn() % (32+ai_tribe_2) == 0) then
+        local num_dead = pp[player_tribe].PeopleKilled[ai_tribe_2];
+        num_dead = num_dead + pp[player_ally_tribe].PeopleKilled[ai_tribe_2];
+
+        local num_braves = pp[ai_tribe_2].NumPeopleOfType[M_PERSON_BRAVE];
+        local num_huts = pp[ai_tribe_2].NumBuildingsOfType[1];
+        num_huts = num_huts + pp[ai_tribe_2].NumBuildingsOfType[2];
+        num_huts = num_huts + pp[ai_tribe_2].NumBuildingsOfType[3];
+
+        if (num_braves < 1 and num_huts == 0 and num_dead > 70) then
+          GIVE_UP_AND_SULK(ai_tribe_2);
+        end
+      end
+
       if (Engine:getVar(7) == 1) then
         --ATTACKING HERE M8
         if (Y_Atk3:process()) then
@@ -864,7 +879,21 @@ function OnTurn()
     end
 
     --BLUE CODE PART
-    if (pp[ai_tribe_1].NumPeople > 0) then
+    if (pp[ai_tribe_1].NumPeople > 0 and is_player_in_submit_mode(pp[ai_tribe_1]) == 0) then
+      --gib down and sink
+      if (getTurn() % (32+ai_tribe_1) == 0) then
+        local num_dead = pp[player_tribe].PeopleKilled[ai_tribe_1];
+        num_dead = num_dead + pp[player_ally_tribe].PeopleKilled[ai_tribe_1];
+
+        local num_braves = pp[ai_tribe_1].NumPeopleOfType[M_PERSON_BRAVE];
+        local num_huts = pp[ai_tribe_1].NumBuildingsOfType[1];
+        num_huts = num_huts + pp[ai_tribe_1].NumBuildingsOfType[2];
+        num_huts = num_huts + pp[ai_tribe_1].NumBuildingsOfType[3];
+
+        if (num_braves < 1 and num_huts == 0 and num_dead > 70) then
+          GIVE_UP_AND_SULK(ai_tribe_1, TRUE);
+        end
+      end
       --converting :n
       if (getTurn() % (72 << 1) == 0) then
         if (pp[ai_tribe_1].NumPeople < 35 and getTurn() < 720*2) then
