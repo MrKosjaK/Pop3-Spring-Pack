@@ -261,6 +261,23 @@ function OnTurn()
   if (init) then
     init = false;
 
+    --plants
+    ProcessGlobalTypeList(T_SCENERY, function(t)
+      if (t.Model == M_SCENERY_PLANT_1) then
+        t.DrawInfo.DrawNum = 1786 + G_RANDOM(5);
+        return true;
+      end
+      return true;
+    end);
+
+    ProcessGlobalTypeList(T_EFFECT, function(t)
+      if (t.Model == M_EFFECT_SWAMP_MIST) then
+        t.Flags3 = t.Flags3 | TF3_RESTRICT_ANIM_SPEED;
+        return true;
+      end
+      return true;
+    end);
+
     set_players_allied(ai_tribe_1, ai_tribe_2);
     set_players_allied(ai_tribe_2, ai_tribe_1);
 
