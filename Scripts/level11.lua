@@ -345,6 +345,10 @@ if i ~= 3 then
 	WRITE_CP_ATTRIB(i, ATTR_SHAMEN_BLAST, 64 >> 1+difficulty())
 end
 end
+SET_MARKER_ENTRY(tribe1,0,254,255,0,2+difficulty(),2+difficulty(),2) --br,war,fw,pre
+SET_MARKER_ENTRY(tribe2,0,169,171,0,2+difficulty(),2+difficulty(),1) --br,war,fw,pre
+SET_MARKER_ENTRY(tribe2,1,162,189,0,2+difficulty(),2+difficulty(),1) --br,war,fw,pre
+SET_MARKER_ENTRY(tribe3,0,148,154,0,2+difficulty(),2+difficulty(),1) --br,war,fw,pre
 --end
 --shaman stuff
 SHAMAN_DEFEND(tribe1, 138, 44, TRUE)
@@ -788,22 +792,29 @@ function OnTurn()
 			WriteAiAttackers(TRIBE_PINK,0,35,35,35,0,100)
 		end
 		--green attacks
-		if _gsi.Players[tribe4].NumPeopleOfType[M_PERSON_WARRIOR] > 1 + difficulty() + gameStage then
-			WRITE_CP_ATTRIB(tribe4, ATTR_DONT_GROUP_AT_DT, 1)
-			WRITE_CP_ATTRIB(tribe4, ATTR_FIGHT_STOP_DISTANCE, 26 + G_RANDOM(14))
-			WriteAiAttackers(tribe4,0,100,0,0,0,0)
-			local target = player
-			local focus = ATTACK_BUILDING
-			if _gsi.Players[player].NumBuildings == 0 then focus = ATTACK_PERSON end
-			ATTACK(tribe4, player, 1 + difficulty() + gameStage, focus, 0, 999, 0, 0, 0, ATTACK_NORMAL, 0, -1, -1, 0)
+		if rnd() > 30 then
+			if _gsi.Players[tribe4].NumPeopleOfType[M_PERSON_WARRIOR] > 1 + difficulty() + gameStage then
+				WRITE_CP_ATTRIB(tribe4, ATTR_DONT_GROUP_AT_DT, 1)
+				WRITE_CP_ATTRIB(tribe4, ATTR_FIGHT_STOP_DISTANCE, 26 + G_RANDOM(14))
+				WriteAiAttackers(tribe4,0,100,0,0,0,0)
+				local target = player
+				local focus = ATTACK_BUILDING
+				if _gsi.Players[player].NumBuildings == 0 then focus = ATTACK_PERSON end
+				ATTACK(tribe4, player, 1 + difficulty() + gameStage, focus, 0, 999, 0, 0, 0, ATTACK_NORMAL, 0, -1, -1, 0)
+			end
 		end
+	end
+	
+	if everySeconds(90-difficulty()*5) then
 		--preach mks
 		local preachmks = {73,235,78,77,94,35,82}
 		for k,v in ipairs(AItribes) do
-			if _gsi.Players[v].NumPeopleOfType[M_PERSON_RELIGIOUS] > gameStage then
+			if _gsi.Players[v].NumPeopleOfType[M_PERSON_RELIGIOUS] > gameStage and rnd() > 40 then
 				PREACH_AT_MARKER(v,preachmks[math.random(#preachmks)])
 			end
 		end
+		--defensive patrols
+		MARKER_ENTRIES(tribe1,0,-1,-1,-1) MARKER_ENTRIES(tribe2,0,1,-1,-1) MARKER_ENTRIES(tribe3,0,-1,-1,-1)
 	end
 	
 	--give AI spell shots occasionally
@@ -882,6 +893,122 @@ function OnTurn()
 		if tribe1Atk1 < turn() then SendAttack(tribe1) end
 		if tribe2Atk1 < turn() then SendAttack(tribe2) end
 		if tribe3Atk1 < turn() then SendAttack(tribe3) end
+	end
+	
+	if every2Pow(6) then
+		--update game stage (early,mid,late,very late)
+		if minutes() < 8 then
+			gameStage = 0
+		elseif minutes() < 16 then
+			gameStage = 1
+		elseif minutes() < 24 then
+			gameStage = 2
+		elseif minutes() < 32 then
+			gameStage = 3
+		else
+			gameStage = 4
+		end
+		
+		for i,v in ipairs(AItribes) do
+			if turn() > 1400 then WRITE_CP_ATTRIB(v, ATTR_EXPANSION, math.random(16,24)) end
+			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 70+G_RANDOM(1+4*difficulty())+(difficulty()*6)+(gameStage*(4+difficulty()))) --base size
+			WriteAiTrainTroops(v,12+difficulty(),13+difficulty(),15+difficulty(),0) --(pn,w,r,fw,spy)
+			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 90+(minutes()*2)) --attack stuff
+			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 120 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 90) end
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_BLAST, math.random(6,8)-(difficulty()*1)) --spells
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_CONVERT_WILD, math.random(5,8)-(difficulty()*1))
+			--SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_GHOST_ARMY, 12)
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_INSECT_PLAGUE, math.random(13,18)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_LAND_BRIDGE, math.random(26,34)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_LIGHTNING_BOLT, math.random(34,44)-(difficulty()*3))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_INVISIBILITY, math.random(24,30)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_HYPNOTISM, math.random(32,38)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_WHIRLWIND, math.random(26,30)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_SWAMP, math.random(16,28)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_EARTHQUAKE, math.random(30,45)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_EROSION, math.random(26,34)-(difficulty()*3))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_FLATTEN, math.random(25,30)-(difficulty()*2))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_FIRESTORM, math.random(35,50)-(difficulty()*3))
+			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_SHIELD, math.random(20,30)-(difficulty()*2))
+			local baseMK = 33
+			--spell entries base and outside
+			if IS_SHAMAN_IN_AREA(v,baseMK,16) == 1 then
+				--spells in base defense
+				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 64, 1, 1)
+				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 256, 3, 1)
+				SET_SPELL_ENTRY(v, 2, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 5-difficulty(), 1)
+				SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 13-difficulty(), 1)
+				if gameStage > 1 then
+					SET_SPELL_ENTRY(v, 4, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> (1+difficulty()), 128, 12-(difficulty()*2), 1)
+					if gameStage >= 3 and difficulty() >= 2 then
+						SET_SPELL_ENTRY(v, 5, M_SPELL_ANGEL_OF_DEATH, SPELL_COST(M_SPELL_ANGEL_OF_DEATH) >> (1+difficulty()), 128, 24-(difficulty()*2), 1)
+					end
+				end
+			else
+				--spells when attacking
+				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 64, 1, 0)
+				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 256, 1, 0)
+				SET_SPELL_ENTRY(v, 2, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 5-difficulty(), 0)
+				SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 12-difficulty(), 0)
+				if gameStage > 1 then
+					SET_SPELL_ENTRY(v, 4, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> (1+difficulty()), 128, 12-(difficulty()*2), 0)
+					if gameStage < 2 then
+						SET_SPELL_ENTRY(v, 5, M_SPELL_FIRESTORM, SPELL_COST(M_SPELL_FIRESTORM) >> (1+difficulty()), 128, 18-(difficulty()*2), 0)
+						SET_SPELL_ENTRY(v, 6, M_SPELL_EARTHQUAKE, SPELL_COST(M_SPELL_EARTHQUAKE) >> (1+difficulty()), 128, 16-(difficulty()*2), 0)
+						if difficulty() == 3 then
+							SET_SPELL_ENTRY(v, 7, M_SPELL_ANGEL_OF_DEATH, SPELL_COST(M_SPELL_ANGEL_OF_DEATH) >> (1+difficulty()), 128, 32-(difficulty()*3), 0)
+						end
+					end
+				end
+			end
+			--conditional stuff
+			if _gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_2]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_3] > 3 then WRITE_CP_ATTRIB(v, ATTR_PREF_SUPER_WARRIOR_TRAINS, 1) else WRITE_CP_ATTRIB(v, ATTR_PREF_SUPER_WARRIOR_TRAINS, 0) end
+			if _gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_2]+_gsi.Players[v].NumBuildingsOfType[M_BUILDING_TEPEE_3] > 5 then WRITE_CP_ATTRIB(v, ATTR_PREF_RELIGIOUS_TRAINS, 1) else WRITE_CP_ATTRIB(v, ATTR_PREF_RELIGIOUS_TRAINS, 0) end
+			if _gsi.Players[v].NumPeople < 5 then GIVE_UP_AND_SULK(v,TRUE) end
+			--add lategame spells to atkspells
+			if gameStage == 2 then
+				if #tribe1AtkSpells < 6 then
+					table.insert(tribe1AtkSpells,M_SPELL_ANGEL_OF_DEATH)
+					if #tribe1AtkSpells == 6 and difficulty() >= 3 then
+						table.insert(tribe1AtkSpells,M_SPELL_FIRESTORM)
+					end
+				end
+				if #tribe2AtkSpells < 6 then
+					table.insert(tribe2AtkSpells,M_SPELL_ANGEL_OF_DEATH)
+					if #tribe2AtkSpells == 6 and difficulty() >= 3 then
+						table.insert(tribe2AtkSpells,M_SPELL_FIRESTORM)
+					end
+				end
+				if #tribe3AtkSpells < 6 then
+					table.insert(tribe2AtkSpells,M_SPELL_SWAMP)
+					if #tribe2AtkSpells == 6 and difficulty() >= 3 then
+						table.insert(tribe2AtkSpells,M_SPELL_FIRESTORM)
+					end
+				end
+			elseif gameStage == 3 then
+				if #tribe1AtkSpells < 6 then
+					table.insert(tribe1AtkSpells,M_SPELL_EARTHQUAKE)
+					if #tribe1AtkSpells == 6 and difficulty() >= 3 then
+						table.insert(tribe1AtkSpells,M_SPELL_VOLCANO)
+					end
+				end
+				if #tribe2AtkSpells < 6 then
+					table.insert(tribe2AtkSpells,M_SPELL_EARTHQUAKE)
+					if #tribe2AtkSpells == 6 and difficulty() >= 3 then
+						table.insert(tribe2AtkSpells,M_SPELL_ANGEL_OF_DEATH)
+					end
+				end
+				if #tribe3AtkSpells < 6 then
+					table.insert(tribe3AtkSpells,M_SPELL_EARTHQUAKE)
+					if #tribe3AtkSpells == 6 and difficulty() >= 3 then
+						table.insert(tribe3AtkSpells,M_SPELL_FIRESTORM)
+					end
+				end
+			end
+			local atkpatrol = {78,77,74,85,87,133}
+			local mk,mk2 = atkpatrol[math.random(#atkpatrol)],atkpatrol[math.random(#atkpatrol)]
+			SET_MARKER_ENTRY(v,2,mk,mk2,0,2+gameStage,2+gameStage,2+gameStage) --br,war,fw,pre
+		end
 	end
 end
 
@@ -1067,6 +1194,7 @@ function SendAttack(attacker)
 				tribe3NavStress = tribe3NavStress + 1
 			end
 		else
+			MARKER_ENTRIES(attacker,2,-1,-1,-1)
 			local preachmks = {73,235,78,77,94,35,82}
 			for i = 0,difficulty() do
 				if _gsi.Players[attacker].NumPeopleOfType[M_PERSON_RELIGIOUS] > difficulty() then
@@ -1091,7 +1219,7 @@ end
 function IncrementAtkVar(pn,amt,mainAttack)
 	if mainAttack == true then
 		if pn == tribe1 then tribe1Atk1 = amt
-		elseif pn == tribe2 then tribe2Atk1 = atm
+		elseif pn == tribe2 then tribe2Atk1 = amt
 		else tribe3Atk1 = amt end
 	end
 end
@@ -1307,7 +1435,6 @@ function OnKeyDown(k)
 		LOG("pop: " .. GetPop(5) .. "    troops: " .. GetTroops(5) .. "    free entries: " .. FREE_ENTRIES(5))
 		ReadAIAttackers(5)
 		ReadAITroops(5)
-		PRAY_AT_HEAD(5,4,249)
 	end
 	if k == LB_KEY_A then	
 		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
@@ -1317,6 +1444,7 @@ function OnKeyDown(k)
 		--SET_MARKER_ENTRY(tribe1,0,248,248,0,3,0,0) MARKER_ENTRIES(tribe1,0,-1,-1,-1) --248
 		--PREACH_AT_MARKER(tribe1,248)
 		--LBexpand(tribe2,183,228,0,3)
+		LOG(tribe2Atk1)
 	end
 end
 
