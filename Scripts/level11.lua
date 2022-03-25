@@ -61,13 +61,13 @@ sti[seed].AvailableSpriteIdx = 1777
 sti[seed].NotAvailableSpriteIdx = 1781
 sti[seed].ClickedSpriteIdx = 1779
 bti[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 641
-sti[enrage].Cost = 250000
+sti[enrage].Cost = 250000+(difficulty()*15000)
 sti[enrage].CursorSpriteNum = 164
 sti[enrage].ToolTipStrIdx = 697
 sti[enrage].AvailableSpriteIdx = 1796
 sti[enrage].NotAvailableSpriteIdx = 1798
 sti[enrage].ClickedSpriteIdx = 1797 
-sti[terra].Cost = 700000 
+sti[terra].Cost = 700000+(difficulty()*15000)
 sti[terra].WorldCoordRange = 4096+2048
 sti[terra].CursorSpriteNum = 165
 sti[terra].ToolTipStrIdx = 698
@@ -602,11 +602,12 @@ function OnTurn()
 			if BardLives == 1 then	
 				SET_NO_REINC(player)
 			elseif BardLives == 0 then
-				SearchMapCells(CIRCULAR, 0, 0 , 3, world_coord3d_to_map_idx(marker_to_coord3d(32)), function(me)
+				SearchMapCells(CIRCULAR, 0, 0 , 3, world_coord3d_to_map_idx(marker_to_coord3d(0)), function(me)
 						me.Flags = me.Flags | (1<<16)
 				return true
 				end)
-				ms_script_create_msg_information(694)
+				TRIGGER_THING(248)
+				ms_script_create_msg_information(702)
 				SET_MSG_AUTO_OPEN_DLG()
 			end
 		elseif  getShaman(player) ~= nil and livesLock == 1 then
@@ -620,7 +621,7 @@ function OnTurn()
 		if pplKilled % (12+difficulty()*3+gameStage*3) == 0 and lbLock ~= pplKilled and pplKilled ~= 0 then
 			lbLock = pplKilled
 			local get,maxx = M_SPELL_LAND_BRIDGE,4
-			if rnd() > 70 then get = M_SPELL_FLATTEN maxx = 3 end
+			if rnd() > 85 then get = M_SPELL_FLATTEN maxx = 3 end
 			local shots = GET_NUM_ONE_OFF_SPELLS(player,get)
 			if shots < maxx then
 				_gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[get] = _gsi.ThisLevelInfo.PlayerThings[player].SpellsAvailableOnce[get] & 240
@@ -780,28 +781,33 @@ function OnTurn()
 	
 	if everySeconds(60-(difficulty()*3)-gameStage*2) then
 		--pray at guest spells stones
-		local praying = count_people_of_type_in_area(90, 54, -1, -1, 1)
-		if praying < 4 then
-			WriteAiAttackers(TRIBE_BLUE,100,0,0,0,0,0)
-			PRAY_AT_HEAD(TRIBE_BLUE,4-praying,253)
-			WriteAiAttackers(TRIBE_BLUE,0,35,35,35,0,100)
-		end
-		local praying = count_people_of_type_in_area(68, 160, -1, -1, 1)
-		if praying < 3 then
-			WriteAiAttackers(TRIBE_PINK,100,0,0,0,0,0)
-			PRAY_AT_HEAD(TRIBE_PINK,3-praying,249)
-			WriteAiAttackers(TRIBE_PINK,0,35,35,35,0,100)
+		if rnd() < 50 then
+			local praying = count_people_of_type_in_area(90, 54, -1, -1, 1)
+			if praying < 4 then
+				WriteAiAttackers(TRIBE_BLUE,100,0,0,0,0,0)
+				PRAY_AT_HEAD(TRIBE_BLUE,4-praying,253)
+				WriteAiAttackers(TRIBE_BLUE,0,35,35,35,0,100)
+			end
+		else
+			local praying = count_people_of_type_in_area(68, 160, -1, -1, 1)
+			if praying < 3 then
+				WriteAiAttackers(TRIBE_PINK,100,0,0,0,0,0)
+				PRAY_AT_HEAD(TRIBE_PINK,3-praying,249)
+				WriteAiAttackers(TRIBE_PINK,0,35,35,35,0,100)
+			end
 		end
 		--green attacks
 		if rnd() > 30 then
-			if _gsi.Players[tribe4].NumPeopleOfType[M_PERSON_WARRIOR] > 1 + difficulty() + gameStage then
-				WRITE_CP_ATTRIB(tribe4, ATTR_DONT_GROUP_AT_DT, 1)
-				WRITE_CP_ATTRIB(tribe4, ATTR_FIGHT_STOP_DISTANCE, 26 + G_RANDOM(14))
-				WriteAiAttackers(tribe4,0,100,0,0,0,0)
-				local target = player
-				local focus = ATTACK_BUILDING
-				if _gsi.Players[player].NumBuildings == 0 then focus = ATTACK_PERSON end
-				ATTACK(tribe4, player, 1 + difficulty() + gameStage, focus, 0, 999, 0, 0, 0, ATTACK_NORMAL, 0, -1, -1, 0)
+			if turn() > 1500 then
+				if _gsi.Players[tribe4].NumPeopleOfType[M_PERSON_WARRIOR] > 1 + difficulty() + gameStage then
+					WRITE_CP_ATTRIB(tribe4, ATTR_DONT_GROUP_AT_DT, 1)
+					WRITE_CP_ATTRIB(tribe4, ATTR_FIGHT_STOP_DISTANCE, 26 + G_RANDOM(14))
+					WriteAiAttackers(tribe4,0,100,0,0,0,0)
+					local target = player
+					local focus = ATTACK_BUILDING
+					if _gsi.Players[player].NumBuildings == 0 then focus = ATTACK_PERSON end
+					ATTACK(tribe4, player, 1 + difficulty() + gameStage, focus, 0, 999, 0, 0, 0, ATTACK_NORMAL, 0, -1, -1, 0)
+				end
 			end
 		end
 	end
@@ -828,7 +834,7 @@ function OnTurn()
 			elseif gameStage == 2 then
 				GIVE_ONE_SHOT(M_SPELL_BLAST,v) if rnd() > 50 then GIVE_ONE_SHOT(M_SPELL_WHIRLWIND,v) GIVE_ONE_SHOT(M_SPELL_HYPNOTISM,v) end
 			else
-				GIVE_ONE_SHOT(M_SPELL_BLAST,v) if rnd() > 50 then GIVE_ONE_SHOT(M_SPELL_WHIRLWIND,v) GIVE_ONE_SHOT(M_SPELL_HYPNOTISM,v) GIVE_ONE_SHOT(M_SPELL_SWAMP,v) end
+				GIVE_ONE_SHOT(M_SPELL_BLAST,v) if rnd() > 50 then GIVE_ONE_SHOT(M_SPELL_WHIRLWIND,v) GIVE_ONE_SHOT(M_SPELL_HYPNOTISM,v) GIVE_ONE_SHOT(M_SPELL_EARTHQUAKE,v) end
 			end
 		end
 	end
@@ -860,13 +866,13 @@ function OnTurn()
 			LBexpand(tribe1,246,247,2,3)
 		end
 		--teleport attack pink
-		if gameStage > 1 and getShaman(tribe2) ~= nil and IS_SHAMAN_AVAILABLE_FOR_ATTACK(tribe2) > 0 and FREE_ENTRIES(tribe2) > 4 then
-			if I_HAVE_ONE_SHOT(tribe2,T_SPELL,M_SPELL_TELEPORT) == true then
+		if gameStage > 2 and getShaman(tribe2) ~= nil and IS_SHAMAN_AVAILABLE_FOR_ATTACK(tribe2) > 0 and FREE_ENTRIES(tribe2) > 4 then
+			if I_HAVE_ONE_SHOT(tribe2,T_SPELL,M_SPELL_TELEPORT) == true and getShaman(tribe2).State ~= S_PERSON_WAIT_IN_BLDG and rnd() > 50 then
 				local s1,s2,s3 = M_SPELL_HYPNOTISM,M_SPELL_LIGHTNING_BOLT,M_SPELL_ANGEL_OF_DEATH
 				if _gsi.Players[player].NumBuildings > 0 then
 					if difficulty() == 0 then
 						s1,s2,s3 = M_SPELL_WHIRLWIND,M_SPELL_LIGHTNING_BOLT,M_SPELL_WHIRLWIND
-						if gameStage > 1 then s2 = M_SPELL_SWAMP end ; if gameStage > 2 then s3 = M_SPELL_EARTHQUAKE end
+						if gameStage > 1 then s2 = M_SPELL_HYPNOTISM end ; if gameStage > 2 then s3 = M_SPELL_EARTHQUAKE end
 					elseif difficulty() == 1 then
 						s1,s2,s3 = M_SPELL_WHIRLWIND,M_SPELL_WHIRLWIND,M_SPELL_WHIRLWIND
 						if gameStage > 2 then s3 = M_SPELL_EARTHQUAKE end
@@ -878,13 +884,22 @@ function OnTurn()
 				GIVE_ONE_SHOT(s1,tribe2) GIVE_ONE_SHOT(s2,tribe2) GIVE_ONE_SHOT(s3,tribe2)
 				local mks = {75,78,82,79,236,95,99}
 				local mk = mks[math.random(#mks)]
-				SPELL_ATTACK(tribe2,M_SPELL_TELEPORT,mk,mk)
+				--SPELL_ATTACK(tribe2,M_SPELL_TELEPORT,mk,mk)
 				WRITE_CP_ATTRIB(tribe2, ATTR_DONT_GROUP_AT_DT, 1)
 				WRITE_CP_ATTRIB(tribe2, ATTR_GROUP_OPTION, 3)
 				TARGET_S_WARRIORS(tribe2)
 				WriteAiAttackers(tribe2,0,0,0,0,0,100)
 				ATTACK(tribe2, player, 0, ATTACK_BUILDING, 0, 999, M_SPELL_WHIRLWIND, M_SPELL_EARTHQUAKE, M_SPELL_LIGHTNING_BOLT, ATTACK_NORMAL, 0, -1, -1, 0)
+				createThing(T_EFFECT,M_EFFECT_TELEPORT, tribe2, marker_to_coord3d(mk), false, false)
 				WRITE_CP_ATTRIB(tribe2, ATTR_DONT_GROUP_AT_DT, 0) WRITE_CP_ATTRIB(tribe2, ATTR_GROUP_OPTION, 0)
+				local shots = GET_NUM_ONE_OFF_SPELLS(tribe2,M_SPELL_TELEPORT)
+				if shots > 0 then
+					_gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] = _gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] & 240
+					_gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] = _gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] | shots-1
+				else
+					_gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] = _gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] & 240
+					_gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] = _gsi.ThisLevelInfo.PlayerThings[tribe2].SpellsAvailableOnce[M_SPELL_TELEPORT] | 0
+				end
 			end
 		end
 	end
@@ -938,7 +953,7 @@ function OnTurn()
 				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 64, 1, 1)
 				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 256, 3, 1)
 				SET_SPELL_ENTRY(v, 2, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 5-difficulty(), 1)
-				SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 13-difficulty(), 1)
+				--SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 13-difficulty(), 1)
 				if gameStage > 1 then
 					SET_SPELL_ENTRY(v, 4, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> (1+difficulty()), 128, 12-(difficulty()*2), 1)
 					if gameStage >= 3 and difficulty() >= 2 then
@@ -950,7 +965,7 @@ function OnTurn()
 				SET_SPELL_ENTRY(v, 0, M_SPELL_BLAST, SPELL_COST(M_SPELL_BLAST) >> (1+difficulty()), 64, 1, 0)
 				SET_SPELL_ENTRY(v, 1, M_SPELL_LIGHTNING_BOLT, SPELL_COST(M_SPELL_LIGHTNING_BOLT) >> (1+difficulty()), 256, 1, 0)
 				SET_SPELL_ENTRY(v, 2, M_SPELL_INSECT_PLAGUE, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 5-difficulty(), 0)
-				SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 12-difficulty(), 0)
+				--SET_SPELL_ENTRY(v, 3, M_SPELL_SWAMP, SPELL_COST(M_SPELL_INSECT_PLAGUE) >> (1+difficulty()), 128, 12-difficulty(), 0)
 				if gameStage > 1 then
 					SET_SPELL_ENTRY(v, 4, M_SPELL_HYPNOTISM, SPELL_COST(M_SPELL_HYPNOTISM) >> (1+difficulty()), 128, 12-(difficulty()*2), 0)
 					if gameStage < 2 then
@@ -981,7 +996,7 @@ function OnTurn()
 					end
 				end
 				if #tribe3AtkSpells < 6 then
-					table.insert(tribe2AtkSpells,M_SPELL_SWAMP)
+					table.insert(tribe2AtkSpells,M_SPELL_WHIRLWIND)
 					if #tribe2AtkSpells == 6 and difficulty() >= 3 then
 						table.insert(tribe2AtkSpells,M_SPELL_FIRESTORM)
 					end
@@ -1357,6 +1372,7 @@ end
 
 
 function OnSave(save_data)
+
 	for i = #tribe1AtkSpells, 1 do
 		save_data:push_int(tribe1AtkSpells[i])
 	end
@@ -1436,26 +1452,6 @@ function OnLoad(load_data)
 	local numSpellsAtk1 = load_data:pop_int();
 	for i = 1, numSpellsAtk1 do
 		 tribe1AtkSpells[i] = load_data:pop_int();
-	end
-end
-
-
-
-function OnKeyDown(k)
-    if (k == LB_KEY_1) then
-		LOG("pop: " .. GetPop(5) .. "    troops: " .. GetTroops(5) .. "    free entries: " .. FREE_ENTRIES(5))
-		ReadAIAttackers(5)
-		ReadAITroops(5)
-	end
-	if k == LB_KEY_A then	
-		--queue_sound_event(nil,SND_EVENT_DISCOBLDG_START, SEF_FIXED_VARS)
-		--log_msg(2,"nav check: " .. (NAV_CHECK(2,player,ATTACK_PERSON,0,0)))
-		--LOG(CountThingsOfTypeInArea(T_VEHICLE,M_VEHICLE_AIRSHIP_1,player,38,224,16))
-		--LOG(NAV_CHECK(tribe1,player,ATTACK_MARKER,248,0))
-		--SET_MARKER_ENTRY(tribe1,0,248,248,0,3,0,0) MARKER_ENTRIES(tribe1,0,-1,-1,-1) --248
-		--PREACH_AT_MARKER(tribe1,248)
-		--LBexpand(tribe2,183,228,0,3)
-		LOG(tribe2Atk1)
 	end
 end
 

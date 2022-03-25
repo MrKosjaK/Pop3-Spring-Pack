@@ -560,6 +560,7 @@ function OnTurn()
 	if game_loaded then
 		game_loaded = false
 		--if turn() > 54 and turn() < 1230 then Engine:hidePanel() end
+		Engine:postLoadItems()
 		--if cinemaEnd > turn() and cinemaEnd ~= 0 then Engine:hidePanel() end
 		if devil == 1 then
 			--spells remove

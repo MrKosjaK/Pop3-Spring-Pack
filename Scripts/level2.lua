@@ -95,7 +95,7 @@ local atkRoulette = 0
 --vars that cant be initialized more than once
 if turn() == 0 then
 	local fog = createThing(T_EFFECT, 95, 0, marker_to_coord3d(255), false, false) ; fog.u.Effect.Count = 2 --remove visual bug from textures (dark fog)
-	process_options(OPT_TOGGLE_PANEL, 0, 0);
+	--process_options(OPT_TOGGLE_PANEL, 0, 0);
 	set_player_reinc_site_off(getPlayer(TRIBE_BLUE))
 	Ypreacher = createThing(T_PERSON,M_PERSON_RELIGIOUS,3,marker_to_coord3d(1),false,false)
 	Bwar1 = createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(9),false,false)
@@ -602,7 +602,8 @@ end
 function OnTurn()
 	if game_loaded then
 		game_loaded = false
-		if turn() < 1230 then Engine:hidePanel() end
+		--if turn() < 1230 then Engine:hidePanel() end
+		Engine:postLoadItems();
 		--reset texture
 		if day == 1 then
 			set_level_type(13)
