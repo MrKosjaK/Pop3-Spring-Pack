@@ -38,5 +38,10 @@ People who's capable of completing entire pack on honour difficulty will receive
 [size=150][b]Credits[/b][/size]
 
 [size=100]
---some credits
+* Thanks for the 'Popre Development Team' for making this possible
+* Special thanks goes to Craig and his comrades for the constant "spring when"
+* Lovenji, Babo, Brandan, Fistung, Nici, Addiction for moral support
+* Divinity for pure love to his players
+* Impboy for working on this project
+* IncaWarrior for finally fixing some of annoying sound engine bugs and moral support
 [/size]
