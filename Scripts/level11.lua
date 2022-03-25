@@ -1127,6 +1127,16 @@ function SendAttack(attacker)
 				spell1 = M_SPELL_BLOODLUST
 			end
 		end
+		if rnd() > 70 then
+			if attacker == tribe1 then
+				if rnd() < 50 then target = tribe2 else target = tribe3 end
+			elseif attacker == tribe2 then
+				if rnd() < 50 then target = tribe1 else target = tribe3 end
+			else
+				if rnd() < 50 then target = tribe2 else target = tribe1 end
+			end
+		end
+		if GetPop(target) == 0 then target = player end
 		--LAUNCH ATTACK
 		
 		--has enough troops
