@@ -3,7 +3,6 @@
 
 [size=100]
 Another pack from the Seasons series featuring spring themed levels. This is final map pack to the said series and there won't be anymore of those.
-
 Is there a difference in final seasons pack? A major one: 1.5 version only.
 How many there are differences? Pretty a lot, but not that much as expected. One of features is almighty powerful scripting engine supporting endless amount of creative ideas/possibilities. I will not spoiler some of this pack's features, you'll discover them on your playthrough.
 [/size]
@@ -19,11 +18,10 @@ How many there are differences? Pretty a lot, but not that much as expected. One
 [size=100]
 This is the first time we're using a difficulty system. Each level will have slightly altered AI and/or some minor changes to the map.
 Current season pack has 4 different difficulties to choose from:
- * Beginner - Easiest of all. AI doesn't do much, game is generous to you and allies actually help.
- * Experienced - This is where game will start to sting a little. AI will be more aggressive, game is less generous to player, ally will not help you at all, as if they were helpful...
- * Veteran - Unfair. AI is even more aggressive towards the player because of their existence, they know you're the one to be exterminated, not them. Game forgot how to be generous.
- * Honour - Nobody likes you, even game itself will only allow you to save once.
-
+ * Beginner - Easiest of all. AI doesn't do much, game is generous to you and allies actually help.
+ * Experienced - This is where game will start to sting a little. AI will be more aggressive, game is less generous to player, ally will not help you at all, as if they were helpful...
+ * Veteran - Unfair. AI is even more aggressive towards the player because of their existence, they know you're the one to be exterminated, not them. Game forgot how to be generous.
+ * Honour - Nobody likes you, even game itself will only allow you to save once.
 It is up to you on which difficulty to play.
 People who's capable of completing entire pack on honour difficulty will receive their medal of honor (mention on top of thread).
 [/size]
@@ -31,8 +29,9 @@ People who's capable of completing entire pack on honour difficulty will receive
 [size=150][b]Screenshots[/b][/size]
 
 [size=100]
-!!!!!!SPOILERS!!!!!!!!!!
--- some screenshots, 1-4 enough.
+[img]https://i.imgur.com/owagauO.png[/img]
+[img]https://i.imgur.com/Tsp64B7.png[/img]
+[img]https://i.imgur.com/8tG7h1x.png[/img]
 [/size]
 
 [size=150][b]Credits[/b][/size]
