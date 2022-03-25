@@ -1504,20 +1504,20 @@ function SendAttack(attacker)
 			if _gsi.Players[target].NumBuildings > 0 then
 				--can target bldg by land
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
-					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
+					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
 					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
 				else
 					--try atk bldg from water
 					if boats > 0 then
 						WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 						WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
-						ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
+						ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
 						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg boat")
 					else
 						--else attack units
 						if _gsi.Players[target].NumPeople > 0 then
 							if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
-								ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
+								ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
 								IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 							else
 								--fail
@@ -1535,14 +1535,14 @@ function SendAttack(attacker)
 				--if no buildings, focus on units
 				if _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
-						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
+						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
 						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 					else
 						--try to atk units from water
 						if boats > 0 then
 							WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 							WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
-							ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
+							ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
 							IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person boat")
 						else
 							--fail
