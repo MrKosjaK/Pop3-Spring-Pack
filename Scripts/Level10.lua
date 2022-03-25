@@ -572,7 +572,7 @@ function OnTurn()
         if (Engine:getVar(5) == 0) then
           if (process_area(46, 104) or process_area(54, 124)) then
             Engine:setVar(5, 1);
-            Engine:addCommand_QueueMsg("Ikani have been spotted!", "", 36, false, 1785, 0, 229, 12*4);
+            Engine:addCommand_QueueMsg("Ikani have been spotted!", "Scout", 36, false, 1785, 0, 229, 12*4);
           end
         end
       end
@@ -581,7 +581,7 @@ function OnTurn()
         if (Engine:getVar(6) == 0) then
           if (process_area(134, 84) or process_area(142, 66)) then
             Engine:setVar(6, 1);
-            Engine:addCommand_QueueMsg("Chumara have been spotted!", "", 36, false, 1785, 0, 229, 12*4);
+            Engine:addCommand_QueueMsg("Chumara have been spotted!", "Scout", 36, false, 1785, 0, 229, 12*4);
           end
         end
       end
