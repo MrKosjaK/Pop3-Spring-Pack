@@ -67,6 +67,7 @@ sti[M_SPELL_VOLCANO].ToolTipStrIdx = 828
 sti[M_SPELL_VOLCANO].AvailableSpriteIdx = 369
 sti[M_SPELL_VOLCANO].NotAvailableSpriteIdx = 387
 sti[M_SPELL_VOLCANO].ClickedSpriteIdx = 405
+set_correct_gui_menu()
 --------------------
 local tribe1 = TRIBE_RED
 local tribe2 = TRIBE_BLACK

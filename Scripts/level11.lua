@@ -74,6 +74,7 @@ sti[terra].ToolTipStrIdx = 698
 sti[terra].AvailableSpriteIdx = 1799
 sti[terra].NotAvailableSpriteIdx = 1801
 sti[terra].ClickedSpriteIdx = 1800
+set_correct_gui_menu()
 --------------------
 function Plant(IdxS,IdxE,drawnum)
 	for i = IdxS,IdxE do
