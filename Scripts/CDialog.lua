@@ -182,7 +182,8 @@ function CDialog:renderDialog()
     if (self.DialogTicker >= 60) then
       self.DialogTicker = 0;
     end
-    if (self.DlgDrawSprIdx ~= nil and self.DlgDrawIcon ~= nil) then
+    if (self.DlgDrawSprIdx ~= nil and self.DlgDrawBank ~= nil) then
+      self.DlgDrawIcon = get_sprite(self.DlgDrawBank, self.DlgDrawSprIdx)
       LbDraw_Sprite(rect.Left - (self.DlgDrawIcon.Width >> 1), self.ScreenPosY + (self.DialogHeight >> 2) - (self.DlgDrawIcon.Height >> 1), self.DlgDrawIcon);
     end
     if (self.DlgTitle ~= nil) then
@@ -250,7 +251,7 @@ function CDialog:loadData(ld)
     self.MsgCache = ld:pop_string();
   end
 
-  if (self.DlgDrawSprIdx and self.DlgDrawBank) then
+  if (self.DlgDrawSprIdx ~= nil) then
     self:setIcon(self.DlgDrawSprIdx, self.DlgDrawBank or 0);
   end
 
