@@ -809,7 +809,7 @@ function OnTurn()
 		--preach mks
 		local preachmks = {73,235,78,77,94,35,82}
 		for k,v in ipairs(AItribes) do
-			if _gsi.Players[v].NumPeopleOfType[M_PERSON_RELIGIOUS] > gameStage and rnd() > 40 then
+			if _gsi.Players[v].NumPeopleOfType[M_PERSON_RELIGIOUS] > gameStage and rnd() > 40 and gameStage > 0 then
 				PREACH_AT_MARKER(v,preachmks[math.random(#preachmks)])
 			end
 		end
