@@ -455,7 +455,7 @@ function EnrageSpell(pn,c3d)
 		local limit = 0
 		SearchMapCells(SQUARE, 0, 0 , 3, world_coord3d_to_map_idx(c3d), function(me)
 			me.MapWhoList:processList( function (t)
-				if t.Type == T_PERSON and t.Model > 1 and t.Model < 7 and limit < 6 and t.Owner == pn then --limit is 6
+				if t.Type == T_PERSON and t.Model > 1 and t.Model < 7 and limit < 6-difficulty() and t.Owner == pn then --limit is 6-difficulty
 					if (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON == 0) then
 						limit = limit + 1
 						if (t.Flags3 & TF3_SHIELD_ACTIVE) == 0 then
