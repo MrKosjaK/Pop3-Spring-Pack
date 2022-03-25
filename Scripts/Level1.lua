@@ -104,6 +104,7 @@ enable_feature(F_WILD_NO_RESPAWN); --disable wild respawning, oh boy.
 local ai_tribe_1 = TRIBE_YELLOW;
 local ai_tribe_2 = TRIBE_BLUE;
 local player_tribe = TRIBE_RED;
+local player_ally_tribe = TRIBE_CYAN;
 local diff_beginner = 0;
 local diff_experienced = 1;
 local diff_veteran = 2;
