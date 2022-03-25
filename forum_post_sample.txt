@@ -17,7 +17,15 @@ How many there are differences? Pretty a lot, but not that much as expected. One
 [size=150][b]Notes[/b][/size]
 
 [size=100]
--- some text
+This is the first time we're using a difficulty system. Each level will have slightly altered AI and/or some minor changes to the map.
+Current season pack has 4 different difficulties to choose from:
+ * Beginner - Easiest of all. AI doesn't do much, game is generous to you and allies actually help.
+ * Experienced - This is where game will start to sting a little. AI will be more aggressive, game is less generous to player, ally will not help you at all, as if they were helpful...
+ * Veteran - Unfair. AI is even more aggressive towards the player because of their existence, they know you're the one to be exterminated, not them. Game forgot how to be generous.
+ * Honour - Nobody likes you, even game itself will only allow you to save once.
+
+It is up to you on which difficulty to play.
+People who's capable of completing entire pack on honour difficulty will receive their medal of honor (mention on top of thread).
 [/size]
 
 [size=150][b]Screenshots[/b][/size]
