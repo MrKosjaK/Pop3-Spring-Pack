@@ -312,15 +312,17 @@ function OnTurn()
     Engine:hidePanel();
     Engine:addCommand_CinemaRaise(0);
 
+    local multiplier = current_game_difficulty; if (multiplier > 2) then multiplier = 2; end
+
     Engine:addCommand_SpawnThings(1, 1, T_PERSON, M_PERSON_MEDICINE_MAN, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(1), 12);
-    Engine:addCommand_SpawnThings(2, 10, T_PERSON, M_PERSON_BRAVE, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_SpawnThings(2, 10 - (multiplier * 2), T_PERSON, M_PERSON_BRAVE, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(2), 8);
-    Engine:addCommand_SpawnThings(3, 4, T_PERSON, M_PERSON_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_SpawnThings(3, 4 - multiplier, T_PERSON, M_PERSON_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 8);
-    Engine:addCommand_SpawnThings(3, 4, T_PERSON, M_PERSON_SUPER_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_SpawnThings(3, 4 - multiplier, T_PERSON, M_PERSON_SUPER_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 8);
-    Engine:addCommand_SpawnThings(3, 4, T_PERSON, M_PERSON_RELIGIOUS, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_SpawnThings(3, 4 - multiplier, T_PERSON, M_PERSON_RELIGIOUS, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 12);
     Engine:addCommand_QueueMsg("This is...", "Matak", 36, false, 6943, 1, 229, 12);
     Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(4), 12*5);
