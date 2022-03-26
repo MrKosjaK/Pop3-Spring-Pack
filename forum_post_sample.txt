@@ -11,6 +11,14 @@ How many there are differences? Pretty a lot, but not that much as expected. One
 
 [size=100]
 First of all before getting this season pack, ensure you have original full game installed with 1.5 patch on top of it.
+You can get 1.5 patch by logging into matchmaker and typing !beta in chat, once it finishes downloading close app.
+
+BACKUP YOUR GAME IF YOU'RE NERVOUS ABOUT VANILLA STUFF!!!!
+
+After this, get season pack and then extract all of it's contents into your game's directory, overwrite if it asks.
+Start "LaunchMod_Spring.bat", have fun!
+
+Season Pack Download: 
 [/size]
 
 [size=150][b]Notes[/b][/size]
