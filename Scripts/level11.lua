@@ -362,13 +362,13 @@ SET_DRUM_TOWER_POS(tribe3, 34, 208)
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"This planet looks dull. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
-  [1] = {"It is, indeed. You must be congratulated. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your decision was to become... a bard.", "Tiyao", 6883, 2, 146},
-  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create and restore life.", "Tiyao", 6883, 2, 146},
-  [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
-  [4] = {"I must go now. Your trials as a bard begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
-  [5] = {"...", "Nomel", 6939, 2, 138},
-  [12] = {"Your other spell is the healing balm. <br> Cast it on your units (3x3 area) to heal them for 1/3 of their maximum health!", "Info", 173, 0, 160},
+  [0] = {"I can sense enemies nearby... My first challenge since my trial. <br> Guide me, mother earth!", "Nomel", 6939, 2, 138},
+  [1] = {"Congratulations on your trial, Nomel. You are now officially a bard! <br> Remember your limits: your lives are scarce - but acknowledge your perks: new unique ways of controlling your mana to create and maintain life. <br> But not only - as promised, you have unlocked two higher tier bard spells. Use them wisely. ", "The Bard", 1783, 0, 225},
+  [2] = {"I am grateful. The eastern winds whisper me four tribes defend this land. I must stand my ground.", "Nomel", 6939, 2, 138},
+  [3] = {"...", "Nomel", 6939, 2, 138},
+  [4] = {"Remember, your shaman will not reincarnate if you lose all your lives. <br> Bards can not charge land spells with mana, but they earn them occasionally, by killing enemies.", "Info", 173, 0, 160},
+  [5] = {"Enrage is a new spell you can charge as a bard. <br> It affects some of your units in a area, enraging them. They will temporarily rise their power, but their health will decay until they perish.", "Info", 173, 0, 160},
+  [6] = {"Terra firma is the bard's destructive spell. <br> It calls upon mother earth, lowering and sinking the land in a great area, while lava gets expelled from the core. <br> You can read this spells info by using the encyclopedia.", "Info", 173, 0, 160},
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -481,17 +481,17 @@ function TerraSpell(pn,c3d)
 		local a = rnd()
 		local dip = c3d
 		if a < 25 then
-			dip.Xpos = dip.Xpos + math.random(0,2500)
-			dip.Zpos = dip.Zpos + math.random(0,2500)
+			dip.Xpos = dip.Xpos + math.random(0,2200)
+			dip.Zpos = dip.Zpos + math.random(0,2200)
 		elseif a < 50 then
-			dip.Xpos = dip.Xpos - math.random(0,2500)
-			dip.Zpos = dip.Zpos - math.random(0,2500)
+			dip.Xpos = dip.Xpos - math.random(0,2200)
+			dip.Zpos = dip.Zpos - math.random(0,2200)
 		elseif a < 75 then
-			dip.Xpos = dip.Xpos - math.random(0,2500)
-			dip.Zpos = dip.Zpos + math.random(0,2500)
+			dip.Xpos = dip.Xpos - math.random(0,2200)
+			dip.Zpos = dip.Zpos + math.random(0,2200)
 		else
-			dip.Xpos = dip.Xpos + math.random(0,2500)
-			dip.Zpos = dip.Zpos - math.random(0,2500)
+			dip.Xpos = dip.Xpos + math.random(0,2200)
+			dip.Zpos = dip.Zpos - math.random(0,2200)
 		end
 		createThing(T_EFFECT,M_EFFECT_DIP,8,dip,false,false)
 	end
@@ -499,17 +499,17 @@ function TerraSpell(pn,c3d)
 		local valley = c3d
 		local a = rnd()
 		if a < 25 then
-			valley.Xpos = valley.Xpos + math.random(0,2048)
-			valley.Zpos = valley.Zpos + math.random(0,2048)
+			valley.Xpos = valley.Xpos + math.random(0,1700)
+			valley.Zpos = valley.Zpos + math.random(0,1700)
 		elseif a < 50 then
-			valley.Xpos = valley.Xpos - math.random(0,2048)
-			valley.Zpos = valley.Zpos - math.random(0,2048)
+			valley.Xpos = valley.Xpos - math.random(0,1700)
+			valley.Zpos = valley.Zpos - math.random(0,1700)
 		elseif a < 75 then
-			valley.Xpos = valley.Xpos - math.random(0,2048)
-			valley.Zpos = valley.Zpos + math.random(0,2048)
+			valley.Xpos = valley.Xpos - math.random(0,1700)
+			valley.Zpos = valley.Zpos + math.random(0,1700)
 		else
-			valley.Xpos = valley.Xpos + math.random(0,2048)
-			valley.Zpos = valley.Zpos - math.random(0,2048)
+			valley.Xpos = valley.Xpos + math.random(0,1700)
+			valley.Zpos = valley.Zpos - math.random(0,1700)
 		end
 		createThing(T_EFFECT,M_EFFECT_VALLEY,8,valley,false,false)
 		createThing(T_EFFECT,M_EFFECT_VALLEY,8,valley,false,false)
@@ -522,25 +522,66 @@ function OnTurn()
 	if game_loaded then
 		game_loaded = false
 		
+		Engine:postLoadItems()
 		--kill honor loads
 		if (difficulty() == 3) and turn() > honorSaveTurnLimit and honorSaveTurnLimit ~= 0 then
-			ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
+			ProcessGlobalSpecialList(player, PEOPLELIST, function(t)
 				damage_person(t, 8, 20000, TRUE)
 				return true
 			end)
-			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(0)
+			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(player)
 			log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
 		end
 	end
-	if turn() == 24 then
-		--Engine:hidePanel()
-		--Engine:addCommand_CinemaRaise(0)
-		--Engine:addCommand_AngleThing(getShaman(4).ThingNum, 1500, 36);
-		--Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 24, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*1);
+	if turn() == 12 then
+		FLYBY_CREATE_NEW()
+		FLYBY_ALLOW_INTERRUPT(FALSE)
+
+		--start
+		FLYBY_SET_EVENT_POS(232, 212, 1, 30)
+		FLYBY_SET_EVENT_ANGLE(250, 1, 20)
+		
+		--bard
+		FLYBY_SET_EVENT_POS(206, 214, 80, 30)
+		FLYBY_SET_EVENT_ANGLE(1900, 80, 30)
+		
+		FLYBY_SET_EVENT_POS(206, 214, 115, 120)
+		FLYBY_SET_EVENT_ANGLE(1800, 115, 120)
+		
+		FLYBY_SET_EVENT_POS(212, 208, 240, 400)
+		FLYBY_SET_EVENT_ANGLE(1780, 240, 400)
+		
+		FLYBY_SET_EVENT_POS(224, 202, 440, 70)
+		FLYBY_SET_EVENT_ANGLE(250, 440, 70)
+		
+		FLYBY_SET_EVENT_POS(226, 200, 520, 10)
+		FLYBY_SET_EVENT_ANGLE(248, 520, 5)
+		--
+		
+		FLYBY_START()
+	elseif turn() == 24 then
+		Engine:hidePanel()
+		Engine:addCommand_CinemaRaise(0)
+		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 36, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*8);
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(82), 60);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 1750, 8);
+		Engine:addCommand_QueueMsg(dialog_msgs[1][1], dialog_msgs[1][2], 36, false, dialog_msgs[1][3], dialog_msgs[1][4], dialog_msgs[1][5], 12*20);
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(0), 60);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 1750, 8);
+		Engine:addCommand_QueueMsg(dialog_msgs[2][1], dialog_msgs[2][2], 36, false, dialog_msgs[2][3], dialog_msgs[2][4], dialog_msgs[2][5], 12*3);
+		Engine:addCommand_AngleThing(getShaman(player).ThingNum, 1000, 16);
+		Engine:addCommand_QueueMsg(dialog_msgs[3][1], dialog_msgs[3][2], 36, false, dialog_msgs[3][3], dialog_msgs[3][4], dialog_msgs[3][5], 12*5);
+		Engine:addCommand_CinemaHide(12);
+		Engine:addCommand_ShowPanel(360);
+		Engine:addCommand_QueueMsg(dialog_msgs[4][1], dialog_msgs[4][2], 60, false, dialog_msgs[4][3], dialog_msgs[4][4], dialog_msgs[4][5], 12*35);
+		Engine:addCommand_QueueMsg(dialog_msgs[5][1], dialog_msgs[5][2], 60, false, dialog_msgs[5][3], dialog_msgs[5][4], dialog_msgs[5][5], 12*35);
+		Engine:addCommand_QueueMsg(dialog_msgs[6][1], dialog_msgs[6][2], 60, false, dialog_msgs[6][3], dialog_msgs[6][4], dialog_msgs[6][5], 12);
 	else
 		Engine.DialogObj:processQueue();
 		Engine:processCmd();
 	end
+	if turn() == 450 then createThing(T_EFFECT,M_EFFECT_BURN_CELL_OBSTACLES,8,marker_to_coord3d(133),false,false) end
+	if turn() == 750 then honorSaveTurnLimit = turn() + 12*20 end
 	--balm spell
 	if balmCDR > 0 then 
 		balmCDR = balmCDR - 1
@@ -1404,8 +1445,11 @@ function OnSave(save_data)
 	save_data:push_int(honorSaveTurnLimit)
 	save_data:push_int(gameStage)
 	save_data:push_int(tribe1Atk1)
-	save_data:push_int(tribe1MiniAtk1)
 	save_data:push_int(tribe1NavStress)
+	save_data:push_int(tribe2Atk1)
+	save_data:push_int(tribe2NavStress)
+	save_data:push_int(tribe3Atk1)
+	save_data:push_int(tribe3NavStress)
 	save_data:push_int(balmCDR)
 	save_data:push_int(seedCDR)
 	save_data:push_int(enrageCDR)
@@ -1415,13 +1459,17 @@ end
 
 function OnLoad(load_data) 
 	game_loaded = true
+
 	Engine:loadData(load_data)
 	terraCDR = load_data:pop_int()
 	enrageCDR = load_data:pop_int()
 	seedCDR = load_data:pop_int()
 	balmCDR = load_data:pop_int()
+	tribe3NavStress = load_data:pop_int()
+	tribe3Atk1 = load_data:pop_int()
+	tribe2NavStress = load_data:pop_int()
+	tribe2Atk1 = load_data:pop_int()
 	tribe1NavStress = load_data:pop_int()
-	tribe1MiniAtk1 = load_data:pop_int()
 	tribe1Atk1 = load_data:pop_int()
 	gameStage = load_data:pop_int()
 	honorSaveTurnLimit = load_data:pop_int()
@@ -1454,4 +1502,3 @@ function OnLoad(load_data)
 		 tribe1AtkSpells[i] = load_data:pop_int();
 	end
 end
-

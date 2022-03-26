@@ -361,13 +361,14 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	if game_loaded then
 		game_loaded = false
 		
+		Engine:postLoadItems()
 		--kill honor loads
 		if (difficulty() == 3) and turn() > honorSaveTurnLimit and honorSaveTurnLimit ~= 0 then
-			ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
+			ProcessGlobalSpecialList(player, PEOPLELIST, function(t)
 				damage_person(t, 8, 20000, TRUE)
 				return true
 			end)
-			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(0)
+			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(player)
 			log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
 		end
 	end

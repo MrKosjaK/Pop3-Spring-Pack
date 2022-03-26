@@ -92,8 +92,24 @@ local pestilence1Get = 0
 local pestilence2Get = 0
 local eagleGet = 0
 local atkRoulette = 0
+
+function Plant(IdxS,IdxE,drawnum)
+	for i = IdxS,IdxE do
+		local plants = createThing(T_SCENERY,M_SCENERY_PLANT_2,8,marker_to_coord3d(i),false,false) centre_coord3d_on_block(plants.Pos.D3)
+		plants.DrawInfo.DrawNum = drawnum ; plants.DrawInfo.Alpha = -16
+	end
+end
+
 --vars that cant be initialized more than once
 if turn() == 0 then
+	Plant(153,155,1792)
+	Plant(156,158,1794)
+	Plant(159,164,1787)
+	for i = 131,152 do
+		plants = createThing(T_SCENERY,M_SCENERY_PLANT_2,8,marker_to_coord3d(i),false,false) centre_coord3d_on_block(plants.Pos.D3)
+		plants.DrawInfo.DrawNum = math.random(1787,1795) plants.DrawInfo.Alpha = -16
+	end
+	--
 	local fog = createThing(T_EFFECT, 95, 0, marker_to_coord3d(255), false, false) ; fog.u.Effect.Count = 2 --remove visual bug from textures (dark fog)
 	--process_options(OPT_TOGGLE_PANEL, 0, 0);
 	set_player_reinc_site_off(getPlayer(TRIBE_BLUE))

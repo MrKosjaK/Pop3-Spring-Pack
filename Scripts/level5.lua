@@ -280,8 +280,22 @@ SET_DRUM_TOWER_POS(tribe3, 200, 60)
 SHAMAN_DEFEND(tribe4, 238, 132, TRUE)
 SET_DRUM_TOWER_POS(tribe4, 238, 132)
 
+function Plant(IdxS,IdxE,drawnum)
+	for i = IdxS,IdxE do
+		local plants = createThing(T_SCENERY,M_SCENERY_PLANT_2,8,marker_to_coord3d(i),false,false) centre_coord3d_on_block(plants.Pos.D3)
+		plants.DrawInfo.DrawNum = drawnum ; plants.DrawInfo.Alpha = -16
+	end
+end
+
 --stuff at start only
 if turn() == 0 then
+	Plant(200,204,1792)
+	Plant(205,208,1794)
+	Plant(209,212,1791)
+	for i = 213,240 do
+		plants = createThing(T_SCENERY,M_SCENERY_PLANT_2,8,marker_to_coord3d(i),false,false) centre_coord3d_on_block(plants.Pos.D3)
+		plants.DrawInfo.DrawNum = math.random(1787,1795) plants.DrawInfo.Alpha = -16
+	end
 	--white ground cemetery
 	for i = 1,8 do
 		SearchMapCells(CIRCULAR, 0, 0 , 1, world_coord3d_to_map_idx(marker_to_coord3d(i)), function(me)
@@ -306,6 +320,7 @@ if turn() == 0 then
 	hiddenJ = possibleJewelMk[math.random(1,#possibleJewelMk)]
 	local jewel = createThing(T_EFFECT,10,8,marker_to_coord3d(hiddenJ),false,false) centre_coord3d_on_block(jewel.Pos.D3) ; set_thing_draw_info(jewel,TDI_SPRITE_F1_D1, Jsprite) 
 	jewel.u.Effect.Duration = -1 ; jewel.DrawInfo.Alpha = -16 jewel.Flags2 = EnableFlag(jewel.Flags2, TF2_DONT_DRAW_IN_WORLD_VIEW)
+	createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(hiddenJ),false,false)
 	--braves
 	Brave1 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(39),false,false)
 	Brave2 = createThing(T_PERSON,M_PERSON_BRAVE,0,marker_to_coord3d(40),false,false)
@@ -836,7 +851,7 @@ function OnTurn()
 		--suicide pact cemetery
 		SearchMapCells(CIRCULAR, 0, 0, 2, world_coord3d_to_map_idx(marker_to_coord3d(4)), function(me)
 			me.MapWhoList:processList( function (t)
-				if t.Type == T_PERSON and t.Model ~= M_PERSON_MEDICINE_MAN then
+				if t.Type == T_PERSON and t.Model ~= M_PERSON_MEDICINE_MAN and t.Owner == 0 then
 					damage_person(t, 8, 100, TRUE)
 				end
 			return true end)
@@ -1161,7 +1176,8 @@ function OnTurn()
 	if every2Pow(6) then
 		--remove light/invi is bugged upon load
 		if difficulty() > 1 then
-			set_player_cannot_cast(M_SPELL_INVISIBILITY, 0) set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0)
+			set_player_cannot_cast(M_SPELL_INVISIBILITY, 0) 
+			if devil == 0 then set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0) end
 		else
 			if difficulty() == 1 then
 				set_player_can_cast(M_SPELL_INVISIBILITY, 0)
@@ -1218,7 +1234,7 @@ function OnTurn()
 			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 70+G_RANDOM(1+4*difficulty())+(difficulty()*8)+(gameStage*(6+difficulty()))) --base size
 			WriteAiTrainTroops(v,8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),0) --(pn,w,r,fw,spy)
 			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 65+(minutes()*2)) --attack stuff
-			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 140 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 120) end
+			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 130 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 110) end
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_BLAST, math.random(6,8)-(difficulty()*1)) --spells
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_CONVERT_WILD, math.random(5,8)-(difficulty()*1))
 			--SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_GHOST_ARMY, 12)
@@ -1420,7 +1436,7 @@ end
 function SendAttack(attacker)
 	if (minutes() > 7-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
 		WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 28 + G_RANDOM(16))
-		WriteAiAttackers(attacker,G_RANDOM(5),15+G_RANDOM(10)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(5)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(7)+(difficulty()*6)+(gameStage*4),0,100) --(pn,b,w,r,fw,spy,sh)
+		WriteAiAttackers(attacker,G_RANDOM(5),14+G_RANDOM(10)+(difficulty()*6)+(gameStage*4),14+G_RANDOM(5)+(difficulty()*6)+(gameStage*4),14+G_RANDOM(7)+(difficulty()*6)+(gameStage*4),0,100) --(pn,b,w,r,fw,spy,sh)
 		local target = 0
 		local numTroops = 0
 		local boats = _gsi.Players[attacker].NumVehiclesOfType[M_VEHICLE_BOAT_1]
