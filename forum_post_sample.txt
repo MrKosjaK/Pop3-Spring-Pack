@@ -15,10 +15,10 @@ You can get 1.5 patch by logging into matchmaker and typing !beta in chat, once 
 
 BACKUP YOUR GAME IF YOU'RE NERVOUS ABOUT VANILLA STUFF!!!!
 
-After this, get season pack and then extract all of it's contents into your game's directory, overwrite if it asks.
+After this, get spring pack and then extract all of it's contents into your game's directory, overwrite if it asks.
 Start "LaunchMod_Spring.bat", have fun!
 
-Season Pack Download: 
+Spring Pack Download: 
 [/size]
 
 [size=150][b]Notes[/b][/size]
