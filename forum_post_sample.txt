@@ -10,7 +10,7 @@ How many there are differences? Pretty a lot, but not that much as expected. One
 [size=150][b]Installation[/b][/size]
 
 [size=100]
--- some text
+First of all before getting this season pack, ensure you have original full game installed with 1.5 patch on top of it.
 [/size]
 
 [size=150][b]Notes[/b][/size]
