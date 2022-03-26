@@ -30,6 +30,13 @@ Current season pack has 4 different difficulties to choose from:
  * Experienced - This is where game will start to sting a little. AI will be more aggressive, game is less generous to player, ally will not help you at all, as if they were helpful...
  * Veteran - Unfair. AI is even more aggressive towards the player because of their existence, they know you're the one to be exterminated, not them. Game forgot how to be generous.
  * Honour - Nobody likes you, even game itself will only allow you to save once.
+
+In short:
+ * Beginner - for newbies, first time players.
+ * Experienced - for already familiar with game.
+ * Veteran - for competitive players.
+ * Honour - for those who seek challenge or are masochists.
+
 It is up to you on which difficulty to play.
 People who's capable of completing entire pack on honour difficulty will receive their medal of honor (mention on top of thread).
 [/size]
@@ -37,8 +44,8 @@ People who's capable of completing entire pack on honour difficulty will receive
 [size=150][b]Bugs & Issues[/b][/size]
 
 [size=100]
-If you find any issues related to spring pack, report them here or directly to me in discord.
-If you find any issues related to 1.5 version, report them to bug tracker.
+If you find any issues related to spring pack, report them here or directly to me on discord.
+If you find any issues related to 1.5 version, report them to bug tracker http://www.populous3.info/bugs/view_all_bug_page.php.
 [/size]
 
 [size=150][b]Screenshots[/b][/size]
