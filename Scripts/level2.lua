@@ -666,7 +666,7 @@ function OnTurn()
 			end
 		end
 	end
-
+	--if turn() == 1 then computer_init_player(_gsi.Players[tribe2]) SHAMAN_DEFEND(tribe2, 100, 154, TRUE) SET_DRUM_TOWER_POS(tribe2, 100, 154) end	
 	if turn() == 1200 then
 		--add wilds near CoR depending on diff
 		local wildTbl = {19,20,21,22,23}
@@ -1171,6 +1171,8 @@ function OnTurn()
 	end
 
 	if every2Pow(6) then
+		--SHAMAN_DEFEND(tribe2, 100, 154, TRUE)
+		--SET_DRUM_TOWER_POS(tribe2, 100, 154)
 		--update game stage (early,mid,late,very late)
 		if minutes() < 6 then
 			gameStage = 0
