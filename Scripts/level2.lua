@@ -36,6 +36,7 @@ ency[35].StrId = 695
 ency[38].StrId = 696
 include("assets.lua")
 gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
+set_level_type(13)
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
 sti[M_SPELL_GHOST_ARMY].NetworkOnly = 1
@@ -111,7 +112,6 @@ if turn() == 0 then
 	end
 	--
 	local fog = createThing(T_EFFECT, 95, 0, marker_to_coord3d(255), false, false) ; fog.u.Effect.Count = 2 --remove visual bug from textures (dark fog)
-	--process_options(OPT_TOGGLE_PANEL, 0, 0);
 	set_player_reinc_site_off(getPlayer(TRIBE_BLUE))
 	Ypreacher = createThing(T_PERSON,M_PERSON_RELIGIOUS,3,marker_to_coord3d(1),false,false)
 	Bwar1 = createThing(T_PERSON,M_PERSON_WARRIOR,0,marker_to_coord3d(9),false,false)
@@ -305,8 +305,9 @@ WRITE_CP_ATTRIB(tribe1, ATTR_SHAMEN_BLAST, 8)
 WRITE_CP_ATTRIB(tribe2, ATTR_SHAMEN_BLAST, 16)
 SHAMAN_DEFEND(tribe1, 102, 250, TRUE)
 SET_DRUM_TOWER_POS(tribe1, 102, 250)
-SHAMAN_DEFEND(tribe2, 100, 154, TRUE)
-SET_DRUM_TOWER_POS(tribe2, 100, 154)
+--DELAY_MAIN_DRUM_TOWER(tribe2,TRUE)
+--SHAMAN_DEFEND(tribe2, 100, 154, TRUE)
+--SET_DRUM_TOWER_POS(tribe2, 100, 154)
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -705,7 +706,7 @@ function OnTurn()
 		Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 36, false, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 12*3);
 	end
 	if turn() == 12 then
-		FLYBY_CREATE_NEW()
+		--[[FLYBY_CREATE_NEW()
 		FLYBY_ALLOW_INTERRUPT(FALSE)
 
 		--start
@@ -733,10 +734,11 @@ function OnTurn()
 		FLYBY_SET_EVENT_POS(0, 0, 1000, 12*5)
 		FLYBY_SET_EVENT_ANGLE(0, 1000, 12*3)
 
-		FLYBY_START()
+		FLYBY_START()]]
 	end
 	if turn() == 1 then
 		--command system stuff
+		Engine:hidePanel()
 		Engine:addCommand_CinemaRaise(0);
 		--move to first stop and stare at orb
 		Engine:addCommand_MoveThing(Ypreacher.ThingNum, marker_to_coord2d_centre(2), 1);
@@ -1860,6 +1862,7 @@ function OnSave(save_data)
 end
 
 function OnLoad(load_data)
+	game_loaded = true
 
 	Engine:loadData(load_data);
 	g_DrawMenu = load_data:pop_bool()
@@ -1894,8 +1897,6 @@ function OnLoad(load_data)
 	for i = 1, numSpellsAtk2 do
 		 tribe2AtkSpells[i] = load_data:pop_int();
 	end
-	
-	game_loaded = true
 end
 
 --log_msg(8,"script ran successfully. Difficulty level: " .. difficulty())	
