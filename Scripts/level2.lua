@@ -706,7 +706,7 @@ function OnTurn()
 		Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 36, false, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 12*3);
 	end
 	if turn() == 12 then
-		--[[FLYBY_CREATE_NEW()
+		FLYBY_CREATE_NEW()
 		FLYBY_ALLOW_INTERRUPT(FALSE)
 
 		--start
@@ -734,7 +734,7 @@ function OnTurn()
 		FLYBY_SET_EVENT_POS(0, 0, 1000, 12*5)
 		FLYBY_SET_EVENT_ANGLE(0, 1000, 12*3)
 
-		FLYBY_START()]]
+		FLYBY_START()
 	end
 	if turn() == 1 then
 		--command system stuff
