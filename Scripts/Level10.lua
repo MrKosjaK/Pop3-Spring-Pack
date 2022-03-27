@@ -257,6 +257,18 @@ local function reveal_fog_at(x, z)
   set_square_map_params(world_coord3d_to_map_idx(MAP_XZ_2_WORLD_XYZ(x, z)), 3, TRUE);
 end
 
+local function did_player_kill_any_enemy()
+  local result = false;
+  local people_killed_by_player = gs.Players[player_tribe].PeopleKilled[ai_tribe_1];
+  people_killed_by_player = people_killed_by_player + gs.Players[player_tribe].PeopleKilled[ai_tribe_2];
+
+  if (people_killed_by_player > 0) then
+    result = true;
+  end
+
+  return result;
+end
+
 function OnTurn()
   if (init) then
     init = false;
@@ -604,7 +616,7 @@ function OnTurn()
       end
     end
 
-    if (getTurn() >= 720*8 and Engine:getVar(7) == 0) then
+    if ((getTurn() >= 720*8 and Engine:getVar(7) == 0) or (did_player_kill_any_enemy() and Engine:getVar(7) == 0)) then
       Engine:addCommand_QueueMsg("Destroy your enemies without losing your own shaman. <br> But enemies are already coming...", "Objective", 256, true, 174, 0, 128, 0);
       Engine:setVar(7, 1); --if player doesn't explore around just activate attacking phase.
       Engine:setVar(1, 2);
