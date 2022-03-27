@@ -290,7 +290,7 @@ function OnTurn()
     Engine:addCommand_GotoPoint(1, marker_to_coord2d_centre(2), 24);
     Engine:addCommand_SpawnThing(3, T_PERSON, M_PERSON_WARRIOR, player_ally_tribe, marker_to_coord2d_centre(1), 1);
     Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(3), 1);
-    Engine:addCommand_SpawnThings(2, 5, T_PERSON, M_PERSON_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
+    Engine:addCommand_SpawnThings(2, 8 - current_game_difficulty, T_PERSON, M_PERSON_WARRIOR, player_tribe, marker_to_coord2d_centre(0), 1);
     Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(36), 24);
     Engine:addCommand_QueueMsg("Matak!", "Warrior", 12, false, 1774, 0, 245, 12);
     Engine:addCommand_QueueMsg("Your tribesmen are in trouble!", "Warrior", 36, false, 1774, 0, 245, 12*1);
