@@ -73,7 +73,7 @@ set_correct_gui_menu()
 local tribe1 = TRIBE_RED
 local tribe2 = TRIBE_BLACK
 computer_init_player(_gsi.Players[tribe1])
-computer_init_player(_gsi.Players[tribe2])
+--computer_init_player(_gsi.Players[tribe2])
 local AItribes = {TRIBE_RED,TRIBE_BLACK}
 --
 --vars
@@ -195,119 +195,6 @@ SET_MARKER_ENTRY(tribe2,4,62,62,0,0,2,0)
 SET_MARKER_ENTRY(tribe2,5,63,63,0,0,2,0)
 SET_MARKER_ENTRY(tribe2,6,64,64,0,0,2,0)
 SET_MARKER_ENTRY(tribe2,7,65,65,0,0,2,0)
-
-for t,w in ipairs (AItribes) do
-	for k,v in ipairs(botSpells) do
-		set_player_can_cast(v, w)
-	end
-	for k,v in ipairs(botBldgs) do
-		set_player_can_build(v, w)
-	end
-end
-for i = 1,7 do
-	if (i == tribe1) or (i == tribe2) then
-		for u,v in ipairs(botSpells) do
-			PThing.SpellSet(i, v, TRUE, FALSE)
-		end
-
-		for y,v in ipairs(botBldgs) do
-			PThing.BldgSet(i, v, TRUE)
-		end
-		--ATTRIBUTES
-
-		--base
-		WRITE_CP_ATTRIB(i, ATTR_EXPANSION, 12)
-		WRITE_CP_ATTRIB(i, ATTR_HOUSE_PERCENTAGE, 80+G_RANDOM(30))
-		WRITE_CP_ATTRIB(i, ATTR_MAX_BUILDINGS_ON_GO, 3+G_RANDOM(1))
-		STATE_SET(i, TRUE, CP_AT_TYPE_BRING_NEW_PEOPLE_BACK)
-		STATE_SET(i, TRUE, CP_AT_TYPE_HOUSE_A_PERSON)
-		STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_LOST_PEOPLE)
-		STATE_SET(i, TRUE, CP_AT_TYPE_MED_MAN_GET_WILD_PEEPS)
-		--train
-		STATE_SET(i, TRUE, CP_AT_TYPE_TRAIN_PEOPLE)
-		WRITE_CP_ATTRIB(i, ATTR_MAX_TRAIN_AT_ONCE, 4)
-		--buildings
-		STATE_SET(i, TRUE, CP_AT_TYPE_CONSTRUCT_BUILDING)
-		STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_WOOD)
-		WRITE_CP_ATTRIB(i, ATTR_RANDOM_BUILD_SIDE, 1)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_WARRIOR_TRAINS, 1)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_SUPER_WARRIOR_TRAINS, 0)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_RELIGIOUS_TRAINS, 0)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_SPY_TRAINS, 0)
-		--train
-		WriteAiTrainTroops(i,6,4,8,0) --(pn,w,r,fw,spy)
-		--vehicles
-		STATE_SET(i, TRUE, CP_AT_TYPE_BUILD_VEHICLE)
-		STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_FAR_VEHICLE)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_BOAT_HUTS, 1)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_BOAT_DRIVERS, 2+difficulty())
-		WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BOAT, 2+difficulty())
-		--[[WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_HUTS, 0)
-		WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_DRIVERS, 0)
-		WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BALLOON, 0)]]
-		--attack
-		SET_ATTACK_VARIABLE(i,0)
-		STATE_SET(i, TRUE, CP_AT_TYPE_AUTO_ATTACK)
-		WRITE_CP_ATTRIB(i, ATTR_ATTACK_PERCENTAGE, 100)
-		WRITE_CP_ATTRIB(i, ATTR_MAX_ATTACKS, 999)
-		WRITE_CP_ATTRIB(i, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
-		WRITE_CP_ATTRIB(i, ATTR_RETREAT_VALUE, 4)
-		WRITE_CP_ATTRIB(i, ATTR_FIGHT_STOP_DISTANCE, 32)
-		WRITE_CP_ATTRIB(i, ATTR_GROUP_OPTION, 0)
-	--[[0 - Stop at waypoint (if exists) and before attack
-		1 - Stop before attack only
-		2 - Stop at waypoint (if exists) only
-		3 - Don't stop anywhere]]
-		WriteAiAttackers(i,0,70,40,40,0,100) --(pn,b,w,r,fw,spy,sh)
-		--defense
-		WRITE_CP_ATTRIB(i, ATTR_DEFENSE_RAD_INCR, 4)
-		WRITE_CP_ATTRIB(i, ATTR_MAX_DEFENSIVE_ACTIONS, 3)
-		WRITE_CP_ATTRIB(i, ATTR_USE_PREACHER_FOR_DEFENCE, 1)
-		STATE_SET(i, TRUE, CP_AT_TYPE_POPULATE_DRUM_TOWER)
-		STATE_SET(i, TRUE, CP_AT_TYPE_BUILD_OUTER_DEFENCES)
-		STATE_SET(i, TRUE, CP_AT_TYPE_DEFEND)
-		STATE_SET(i, TRUE, CP_AT_TYPE_DEFEND_BASE)
-		STATE_SET(i, TRUE, CP_AT_TYPE_PREACH)
-		STATE_SET(i, TRUE, CP_AT_TYPE_SUPER_DEFEND)
-		--spies
-		WRITE_CP_ATTRIB(i, ATTR_SPY_DISCOVER_CHANCE, 8) -- (% chance of a spy being uncovered when spotted in cps base)
-		WRITE_CP_ATTRIB(i, ATTR_ENEMY_SPY_MAX_STAND, 128) --(number of game turns computer player will ignore a spy stood in their base doing nothing)
-		WRITE_CP_ATTRIB(i, ATTR_SPY_CHECK_FREQUENCY, 128) --(0 - 128), 0 means AI wont redisguise spies
-		WRITE_CP_ATTRIB(i, ATTR_MAX_SPY_ATTACKS, 256)	
-		STATE_SET(i, FALSE, CP_AT_TYPE_SABOTAGE)
-		--spells
-		SET_BUCKET_USAGE(i, TRUE)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_BLAST, 8)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_CONVERT_WILD, 8)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_GHOST_ARMY, 12)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_INSECT_PLAGUE, 16)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_LAND_BRIDGE, 32)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_LIGHTNING_BOLT, 40)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_INVISIBILITY, 28)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_HYPNOTISM, 50)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_WHIRLWIND, 80)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_SWAMP, 100)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_EARTHQUAKE, 175)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_EROSION, 200)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_FLATTEN, 125)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_FIRESTORM, 275)
-		SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_SHIELD, 28)
-		--defence spells
-		SET_DEFENCE_RADIUS(i, 7)
-		SET_SPELL_ENTRY(i, 0, M_SPELL_INSECT_PLAGUE, 25000, 64, 3, 0)
-		SET_SPELL_ENTRY(i, 1, M_SPELL_LIGHTNING_BOLT, 40000, 64, 2, 0)
-		SET_SPELL_ENTRY(i, 2, M_SPELL_INSECT_PLAGUE, 25000, 64, 3, 1)
-		SET_SPELL_ENTRY(i, 3, M_SPELL_LIGHTNING_BOLT, 40000, 64, 2, 1)
-	end
-end
---shaman stuff
-WRITE_CP_ATTRIB(tribe1, ATTR_SHAMEN_BLAST, 8)
-WRITE_CP_ATTRIB(tribe2, ATTR_SHAMEN_BLAST, 16)
-SHAMAN_DEFEND(tribe1, 102, 250, TRUE)
-SET_DRUM_TOWER_POS(tribe1, 102, 250)
---DELAY_MAIN_DRUM_TOWER(tribe2,TRUE)
---SHAMAN_DEFEND(tribe2, 100, 154, TRUE)
---SET_DRUM_TOWER_POS(tribe2, 100, 154)
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -666,7 +553,120 @@ function OnTurn()
 			end
 		end
 	end
-	--if turn() == 1 then computer_init_player(_gsi.Players[tribe2]) SHAMAN_DEFEND(tribe2, 100, 154, TRUE) SET_DRUM_TOWER_POS(tribe2, 100, 154) end	
+	if turn() == 0 then 
+		computer_init_player(_gsi.Players[tribe2]) 
+		SHAMAN_DEFEND(tribe2, 100, 154, TRUE) 
+		SET_DRUM_TOWER_POS(tribe2, 100, 154) 
+		for t,w in ipairs (AItribes) do
+			for k,v in ipairs(botSpells) do
+				set_player_can_cast(v, w)
+			end
+			for k,v in ipairs(botBldgs) do
+				set_player_can_build(v, w)
+			end
+		end
+		for i = 1,7 do
+			if (i == tribe1) or (i == tribe2) then
+				for u,v in ipairs(botSpells) do
+					PThing.SpellSet(i, v, TRUE, FALSE)
+				end
+
+				for y,v in ipairs(botBldgs) do
+					PThing.BldgSet(i, v, TRUE)
+				end
+				--ATTRIBUTES
+
+				--base
+				WRITE_CP_ATTRIB(i, ATTR_EXPANSION, 12)
+				WRITE_CP_ATTRIB(i, ATTR_HOUSE_PERCENTAGE, 80+G_RANDOM(30))
+				WRITE_CP_ATTRIB(i, ATTR_MAX_BUILDINGS_ON_GO, 3+G_RANDOM(1))
+				STATE_SET(i, TRUE, CP_AT_TYPE_BRING_NEW_PEOPLE_BACK)
+				STATE_SET(i, TRUE, CP_AT_TYPE_HOUSE_A_PERSON)
+				STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_LOST_PEOPLE)
+				STATE_SET(i, TRUE, CP_AT_TYPE_MED_MAN_GET_WILD_PEEPS)
+				--train
+				STATE_SET(i, TRUE, CP_AT_TYPE_TRAIN_PEOPLE)
+				WRITE_CP_ATTRIB(i, ATTR_MAX_TRAIN_AT_ONCE, 4)
+				--buildings
+				STATE_SET(i, TRUE, CP_AT_TYPE_CONSTRUCT_BUILDING)
+				STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_WOOD)
+				WRITE_CP_ATTRIB(i, ATTR_RANDOM_BUILD_SIDE, 1)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_WARRIOR_TRAINS, 1)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_SUPER_WARRIOR_TRAINS, 0)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_RELIGIOUS_TRAINS, 0)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_SPY_TRAINS, 0)
+				--train
+				WriteAiTrainTroops(i,6,4,8,0) --(pn,w,r,fw,spy)
+				--vehicles
+				STATE_SET(i, TRUE, CP_AT_TYPE_BUILD_VEHICLE)
+				STATE_SET(i, TRUE, CP_AT_TYPE_FETCH_FAR_VEHICLE)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_BOAT_HUTS, 1)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_BOAT_DRIVERS, 2+difficulty())
+				WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BOAT, 2+difficulty())
+				--[[WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_HUTS, 0)
+				WRITE_CP_ATTRIB(i, ATTR_PREF_BALLOON_DRIVERS, 0)
+				WRITE_CP_ATTRIB(i, ATTR_PEOPLE_PER_BALLOON, 0)]]
+				--attack
+				SET_ATTACK_VARIABLE(i,0)
+				STATE_SET(i, TRUE, CP_AT_TYPE_AUTO_ATTACK)
+				WRITE_CP_ATTRIB(i, ATTR_ATTACK_PERCENTAGE, 100)
+				WRITE_CP_ATTRIB(i, ATTR_MAX_ATTACKS, 999)
+				WRITE_CP_ATTRIB(i, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
+				WRITE_CP_ATTRIB(i, ATTR_RETREAT_VALUE, 4)
+				WRITE_CP_ATTRIB(i, ATTR_FIGHT_STOP_DISTANCE, 32)
+				WRITE_CP_ATTRIB(i, ATTR_GROUP_OPTION, 0)
+			--[[0 - Stop at waypoint (if exists) and before attack
+				1 - Stop before attack only
+				2 - Stop at waypoint (if exists) only
+				3 - Don't stop anywhere]]
+				WriteAiAttackers(i,0,70,40,40,0,100) --(pn,b,w,r,fw,spy,sh)
+				--defense
+				WRITE_CP_ATTRIB(i, ATTR_DEFENSE_RAD_INCR, 4)
+				WRITE_CP_ATTRIB(i, ATTR_MAX_DEFENSIVE_ACTIONS, 3)
+				WRITE_CP_ATTRIB(i, ATTR_USE_PREACHER_FOR_DEFENCE, 1)
+				STATE_SET(i, TRUE, CP_AT_TYPE_POPULATE_DRUM_TOWER)
+				STATE_SET(i, TRUE, CP_AT_TYPE_BUILD_OUTER_DEFENCES)
+				STATE_SET(i, TRUE, CP_AT_TYPE_DEFEND)
+				STATE_SET(i, TRUE, CP_AT_TYPE_DEFEND_BASE)
+				STATE_SET(i, TRUE, CP_AT_TYPE_PREACH)
+				STATE_SET(i, TRUE, CP_AT_TYPE_SUPER_DEFEND)
+				--spies
+				WRITE_CP_ATTRIB(i, ATTR_SPY_DISCOVER_CHANCE, 8) -- (% chance of a spy being uncovered when spotted in cps base)
+				WRITE_CP_ATTRIB(i, ATTR_ENEMY_SPY_MAX_STAND, 128) --(number of game turns computer player will ignore a spy stood in their base doing nothing)
+				WRITE_CP_ATTRIB(i, ATTR_SPY_CHECK_FREQUENCY, 128) --(0 - 128), 0 means AI wont redisguise spies
+				WRITE_CP_ATTRIB(i, ATTR_MAX_SPY_ATTACKS, 256)	
+				STATE_SET(i, FALSE, CP_AT_TYPE_SABOTAGE)
+				--spells
+				SET_BUCKET_USAGE(i, TRUE)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_BLAST, 8)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_CONVERT_WILD, 8)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_GHOST_ARMY, 12)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_INSECT_PLAGUE, 16)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_LAND_BRIDGE, 32)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_LIGHTNING_BOLT, 40)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_INVISIBILITY, 28)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_HYPNOTISM, 50)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_WHIRLWIND, 80)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_SWAMP, 100)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_EARTHQUAKE, 175)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_EROSION, 200)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_FLATTEN, 125)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_FIRESTORM, 275)
+				SET_BUCKET_COUNT_FOR_SPELL(i, M_SPELL_SHIELD, 28)
+				--defence spells
+				SET_DEFENCE_RADIUS(i, 7)
+				SET_SPELL_ENTRY(i, 0, M_SPELL_INSECT_PLAGUE, 25000, 64, 3, 0)
+				SET_SPELL_ENTRY(i, 1, M_SPELL_LIGHTNING_BOLT, 40000, 64, 2, 0)
+				SET_SPELL_ENTRY(i, 2, M_SPELL_INSECT_PLAGUE, 25000, 64, 3, 1)
+				SET_SPELL_ENTRY(i, 3, M_SPELL_LIGHTNING_BOLT, 40000, 64, 2, 1)
+			end
+		end
+		--shaman stuff
+		WRITE_CP_ATTRIB(tribe1, ATTR_SHAMEN_BLAST, 8)
+		WRITE_CP_ATTRIB(tribe2, ATTR_SHAMEN_BLAST, 16)
+		SHAMAN_DEFEND(tribe1, 102, 250, TRUE)
+		SET_DRUM_TOWER_POS(tribe1, 102, 250)
+	end	
 	if turn() == 1200 then
 		--add wilds near CoR depending on diff
 		local wildTbl = {19,20,21,22,23}
@@ -1171,8 +1171,6 @@ function OnTurn()
 	end
 
 	if every2Pow(6) then
-		--SHAMAN_DEFEND(tribe2, 100, 154, TRUE)
-		--SET_DRUM_TOWER_POS(tribe2, 100, 154)
 		--update game stage (early,mid,late,very late)
 		if minutes() < 6 then
 			gameStage = 0
