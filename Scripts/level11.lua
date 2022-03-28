@@ -27,6 +27,10 @@ local gns = gnsi()
 _gnsi = gnsi()
 _gsi = gsi()
 sti = spells_type_info()
+for i = 2,17 do
+	sti[i].AvailableSpriteIdx = 353+i
+end
+sti[19].AvailableSpriteIdx = 408
 tmi = thing_move_info()
 bti = building_type_info()
 ency = encyclopedia_info()
@@ -36,6 +40,7 @@ ency[22].StrId = 701
 ency[35].StrId = 699
 ency[38].StrId = 700
 include("assets.lua")
+change_sprite_bank(0,0)
 gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
