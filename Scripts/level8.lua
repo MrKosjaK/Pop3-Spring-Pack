@@ -37,6 +37,7 @@ ency[35].StrId = 695
 ency[38].StrId = 696
 include("assets.lua")
 gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
+gns.GameParams.Flags3 = gns.GameParams.Flags3 | PLF_AUTO_USE_VEHICLES
 --------------------
 sti[M_SPELL_GHOST_ARMY].Active = SPAC_OFF
 sti[M_SPELL_GHOST_ARMY].NetworkOnly = 1
@@ -115,6 +116,13 @@ if turn() == 0 then
 		elseif i <= 98 and difficulty() == 1 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false)
 		elseif i <= 109 and difficulty() == 0 then createThing(T_EFFECT,M_EFFECT_REVEAL_FOG_AREA,8,marker_to_coord3d(i),false,false) end
 	end
+	--create tree(s) for noobs
+	if difficulty() == 0 then createThing(T_SCENERY,3,8,marker_to_coord3d(111),false,false) createThing(T_SCENERY,2,8,marker_to_coord3d(110),false,false) end
+	if difficulty() == 1 then createThing(T_SCENERY,3,8,marker_to_coord3d(111),false,false) end
+	--timer
+	local minutesTimer = 60
+	if difficulty() == 1 then minutesTimer = 50 elseif difficulty() == 2 then minutesTimer = 45 elseif difficulty() == 3 then minutesTimer = 40 end
+	SET_TIMER_GOING(12*60*minutesTimer + 103*12 ,1)
 end
 --atk turns
 tribe1Atk1 = 1400 + 7000 + math.random(800) - difficulty()*500
@@ -274,6 +282,8 @@ local dialog_msgs = {
   [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive. <br> Notice your shaman lives at the top left corner.", "Info", 173, 0, 160},
   [11] = {"Bards have a strong connection with the earth. Although they can not charge land spells with mana, killing enemies will eventually earn the shaman free shots of this spells.", "Info", 173, 0, 160},
   [12] = {"Your other spell is the healing balm. <br> Cast it on your units (3x3 area) to heal them for 1/3 of their maximum health!", "Info", 173, 0, 160},
+  [13] = {"Your trials for becoming a bard were unsuccessful.", "The Bard", 1783, 0, 225},
+  [14] = {"Congratulations. You have successfully completed the trials to become a bard. <br> Welcome to the tribe.", "The Bard", 1783, 0, 225}
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
@@ -565,6 +575,17 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 	end
 	
 	if every2Pow(3) then
+		--remove timer
+		if GetPop(tribe1) == 0 and bard < 100 and GetPop(player) > 0 then
+			bard = 100
+			REMOVE_TIMER()
+			Engine:addCommand_QueueMsg(dialog_msgs[14][1], dialog_msgs[14][2], 96, true, dialog_msgs[14][3], dialog_msgs[14][4], dialog_msgs[14][5], 12*1)
+		end
+		--timer ends
+		if HAS_TIMER_REACHED_ZERO() == true and GetPop(player) > 0 then
+			TRIGGER_LEVEL_LOST() ; SET_NO_REINC(player) --REMOVE_TIMER()
+			Engine:addCommand_QueueMsg(dialog_msgs[13][1], dialog_msgs[13][2], 96, true, dialog_msgs[13][3], dialog_msgs[13][4], dialog_msgs[13][5], 12*1)
+		end
 		--remove a bard life
 		if getShaman(player) == nil and livesLock == 0 then
 			BardLives = BardLives - 1
@@ -603,7 +624,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		--occasionally shield troops when attacking
 		for i = 2,3 do
 			local r = 0
-			if getShaman(i) ~= nil and IS_SHAMAN_IN_AREA(i,32,18) == 1 then
+			if getShaman(i) ~= nil and IS_SHAMAN_IN_AREA(i,32,18+difficulty()) == 1 then
 				if gameStage >= 2 and difficulty() > 0 then
 					SearchMapCells(SQUARE, 0, 0 , 6, world_coord3d_to_map_idx(getShaman(i).Pos.D3), function(me)
 						me.MapWhoList:processList(function (t)
@@ -889,7 +910,7 @@ function SendMiniAttack(attacker)
 		--WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, math.random(0,3))
 		--WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 32 + G_RANDOM(16))
 		WRITE_CP_ATTRIB(attacker, ATTR_BASE_UNDER_ATTACK_RETREAT, 0)
-		WriteAiAttackers(attacker,0,math.random(30,40)+(difficulty()*5)+(gameStage*5),math.random(25,35)+(difficulty()*4)+(gameStage*4),math.random(20,30),0,0) --(pn,b,w,r,fw,spy,sh)
+		WriteAiAttackers(attacker,0,math.random(30,40)+(difficulty()*4)+(gameStage*4),math.random(25,35)+(difficulty()*3)+(gameStage*3),math.random(30,40),0,0) --(pn,b,w,r,fw,spy,sh)
 		local target = player
 		local numTroops = 0
 		local balloons = CountThingsOfTypeInArea(T_VEHICLE,M_VEHICLE_AIRSHIP_1,tribe1,152,76,16)
@@ -918,10 +939,11 @@ function SendMiniAttack(attacker)
 				focus = ATTACK_PERSON
 			end
 			--SEND ATK
-			ATTACK(attacker, target, numTroops, focus, 0, 999, 0, 0, 0, ATTACK_BY_BALLOON, 0, math.random(34,39), 0, 0)
+			--log_msg(2,"attack with " .. numTroops .. "troops. focus " .. focus .. ". shaman is going?: " .. READ_CP_ATTRIB(attacker,ATTR_AWAY_MEDICINE_MAN))
+			local mk1 = -1 if rnd() > 80 then mk1 = math.random(34,39) end
+			ATTACK(attacker, target, numTroops, focus, 0, 999, 0, 0, 0, ATTACK_BY_BALLOON, 0, mk1, -1, 0)
 			IncrementAtkVar(attacker,turn() + 2100 + G_RANDOM(2100) - (difficulty()*400) - (gameStage*200),false) 
 			--log_msg(attacker,"mini atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. 2 .. "  , targetting (0mk,1bldg,2person) " .. focus)
-			
 		else
 			IncrementAtkVar(attacker,turn() + 555, false)
 		end
@@ -931,7 +953,7 @@ function SendMiniAttack(attacker)
 end
 
 function SendAttack(attacker)
-	if (minutes() > 5-difficulty()) and (rnd() < 65+difficulty()*5 +gameStage*5) then
+	if (minutes() > 5-difficulty()) and (rnd() < 70+difficulty()*5 +gameStage*5) then
 		--WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 28 + G_RANDOM(16))
 		WriteAiAttackers(attacker,0,15+G_RANDOM(10)+(difficulty()*6)+(gameStage*4),15+G_RANDOM(5)+(difficulty()*5)+(gameStage*4),15+G_RANDOM(7)+(difficulty()*7)+(gameStage*4),0,100) --(pn,b,w,r,fw,spy,sh)
 		local target = player
@@ -991,6 +1013,7 @@ function SendAttack(attacker)
 			spell3 = tribe1AtkSpells[math.random(#tribe1AtkSpells)]
 		end
 		--LAUNCH ATTACK
+		--log_msg(2,"attack with " .. numTroops .. " troops. mk mk2 are: " .. mk1 .. "-" .. mk2 .. ", spells are: " .. spell1 .. "," .. spell2 .. "," .. spell3 .. ", shaman is going?: " .. READ_CP_ATTRIB(attacker,ATTR_AWAY_MEDICINE_MAN))
 		
 		--has enough troops
 		if numTroops > 0 then
@@ -1002,6 +1025,7 @@ function SendAttack(attacker)
 			local focus = -1
 			local atktype = -1
 			local returnVehicle = 0
+			--log_msg(2,"navBldg " .. navBldg .. ", navppl " .. navPpl .. " targBldg " .. targBldgs .. ", targPpl" .. targPpl .. ", wait" .. wait .. ", focus " .. focus .. ", atktype" .. atktype)
 			--prioritize buildings
 			if targBldgs > 0 then
 				--bldg by land
@@ -1059,6 +1083,7 @@ function SendAttack(attacker)
 					--WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
 					returnVehicle = 0
 				end
+				--log_msg(8,"numTroops: " .. numTroops .. ", focus: " .. focus .. ", atktype: " .. atktype .. ", returnVehicle: " .. returnVehicle .. ", mk1 mk2: " .. mk1 .. "|" .. mk2 .. ", free entries: " .. FREE_ENTRIES(tribe1))
 				ATTACK(attacker, target, numTroops, focus, 0, 999, spell1, spell2, spell3, atktype, returnVehicle, mk1, mk2, 0)
 				IncrementAtkVar(attacker,turn() + 3100 + G_RANDOM(3100) - (difficulty()*400) - (gameStage*200),true) 
 				--log_msg(attacker,"main atk vs player: " .. target .. "  , by (0norm,1boat,2ball) " .. atktype .. "  , targetting (0mk,1bldg,2person) " .. focus)
@@ -1116,12 +1141,6 @@ function OnFrame()
 	local middle2 = math.floor((w+guiW)/2)
 	local box = math.floor(h/24)
 	local offset = 8
-	
-	PopSetFont(4)
-	LbDraw_Text(guiW+2,100+10*2,"seconds: " .. seconds(),0)    --104
-	PopSetFont(1)
-	LbDraw_Text(guiW+2,100+12*7,"atk: " .. tribe1Atk1,0)
-	LbDraw_Text(guiW+2,100+12*9,"mini: " .. tribe1MiniAtk1,0)
 	
 	--honor save timer
 	if turn() < honorSaveTurnLimit and honorSaveTurnLimit ~= 0 and difficulty() == 3 then
