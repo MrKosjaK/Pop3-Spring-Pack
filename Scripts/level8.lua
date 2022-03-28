@@ -125,8 +125,8 @@ if turn() == 0 then
 	if difficulty() == 0 then createThing(T_SCENERY,3,8,marker_to_coord3d(111),false,false) createThing(T_SCENERY,2,8,marker_to_coord3d(110),false,false) end
 	if difficulty() == 1 then createThing(T_SCENERY,3,8,marker_to_coord3d(111),false,false) end
 	--timer
-	local minutesTimer = 60
-	if difficulty() == 1 then minutesTimer = 50 elseif difficulty() == 2 then minutesTimer = 45 elseif difficulty() == 3 then minutesTimer = 40 end
+	local minutesTimer = 70
+	if difficulty() == 1 then minutesTimer = 60 elseif difficulty() == 2 then minutesTimer = 50 elseif difficulty() == 3 then minutesTimer = 40 end
 	SET_TIMER_GOING(12*60*minutesTimer + 103*12 ,1)
 end
 --atk turns
