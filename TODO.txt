@@ -1,6 +1,9 @@
-Level 7:
-  - Slightly better AI on Veteran+ difficulty (not sure about that , if veteran+ still easy i'll do it)
+Level 4
+  - Move cyan to slightly different location
+  - Fix cyan shielding single units rather than minimum 6
 
+Level 3
+  - Include cutscene with flyby and msgs.
 
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
