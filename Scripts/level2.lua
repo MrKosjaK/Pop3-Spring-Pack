@@ -333,9 +333,14 @@ function SendAttack(attacker)
 		end
 		--pick target
 		if attacker == tribe1 then
-			if rnd() < (45-(difficulty()*7)) and _gsi.Players[tribe2].NumPeople > 5 then target = tribe2 end
+			if rnd() < (45-(difficulty()*10)) and _gsi.Players[tribe2].NumPeople > 5 then target = tribe2 end
 		else
-			if rnd() < (45-(difficulty()*7)) and _gsi.Players[tribe1].NumPeople > 5 then target = tribe1 end
+			if rnd() < (45-(difficulty()*10)) and _gsi.Players[tribe1].NumPeople > 5 then target = tribe1 end
+		end
+		if difficulty() == 2 then
+			if rnd() < 50 then target = 0 end
+		elseif difficulty() == 3 then
+			if rnd() < 70 then target = 0 end
 		end
 		--is shaman going
 		if getShaman(attacker) ~= nil and gameStage >= 1 and IS_SHAMAN_AVAILABLE_FOR_ATTACK(attacker) == 1 then
@@ -701,7 +706,7 @@ function OnTurn()
 			end
 		end
 	elseif turn() == 1400 then
-		Engine:addCommand_QueueMsg(dialog_msgs[7][1], dialog_msgs[7][2], 36, false, dialog_msgs[7][3], dialog_msgs[7][4], dialog_msgs[7][5], 12*4);
+		Engine:addCommand_QueueMsg(dialog_msgs[7][1], dialog_msgs[7][2], 48, false, dialog_msgs[7][3], dialog_msgs[7][4], dialog_msgs[7][5], 12*4);
 	elseif turn() == levelUpTurn and levelUpTurn ~= -1 then
 		Engine:addCommand_QueueMsg(dialog_msgs[8][1], dialog_msgs[8][2], 36, false, dialog_msgs[8][3], dialog_msgs[8][4], dialog_msgs[8][5], 12*3);
 	end

@@ -101,8 +101,10 @@ set_correct_gui_menu()
 if difficulty() == 0 then
 	set_player_can_cast(M_SPELL_INVISIBILITY, 0)
 	set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+	set_player_can_cast(M_SPELL_FIRESTORM, 0)
 elseif difficulty() == 1 then
 	set_player_can_cast(M_SPELL_INVISIBILITY, 0)
+	set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
 end
 botSpells = {M_SPELL_CONVERT_WILD,
              M_SPELL_BLAST,
@@ -909,10 +911,6 @@ function OnTurn()
 				damage_person(t, 8, 20000, TRUE)
 			end
 		return true end)
-		--give invi for experienced if 1 jewel left
-		if difficulty() == 1 and placedJewels >= 7 then
-			set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
-		end
 		if teach == 0 and jewels == 0 then
 			if (IS_SHAMAN_IN_AREA(0,21,3) == 1) or (IS_SHAMAN_IN_AREA(0,26,3) == 1) or (IS_SHAMAN_IN_AREA(0,22,3) == 1) or (IS_SHAMAN_IN_AREA(0,23,3) == 1)
 			or (IS_SHAMAN_IN_AREA(0,24,3) == 1) or (IS_SHAMAN_IN_AREA(0,25,3) == 1) or (IS_SHAMAN_IN_AREA(0,27,3) == 1) or (IS_SHAMAN_IN_AREA(0,hiddenJ,3) == 1)
@@ -1181,11 +1179,9 @@ function OnTurn()
 		else
 			if difficulty() == 1 then
 				set_player_can_cast(M_SPELL_INVISIBILITY, 0)
-				if jewels >= 7 then
-					set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
-				end
+				set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
 			else
-				set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+				set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0) set_player_can_cast(M_SPELL_FIRESTORM, 0)
 			end
 		end
 		--update game stage (early,mid,late,very late)
@@ -1234,7 +1230,7 @@ function OnTurn()
 			WRITE_CP_ATTRIB(v, ATTR_HOUSE_PERCENTAGE, 70+G_RANDOM(1+4*difficulty())+(difficulty()*8)+(gameStage*(6+difficulty()))) --base size
 			WriteAiTrainTroops(v,8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),8+(difficulty()*2)+(gameStage*1),0) --(pn,w,r,fw,spy)
 			WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 65+(minutes()*2)) --attack stuff
-			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 130 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 110) end
+			if READ_CP_ATTRIB(v,ATTR_ATTACK_PERCENTAGE) > 90+difficulty()*10 then WRITE_CP_ATTRIB(v, ATTR_ATTACK_PERCENTAGE, 70+difficulty()*10) end
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_BLAST, math.random(6,8)-(difficulty()*1)) --spells
 			SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_CONVERT_WILD, math.random(5,8)-(difficulty()*1))
 			--SET_BUCKET_COUNT_FOR_SPELL(v, M_SPELL_GHOST_ARMY, 12)
