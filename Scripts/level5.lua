@@ -102,6 +102,7 @@ if difficulty() == 0 then
 	set_player_can_cast(M_SPELL_INVISIBILITY, 0)
 	set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
 	set_player_can_cast(M_SPELL_FIRESTORM, 0)
+	set_player_can_build(M_BUILDING_TEMPLE, 0)
 elseif difficulty() == 1 then
 	set_player_can_cast(M_SPELL_INVISIBILITY, 0)
 	set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
@@ -1172,7 +1173,11 @@ function OnTurn()
 	end
 	
 	if every2Pow(6) then
-		--remove light/invi is bugged upon load
+		--remove light/invi/temple is bugged upon load
+		if difficulty() > 0 then 
+			set_player_cannot_build(M_BUILDING_TEMPLE, 0) 
+			set_player_cannot_cast(M_SPELL_FIRESTORM, 0)
+		end
 		if difficulty() > 1 then
 			set_player_cannot_cast(M_SPELL_INVISIBILITY, 0) 
 			if devil == 0 then set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0) end
