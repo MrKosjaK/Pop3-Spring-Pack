@@ -928,6 +928,10 @@ function OnTurn()
 		end
 		if devil == 0 then
 			CatchJewels()
+			if GetPop(4) + GetPop(5) + GetPop(6) + GetPop(7) == 0 and win == 0 then
+				win = 1
+				WIN()
+			end
 		else
 			if win == 0 and (GetPop(0) == 0 or devilProgress < 1) then
 				win = -1 ; devilProgress = 0 ; devil = -1 
@@ -1406,12 +1410,12 @@ function SendMiniAttack(attacker)
 			if _gsi.Players[target].NumBuildings > 0 then
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
+					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(3333) - (difficulty()*256) - (gameStage*128),false)
 					--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
 				elseif _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-						IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
+						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(3333) - (difficulty()*256) - (gameStage*128),false)
 						--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 					end
 				else
@@ -1420,7 +1424,7 @@ function SendMiniAttack(attacker)
 			else
 				if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 869+(difficulty()*10), 0, 0, 0, ATTACK_NORMAL, 0, mk1, mk2, -1)
-					IncrementAtkVar(attacker,turn() + 2200 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*128),false)
+					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(3333) - (difficulty()*256) - (gameStage*128),false)
 					--TrainUnitsNow(attacker) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 				else
 					IncrementAtkVar(attacker,turn() + 555, false)
@@ -1523,20 +1527,20 @@ function SendAttack(attacker)
 				--can target bldg by land
 				if (NAV_CHECK(attacker,target,ATTACK_BUILDING,0,0) > 0) then
 					ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-					IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
+					IncrementAtkVar(attacker,turn() + 5555 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg")
 				else
 					--try atk bldg from water
 					if boats > 0 then
 						WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 						WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
 						ATTACK(attacker, target, numTroops, ATTACK_BUILDING, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
-						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg boat")
+						IncrementAtkVar(attacker,turn() + 5555 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   bldg boat")
 					else
 						--else attack units
 						if _gsi.Players[target].NumPeople > 0 then
 							if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 								ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-								IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
+								IncrementAtkVar(attacker,turn() + 5555 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 							else
 								--fail
 								IncrementAtkVar(attacker,turn() + 500 + G_RANDOM(200) - (difficulty()*100) - (gameStage*50),true)
@@ -1554,14 +1558,14 @@ function SendAttack(attacker)
 				if _gsi.Players[target].NumPeople > 0 then
 					if (NAV_CHECK(attacker,target,ATTACK_PERSON,0,0) > 0) then
 						ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_NORMAL, 1, mk1, mk2, 0)
-						IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
+						IncrementAtkVar(attacker,turn() + 5555 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person")
 					else
 						--try to atk units from water
 						if boats > 0 then
 							WRITE_CP_ATTRIB(attacker, ATTR_FIGHT_STOP_DISTANCE, 4)
 							WRITE_CP_ATTRIB(attacker, ATTR_GROUP_OPTION, 0)
 							ATTACK(attacker, target, numTroops, ATTACK_PERSON, 0, 969+(difficulty()*10), spell1, spell2, spell3, ATTACK_BY_BOAT, 1, -1, -1, -1)
-							IncrementAtkVar(attacker,turn() + 3333 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person boat")
+							IncrementAtkVar(attacker,turn() + 5555 + G_RANDOM(2222) - (difficulty()*256) - (gameStage*150),true) --log_msg(attacker,"mini atk vs: " .. target .. "   person boat")
 						else
 							--fail
 							IncrementAtkVar(attacker,turn() + 500 + G_RANDOM(200) - (difficulty()*100) - (gameStage*50),true)
