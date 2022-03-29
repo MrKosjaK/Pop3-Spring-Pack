@@ -376,16 +376,16 @@ function OnTurn()
     --end of patrolling
 
     Engine:addCommand_QueueMsg("What is this trouble?", "Matak", 36, false, 6943, 1, 229, 12*4);
-    Engine:addCommand_QueueMsg("They... *inhales* ", "Warrior", 12, false, 1774, 0, 245, 12*2);
-    Engine:addCommand_QueueMsg("They are holding them imprisoned!", "Warrior", 48, false, 1774, 0, 245, 12*6);
-    Engine:addCommand_QueueMsg("Spread all around like an enslavement camp!", "Warrior", 48, false, 1774, 0, 245, 12*6);
-    Engine:addCommand_QueueMsg("My people! This is unacceptable...", "Matak", 36, false, 6943, 1, 229, 12*4);
+    Engine:addCommand_QueueMsg("They... They... uh ", "Warrior", 12, false, 1774, 0, 245, 12*2);
+    Engine:addCommand_QueueMsg("They are imprisoned, to the last!", "Warrior", 48, false, 1774, 0, 245, 12*6);
+    Engine:addCommand_QueueMsg("Spread all around this world awaiting enslavement!", "Warrior", 48, false, 1774, 0, 245, 12*6);
+    Engine:addCommand_QueueMsg("My people... This is unacceptable...", "Matak", 36, false, 6943, 1, 229, 12*4);
     Engine:addCommand_QueueMsg("Warrior, please, deliver my message to Tiyao, that i'm in a need of reinforcements. <br> We're going after Ikani's and Chumara's heads!", "Matak", 36, false, 6943, 1, 229, 12*7);
     Engine:addCommand_QueueMsg("I bow down before you, almighty Matak, and will promise to deliver the message to Tiyao! <br> If you allow me, i'll hurry right now!", "Warrior", 48, false, 1774, 0, 245, 12*15);
 
     Engine:addCommand_GotoPoint(3, marker_to_coord2d_centre(0), 12*8);
 
-    Engine:addCommand_QueueMsg("Meanwhile, i'll rescue my tribesmen.", "Matak", 48, false, 6943, 1, 229, 12*5);
+    Engine:addCommand_QueueMsg("Meanwhile, I shall have to rescue my tribesmen.", "Matak", 48, false, 6943, 1, 229, 12*5);
 
     Engine:addCommand_CinemaHide(15);
     Engine:addCommand_ShowPanel(12*2);

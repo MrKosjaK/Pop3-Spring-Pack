@@ -361,7 +361,7 @@ function OnTurn()
     Engine:addCommand_CinemaHide(15);
     Engine:addCommand_ShowPanel(12*2);
 
-    Engine:addCommand_QueueMsg("Shaman. Build a base before exploring area around. You never know if there's enemy hiding in fog. <br> Build at least 5 huts. <br> Build at least 3 towers. <br> Build at least one of any training schools.", "Objective", 256, true, 174, 0, 128, 0);
+    Engine:addCommand_QueueMsg("Shaman. Build a base before exploring area around. You never know what dangers lurk in the mist. <br> Build at least 5 huts. <br> Build at least 3 towers. <br> Build at least one of any training hut.", "Objective", 256, true, 174, 0, 128, 0);
 
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
@@ -574,7 +574,7 @@ function OnTurn()
       if (Engine:getVar(4) == 0) then
         if (pp[player_tribe].NumBuildingsOfType[5] > 0 or pp[player_tribe].NumBuildingsOfType[6] > 0 or pp[player_tribe].NumBuildingsOfType[7] > 0 or pp[player_tribe].NumBuildingsOfType[8] > 0) then
           Engine:setVar(4, 1);
-          Engine:addCommand_QueueMsg("Shaman, we've finished building training school!", "Worker", 36, false, 1784, 0, 229, 12*4);
+          Engine:addCommand_QueueMsg("Shaman, we've finished building a training hut!", "Worker", 36, false, 1784, 0, 229, 12*4);
         end
       end
 
@@ -605,7 +605,7 @@ function OnTurn()
       end
 
       if (Engine:getVar(5) == 1 and Engine:getVar(6) == 1) then
-        Engine:addCommand_QueueMsg("We're not alone here, as i thought. Tiyao should arrive soon or late to help us.", "Matak", 36, false, 6943, 1, 229, 12*4);
+        Engine:addCommand_QueueMsg("We're not alone here, as I thought. Tiyao should arrive soon or late to help us.", "Matak", 36, false, 6943, 1, 229, 12*4);
         Engine:addCommand_QueueMsg("Destroy your enemies without losing your own shaman.", "Objective", 256, true, 174, 0, 128, 0);
         Engine:setVar(7, 1);
         Engine:setVar(1, 2);
@@ -1176,12 +1176,12 @@ function OnPlayerDeath(pn)
 
   if (pn == ai_tribe_2) then
     Engine:setVar(10, 1);
-    Engine.DialogObj:queueMessage("... ... ... <br> Is this really happening to us? I hope it's just a bad nightmare.", "Chumara", 36, false, 7869, 1, 238);
+    Engine.DialogObj:queueMessage("... ... ... <br> Is this really happening to us, again?", "Chumara", 36, false, 7869, 1, 238);
   end
 
   if (pn == ai_tribe_1) then
     Engine:setVar(9, 1);
-    Engine.DialogObj:queueMessage("... ... ... <br> I've proven myself... That my sidekick is an absolute idiot...", "Ikani", 36, false, 7809, 1, 222);
+    Engine.DialogObj:queueMessage("... ... ... <br> Once again it has been proven... That my sidekick is an absolute idiot...", "Ikani", 36, false, 7809, 1, 222);
   end
 end
 

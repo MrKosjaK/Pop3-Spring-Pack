@@ -117,17 +117,17 @@ local diff_veteran = 2;
 local diff_honour = 3;
 
 local dialog_msgs = {
-  [0] = {"I'm close to my destination, Tiyao should be awaiting me.", "Dakini", 6903, 1, 245},
-  [1] = {"Ah, there you are, Dakini.", "Tiyao", 6883, 2, 146},
-  [2] = {"Anyway, we're running out of time, all of chit-chat talking later. Ikani and Chumara have settled near us and are preparing forces to get access to the portal, which is direct connection to my tribe.", "Tiyao", 6883, 2, 146},
-  [3] = {"Cannot You close the portal?", "Dakini", 6903, 1, 245},
-  [4] = {"I'm afraid, this is not possible, I'm not enough knowledgable to do that.", "Tiyao", 6883, 2, 146},
-  [5] = {"Or at least for now... <bp> There's possibility that Chumara or Ikani have some secrets, doubt they would share it.", "Tiyao", 6883, 2, 146},
-  [6] = {"Well, let's not think about it, leave protection of portal and defeating foes to me.", "Dakini", 6903, 1, 245},
-  [7] = {"Then may gods help in your quest. <br> It's time for me to leave, my tribe is in danger and I must protect it.", "Tiyao", 6883, 2, 146},
-  [8] = {"Forgive me for not staying with You.", "Tiyao", 6883, 2, 146},
-  [9] = {"Stay cautious, my friend.", "Tiyao", 6883, 2, 146},
-  [10] = {"Do not let Chumara and Ikani pass through You and access a portal. Defeat your foes and hurry to Tiyao's tribe. <br> Additionally, keep yourself alive.", "Objective", 174, 0, 128}
+	[0] = {"I'm close to my destination, Tiyao should be awaiting me.", "Dakini", 6903, 1, 245},
+	[1] = {"Ah, there you are, Dakini.", "Tiyao", 6883, 2, 146},
+	[2] = {"We're running out of time, we'll have time for chit-chat later. Ikani and Chumara have settled near us and are preparing forces to get access to the portal, which is direct connection to my tribe.", "Tiyao", 6883, 2, 146},
+	[3] = {"Can you not close the portal?", "Dakini", 6903, 1, 245},
+	[4] = {"I'm afraid, I can't, I know not what opened the portal, let alone how to seal it.", "Tiyao", 6883, 2, 146},
+	[5] = {"Or at least for now... <bp> There's a possibility that Chumara or Ikani may know more about these, I doubt they will tell us willingly.", "Tiyao", 6883, 2, 146},
+	[6] = {"Well, let's not think on it now, leave the protection of the portal to me. I shall stop them both.", "Dakini", 6903, 1, 245},
+	[7] = {"Then may The Gods help you in your quest. <br> It's time for me to leave, my tribe is in danger and I must protect it.", "Tiyao", 6883, 2, 146},
+	[8] = {"Forgive me for not staying with You.", "Tiyao", 6883, 2, 146},
+	[9] = {"Stay cautious, my friend.", "Tiyao", 6883, 2, 146},
+	[10] = {"Do not let Chumara and Ikani pass through a portal. Defeat your foes and hurry to Tiyao's aid. <br> Additionally, keep yourself alive.", "Objective", 174, 0, 128}
 }
 
 --for scaling purposes

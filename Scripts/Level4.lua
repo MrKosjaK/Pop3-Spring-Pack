@@ -301,17 +301,17 @@ function OnTurn()
     Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(12), 12*14);
 
     --Messages part
-    Engine:addCommand_QueueMsg("Gods were on our side, Ikani's and Chumara's settlements have been destroyed.", "Dakini", 48, false, 6903, 1, 245, 12*2);
+    Engine:addCommand_QueueMsg("The Gods were on our side, The Ikani and Chumara settlements have been destroyed.", "Dakini", 48, false, 6903, 1, 245, 12*2);
 
     --Cyan shaman faces red's shaman
     Engine:addCommand_AngleThing(getShaman(player_ally_tribe).ThingNum, 1024, 12);
 
     --Tiyao saying something
     Engine:addCommand_QueueMsg("That is indeed a great news! I'm glad you've arrived safe and alive!", "Tiyao", 48, false, 6883, 2, 146, 12*12);
-    Engine:addCommand_QueueMsg("But still, it's not an end of our hassle. My tribe is being attacked periodically by Ikani and Chumara once again, and i cannot counter them alone. But since you're here, together we should give them a fight back!", "Tiyao", 48, false, 6883, 2, 146, 12*12);
+    Engine:addCommand_QueueMsg("But I fear I must ask for you aid again. My tribe is under endless assault from Ikani and Chumara. I'm afraid I am unable to repel them alone. Together however, we can give them the fight of their lives!", "Tiyao", 48, false, 6883, 2, 146, 12*12);
 
     --Dakini speech
-    Engine:addCommand_QueueMsg("I've brought my own followers to help you assist against enemy forces.", "Dakini", 48, false, 6903, 1, 245, 12*18);
+    Engine:addCommand_QueueMsg("I've brought my own followers to help you against enemy forces.", "Dakini", 48, false, 6903, 1, 245, 12*18);
 
     --Tiyao senses something sus and walks at front
     Engine:addCommand_MoveThing(getShaman(ai_tribe_1).ThingNum, marker_to_coord2d_centre(28), 0);
@@ -355,10 +355,10 @@ function OnTurn()
     Engine:addCommand_GotoPoint(2, marker_to_coord2d_centre(37), 1);
 
     --Chumara's speech
-    Engine:addCommand_QueueMsg("Tiyao! <br> We're giving you a last chance to surrender and give us your knowledge of magical shield, none of your followers will be harmed.", "Chumara", 48, false, 6923, 1, 238, 12*12);
+    Engine:addCommand_QueueMsg("Tiyao! <br> We're giving you one final chance to surrender and give us your knowledge of Magical Shield, do this, and none of your followers will be harmed.", "Chumara", 48, false, 6923, 1, 238, 12*12);
 
     --Ikani's speech
-    Engine:addCommand_QueueMsg("Stay back Dakini, it is none of your business. We have no intention to fight with you.", "Ikani", 48, false, 6883, 1, 222, 12*10);
+    Engine:addCommand_QueueMsg("Stay back Dakini, our quarrel is not with you. You needn't join this fight.", "Ikani", 48, false, 6883, 1, 222, 12*10);
 
     --Tiyao's speech
     Engine:addCommand_AngleThing(getShaman(player_ally_tribe).ThingNum, 1024, 6);
@@ -368,11 +368,11 @@ function OnTurn()
     Engine:addCommand_QueueMsg("I'm sorry to disappoint you, but i'm not giving you anything for free. If we're trading then you should be giving something in exchange.", "Tiyao", 48, false, 6883, 2, 146, 12*7);
 
     --Ikani's speech
-    Engine:addCommand_QueueMsg("You fool, who are you trying to talk with? Is your mind fogged?", "Ikani", 48, false, 6883, 1, 222, 12*14);
+    Engine:addCommand_QueueMsg("You fool, do you understand your position here? Is your mind fogged?", "Ikani", 48, false, 6883, 1, 222, 12*14);
 
     --Chumara's speech
     Engine:addCommand_AngleThing(getShaman(ai_tribe_2).ThingNum, 1536, 2);
-    Engine:addCommand_QueueMsg("Shush Ikani.", "Chumara", 48, false, 6923, 1, 238, 12*6); --yeah stfu you stupid nobody cares
+    Engine:addCommand_QueueMsg("Silence Ikani.", "Chumara", 48, false, 6923, 1, 238, 12*6); --yeah stfu you stupid nobody cares
     Engine:addCommand_AngleThing(getShaman(ai_tribe_2).ThingNum, 1024 + 256, 2);
     Engine:addCommand_QueueMsg("It seems that you've chosen your destiny. I'm afraid, i can't help but make sure to exterminate your tribe.", "Chumara", 48, false, 6923, 1, 238, 12*11);
     Engine:addCommand_QueueMsg("Prepare for battle!", "Chumara", 48, false, 6923, 1, 238, 6);
@@ -442,7 +442,7 @@ function OnTurn()
     Engine:addCommand_ShowPanel(12*2);
 
     --Tiyao's speech
-    Engine:addCommand_QueueMsg("We were victorious! And that is what i call a splendid team work!", "Tiyao", 48, false, 6883, 2, 146, 12*4);
+    Engine:addCommand_QueueMsg("We were victorious! You and I make an unstoppable force, Dakini!", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_GotoPoint(5, marker_to_coord2d_centre(12), 2);
     Engine:addCommand_GotoPoint(6, marker_to_coord2d_centre(12), 2);
     Engine:addCommand_GotoPoint(7, marker_to_coord2d_centre(12), 2);
@@ -453,12 +453,12 @@ function OnTurn()
     Engine:addCommand_ClearThingBuf(5, 0);
     Engine:addCommand_ClearThingBuf(6, 0);
     Engine:addCommand_ClearThingBuf(7, 0);
-    Engine:addCommand_QueueMsg("I'm actually impressed you posses such powerful magic! Where did one find it?", "Dakini", 48, false, 6903, 1, 245, 12*5);
+    Engine:addCommand_QueueMsg("I'm impressed you posses such powerful magic! Where did you find it?", "Dakini", 48, false, 6903, 1, 245, 12*5);
     Engine:addCommand_QueueMsg("Her almighty Matak has granted me the knowledge.", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_QueueMsg("Alright, we should focus on our foes first. If you need your followers to be magical shielded, bring at least 6 of them near me.", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_QueueMsg("And note, it takes a while for me to actually accumulate enough mana to use one.", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_QueueMsg("Understood.", "Dakini", 48, false, 6903, 1, 245, 12*4);
-    Engine:addCommand_QueueMsg("Shaman. <bp> Tiyao will be willing to help your followers by magical shielding them. <bp> Group at least 6 units near her and she'll cast spell on them. <br> Defeat your foes while keeping shamans alive.", "Objective", 256, true, 174, 0, 128, 0);
+    Engine:addCommand_QueueMsg("Shaman. <bp> Tiyao will be willing to help your followers by magical shielding them. <bp> Group at least 6 units near her and she'll shield them, provided she has the mana. <br> Defeat your foes while keeping shamans alive.", "Objective", 256, true, 174, 0, 128, 0);
 
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 1);
@@ -762,10 +762,10 @@ function OnTurn()
     if (Engine:getVar(3) == 1 and Engine:getVar(4) == 1 and Engine:getVar(5) == 0 and Engine:getVar(6) == 0) then
       Engine:setVar(6, 1);
 
-      Engine:addCommand_QueueMsg("Foes once again have been defeated... But... Their magic..? What is that?", "Dakini", 48, false, 6903, 1, 245, 12*4);
+      Engine:addCommand_QueueMsg("We are once again triumphant... But... Their magic..? What was that?", "Dakini", 48, false, 6903, 1, 245, 12*4);
       Engine:addCommand_QueueMsg("Ah of course, their manipulative possesion of spell - hypnotism!", "Tiyao", 48, false, 6883, 2, 146, 12*4);
-      Engine:addCommand_QueueMsg("This is an absurd...", "Dakini", 48, false, 6903, 1, 245, 12*4);
-      Engine:addCommand_QueueMsg("Hmm... Well, do not boil mind with that, instead, i'll share knowledge of magical shield. <bp> This shouldn't take a lot of time for you to fully understand it. <bp> We're moving on.", "Tiyao", 48, false, 6883, 2, 146, 12*40);
+      Engine:addCommand_QueueMsg("This is an abomination...", "Dakini", 48, false, 6903, 1, 245, 12*4);
+      Engine:addCommand_QueueMsg("Hmm... Well, do not dwell on it too long, instead, I'll share knowledge of magical shield. <bp> A talented shaman of your calibre will understand this in no time. <bp> We're moving on.", "Tiyao", 48, false, 6883, 2, 146, 12*40);
       Engine:addCommand_SetVar(7, 1, 0);
     elseif (Engine:getVar(7) == 1) then
       Engine:setVar(7, 2);
@@ -1120,7 +1120,7 @@ function OnPlayerDeath(pn)
 
   if (pn == ai_tribe_1) then
     Engine:setVar(3, 1);
-    Engine.DialogObj:queueMessage("CHUMARA!!! WHAT ARE YOU ON EARTH DOING?!", "Ikani", 48, false, 7809, 1, 222);
+    Engine.DialogObj:queueMessage("CHUMARA!!! WHAT ON EARTH ARE YOU DOING?!", "Ikani", 48, false, 7809, 1, 222);
     if (getShaman(player_ally_tribe) ~= nil) then
       Engine.DialogObj:queueMessage("Well done Dakini!", "Tiyao", 48, false, 6883, 2, 146);
     end
@@ -1128,7 +1128,7 @@ function OnPlayerDeath(pn)
 
   if (pn == ai_tribe_2) then
     Engine:setVar(4, 1);
-    Engine.DialogObj:queueMessage("Who did I ally... I'm clearly not the brightest mind in this world...", "Chumara", 48, false, 7869, 1, 238);
+		Engine.DialogObj:queueMessage("Let down by Ikani again... I'm clearly not the brightest mind in this world...", "Chumara", 48, false, 7869, 1, 238);
     if (getShaman(player_ally_tribe) ~= nil) then
       Engine.DialogObj:queueMessage("Well done Dakini!", "Tiyao", 48, false, 6883, 2, 146);
     end
