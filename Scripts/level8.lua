@@ -27,6 +27,10 @@ local gns = gnsi()
 _gnsi = gnsi()
 _gsi = gsi()
 sti = spells_type_info()
+for i = 2,17 do
+	sti[i].AvailableSpriteIdx = 353+i
+end
+sti[19].AvailableSpriteIdx = 408
 tmi = thing_move_info()
 bti = building_type_info()
 ency = encyclopedia_info()
@@ -36,6 +40,7 @@ ency[22].StrId = 1005
 ency[35].StrId = 695
 ency[38].StrId = 696
 include("assets.lua")
+change_sprite_bank(0,0)
 gns.GameParams.Flags3 = gns.GameParams.Flags3 | GPF3_FOG_OF_WAR_KEEP_STATE
 gns.GameParams.Flags3 = gns.GameParams.Flags3 | PLF_AUTO_USE_VEHICLES
 --------------------
@@ -120,8 +125,8 @@ if turn() == 0 then
 	if difficulty() == 0 then createThing(T_SCENERY,3,8,marker_to_coord3d(111),false,false) createThing(T_SCENERY,2,8,marker_to_coord3d(110),false,false) end
 	if difficulty() == 1 then createThing(T_SCENERY,3,8,marker_to_coord3d(111),false,false) end
 	--timer
-	local minutesTimer = 60
-	if difficulty() == 1 then minutesTimer = 50 elseif difficulty() == 2 then minutesTimer = 45 elseif difficulty() == 3 then minutesTimer = 40 end
+	local minutesTimer = 70
+	if difficulty() == 1 then minutesTimer = 60 elseif difficulty() == 2 then minutesTimer = 50 elseif difficulty() == 3 then minutesTimer = 40 end
 	SET_TIMER_GOING(12*60*minutesTimer + 103*12 ,1)
 end
 --atk turns
@@ -697,7 +702,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		end
 	end
 	
-	if everySeconds(32-difficulty()*3) then
+	if everySeconds(42-difficulty()*3) then
 		--more frequently explode solo balloons in player's base (if too many)
 		local pos = MapPosXZ.new() ; pos.XZ.X = 24 ; pos.XZ.Z = 224
 		local r = 0

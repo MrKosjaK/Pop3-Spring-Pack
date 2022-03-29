@@ -20,6 +20,12 @@ import(Module_Spells);
 import(Module_String);
 import(Module_System);
 import(Module_Table);
+change_sprite_bank(0,0)
+sti = spells_type_info()
+for i = 2,17 do
+	sti[i].AvailableSpriteIdx = 353+i
+end
+sti[19].AvailableSpriteIdx = 408
 
 --includes
 include("CSequence.lua");
@@ -673,7 +679,7 @@ function OnTurn()
         num_huts = num_huts + pp[ai_tribe_2].NumBuildingsOfType[3];
 
         if (num_braves < 1 and num_huts == 0 and num_dead > 70) then
-          GIVE_UP_AND_SULK(ai_tribe_2);
+          GIVE_UP_AND_SULK(ai_tribe_2, TRUE);
         end
       end
 

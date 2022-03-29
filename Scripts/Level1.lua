@@ -20,6 +20,12 @@ import(Module_Spells);
 import(Module_String);
 import(Module_System);
 import(Module_Table);
+change_sprite_bank(0,0)
+sti = spells_type_info()
+for i = 2,17 do
+	sti[i].AvailableSpriteIdx = 353+i
+end
+sti[19].AvailableSpriteIdx = 408
 
 --includes
 include("CSequence.lua");
@@ -196,6 +202,13 @@ end
 function OnTurn()
   if (init) then
     init = false;
+
+		FIX_WILD_IN_AREA(110, 106, 1);
+		FIX_WILD_IN_AREA(118, 128, 1);
+		FIX_WILD_IN_AREA(102, 136, 1);
+		FIX_WILD_IN_AREA(60, 132, 1);
+		FIX_WILD_IN_AREA(62, 112, 1);
+		FIX_WILD_IN_AREA(132, 130, 1);
 
     --plants
     ProcessGlobalTypeList(T_SCENERY, function(t)

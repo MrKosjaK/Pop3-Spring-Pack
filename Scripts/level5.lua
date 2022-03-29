@@ -1178,19 +1178,30 @@ function OnTurn()
 	
 	if every2Pow(6) then
 		--remove light/invi/temple is bugged upon load
-		if difficulty() > 0 then 
-			set_player_cannot_build(M_BUILDING_TEMPLE, 0) 
-			set_player_cannot_cast(M_SPELL_FIRESTORM, 0)
-		end
-		if difficulty() > 1 then
-			set_player_cannot_cast(M_SPELL_INVISIBILITY, 0) 
-			if devil == 0 then set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0) end
+		if devil == 1 then
+			set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0) set_player_can_cast(M_SPELL_FIRESTORM, 0)
 		else
-			if difficulty() == 1 then
+			local d = difficulty()
+			if d == 0 then
+				set_player_can_build(M_BUILDING_TEMPLE, 0)
 				set_player_can_cast(M_SPELL_INVISIBILITY, 0)
 				set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+				set_player_can_cast(M_SPELL_FIRESTORM, 0)
+			elseif d == 1 then
+				set_player_cannot_build(M_BUILDING_TEMPLE, 0)
+				set_player_cannot_cast(M_SPELL_FIRESTORM, 0)
+				set_player_can_cast(M_SPELL_INVISIBILITY, 0)
+				set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0)
+			elseif d == 2 then
+				set_player_cannot_build(M_BUILDING_TEMPLE, 0)
+				set_player_cannot_cast(M_SPELL_FIRESTORM, 0)
+				set_player_cannot_cast(M_SPELL_INVISIBILITY, 0)
+				set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0)
 			else
-				set_player_can_cast(M_SPELL_INVISIBILITY, 0) set_player_can_cast(M_SPELL_LIGHTNING_BOLT, 0) set_player_can_cast(M_SPELL_FIRESTORM, 0)
+				set_player_cannot_build(M_BUILDING_TEMPLE, 0)
+				set_player_cannot_cast(M_SPELL_FIRESTORM, 0)
+				set_player_cannot_cast(M_SPELL_INVISIBILITY, 0)
+				set_player_cannot_cast(M_SPELL_LIGHTNING_BOLT, 0)
 			end
 		end
 		--update game stage (early,mid,late,very late)
