@@ -679,7 +679,7 @@ function OnTurn()
         num_huts = num_huts + pp[ai_tribe_2].NumBuildingsOfType[3];
 
         if (num_braves < 1 and num_huts == 0 and num_dead > 70) then
-          GIVE_UP_AND_SULK(ai_tribe_2);
+          GIVE_UP_AND_SULK(ai_tribe_2, TRUE);
         end
       end
 
