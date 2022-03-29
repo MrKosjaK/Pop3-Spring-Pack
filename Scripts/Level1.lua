@@ -203,6 +203,13 @@ function OnTurn()
   if (init) then
     init = false;
 
+		FIX_WILD_IN_AREA(110, 106, 1);
+		FIX_WILD_IN_AREA(118, 128, 1);
+		FIX_WILD_IN_AREA(102, 136, 1);
+		FIX_WILD_IN_AREA(60, 132, 1);
+		FIX_WILD_IN_AREA(62, 112, 1);
+		FIX_WILD_IN_AREA(132, 130, 1);
+
     --plants
     ProcessGlobalTypeList(T_SCENERY, function(t)
       if (t.Model == M_SCENERY_PLANT_1) then
