@@ -702,7 +702,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		end
 	end
 	
-	if everySeconds(32-difficulty()*3) then
+	if everySeconds(42-difficulty()*3) then
 		--more frequently explode solo balloons in player's base (if too many)
 		local pos = MapPosXZ.new() ; pos.XZ.X = 24 ; pos.XZ.Z = 224
 		local r = 0
