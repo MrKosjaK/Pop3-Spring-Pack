@@ -603,7 +603,7 @@ function OnTurn()
     WRITE_CP_ATTRIB(player_ally_tribe, ATTR_RETREAT_VALUE, 0);
     WRITE_CP_ATTRIB(player_ally_tribe, ATTR_BASE_UNDER_ATTACK_RETREAT, 0);
 
-    SET_DRUM_TOWER_POS(player_ally_tribe, 148, 120);
+    SET_DRUM_TOWER_POS(player_ally_tribe, 134, 120);
     SET_DEFENCE_RADIUS(player_ally_tribe, 5);
 
     SET_MARKER_ENTRY(player_ally_tribe, 0, 2, 3, 0, 7, 0, 0);
@@ -619,17 +619,23 @@ function OnTurn()
       local s = getShaman(player_ally_tribe);
       if (s ~= nil) then
         local break_now = false;
+				local count = 0;
         SearchMapCells(SQUARE, 0, 0, 1, world_coord2d_to_map_idx(s.Pos.D2), function(me)
           if (not me.MapWhoList:isEmpty()) then
             if (not break_now) then
               me.MapWhoList:processList(function(t)
                 if (t.Type == T_PERSON) then
-                  if (t.Owner == player_tribe and (t.Flags3 & TF3_SHIELD_ACTIVE) == 0 and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON) == 0) then
-                    Engine.Magic.Charges = Engine.Magic.Charges - 1;
-                    createThing(T_SPELL, M_SPELL_SHIELD, player_ally_tribe, t.Pos.D3, false, false);
-                    break_now = true;
-                    return false;
-                  end
+									if (t.Model == M_PERSON_WARRIOR or t.Model == M_PERSON_SUPER_WARRIOR or t.Model == M_PERSON_RELIGIOUS or t.Model == M_PERSON_SPY) then
+	                  if (t.Owner == player_tribe and (t.Flags3 & TF3_SHIELD_ACTIVE) == 0 and (t.Flags2 & TF2_THING_IS_A_GHOST_PERSON) == 0) then
+	                    count = count + 1;
+	                    if (count >= 6) then
+												Engine.Magic.Charges = Engine.Magic.Charges - 1;
+		                    createThing(T_SPELL, M_SPELL_SHIELD, player_ally_tribe, t.Pos.D3, false, false);
+												break_now = true;
+											end
+	                    return true;
+	                  end
+									end
                 end
                 if (break_now) then return false; else return true; end
               end);
@@ -659,7 +665,7 @@ function OnTurn()
 
     if (Engine:getVar(1) == 1) then --post init?
       Engine:setVar(1, 2);
-      SHAMAN_DEFEND(player_ally_tribe, 148, 120, TRUE);
+      SHAMAN_DEFEND(player_ally_tribe, 134, 120, TRUE);
       SHAMAN_DEFEND(ai_tribe_1, 74, 214, TRUE);
       SHAMAN_DEFEND(ai_tribe_2, 202, 200, TRUE);
       STATE_SET(ai_tribe_1, TRUE, CP_AT_TYPE_DEFEND);
