@@ -274,21 +274,21 @@ SET_DRUM_TOWER_POS(tribe1, 130, 88)
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"This planet looks lifeless. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
-  [1] = {"It is, indeed. You must be congratulated. You are about to unlock your shaman type. <br> There are plenty you could have picked from, but your decision was to become... a bard.", "Tiyao", 6883, 2, 146},
-  [2] = {"Interesting choice, i must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create and restore life.", "Tiyao", 6883, 2, 146},
-  [3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
-  [4] = {"I must go now. Your trials as a bard begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
-  [5] = {"...", "Nomel", 6939, 2, 138},
-  [6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "The Bard", 1783, 0, 225},
-  [7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "The Bard", 1783, 0, 225},
-  --[8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them on this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "Info", 173, 0, 160},
-  [9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall grant you with the rest of the knowledge and magic.", "The Bard", 1783, 0, 225},
-  [10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive. <br> Notice your shaman lives at the top left corner.", "Info", 173, 0, 160},
-  [11] = {"Bards have a strong connection with the earth. Although they can not charge land spells with mana, killing enemies will eventually earn the shaman free shots of this spells.", "Info", 173, 0, 160},
-  [12] = {"Your other spell is the healing balm. <br> Cast it on your units (3x3 area) to heal them for 1/3 of their maximum health!", "Info", 173, 0, 160},
-  [13] = {"Your trials for becoming a bard were unsuccessful.", "The Bard", 1783, 0, 225},
-  [14] = {"Congratulations. You have successfully completed the trials to become a bard. <br> Welcome to the tribe.", "The Bard", 1783, 0, 225}
+	[0] = {"This planet looks lifeless. <br> Are you sure this is this the place, Tiyao?", "Nomel", 6939, 2, 138},
+	[1] = {"It is, indeed. You must be congratulated. You are about to unlock define your magical gifts. <br> There are plenty of powers you could have picked from, but your decision was to become... a bard.", "Tiyao", 6883, 2, 146},
+	[2] = {"Interesting choice, I must say. Bards are powerful in their own ways - lovers of nature, they manipulate the mana to create and restore life.", "Tiyao", 6883, 2, 146},
+	[3] = {"Thank you, Tiyao! It is the wish of my inner self to connect to the earth, and all its living things.", "Nomel", 6939, 2, 138},
+	[4] = {"I must go now. Your trials as a bard begin here. I wish you all the best.", "Tiyao", 6883, 2, 146},
+	[5] = {"...", "Nomel", 6939, 2, 138},
+	[6] = {"Free your mind, and empty your soul. <br> The path of the bard is a honourable one!", "The Bard", 1783, 0, 225},
+	[7] = {"You will be facing the Chumara tribe on this trial. I shall aid you with some bard spells, once you leave two of your own behind.", "The Bard", 1783, 0, 225},
+	--[8] = {"Cast any two spells - they will permanently leave your arsenal. You won't be able to use them for this trial. <br> It might be a good idea to not get rid of the convert spell. <br> (cast any spell, they will not trigger)", "Info", 173, 0, 160},
+	[9] = {"Interesting... I shall concede you the status of bard. <br> And if you get out of this trial alive, I shall grant you with the rest of the knowledge and magic.", "The Bard", 1783, 0, 225},
+	[10] = {"Bards are powerful, but very susceptible to death. Your shaman will only reincarnate as long as you have lives left. <br> However, it is not mandatory to finish this trial with your shaman alive. <br> Notice your shaman lives at the top left corner.", "Info", 173, 0, 160},
+	[11] = {"Bards have a strong connection with the earth. Although they can not charge land altering spells with mana, killing enemies will eventually earn the shaman free shots of these spells.", "Info", 173, 0, 160},
+	[12] = {"Your other spell is the healing balm. <br> Cast it on your units (3x3 area) to heal them for 1/3 of their maximum health!", "Info", 173, 0, 160},
+	[13] = {"You have failed your trial, your tribe and your life are forfeit, sadly.", "The Bard", 1783, 0, 225},
+	[14] = {"Congratulations. You have successfully completed the trials to become a bard. <br> Welcome to the tribe.", "The Bard", 1783, 0, 225}
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();

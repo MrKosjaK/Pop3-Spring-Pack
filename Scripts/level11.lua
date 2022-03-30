@@ -367,13 +367,13 @@ SET_DRUM_TOWER_POS(tribe3, 34, 208)
 include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
-  [0] = {"I can sense enemies nearby... My first challenge since my trial. <br> Guide me, mother earth!", "Nomel", 6939, 2, 138},
-  [1] = {"Congratulations on your trial, Nomel. You are now officially a bard! <br> Remember your limits: your lives are scarce - but acknowledge your perks: new unique ways of controlling your mana to create and maintain life. <br> But not only - as promised, you have unlocked two higher tier bard spells. Use them wisely. ", "The Bard", 1783, 0, 225},
-  [2] = {"I am grateful. The eastern winds whisper me four tribes defend this land. I must stand my ground.", "Nomel", 6939, 2, 138},
-  [3] = {"...", "Nomel", 6939, 2, 138},
-  [4] = {"Remember, your shaman will not reincarnate if you lose all your lives. <br> Bards can not charge land spells with mana, but they earn them occasionally, by killing enemies.", "Info", 173, 0, 160},
-  [5] = {"Enrage is a new spell you can charge as a bard. <br> It affects some of your units in a area, enraging them. They will temporarily rise their power, but their health will decay until they perish.", "Info", 173, 0, 160},
-  [6] = {"Terra firma is the bard's destructive spell. <br> It calls upon mother earth, lowering and sinking the land in a great area, while lava gets expelled from the core. <br> You can read this spells info by using the encyclopedia.", "Info", 173, 0, 160},
+	[0] = {"I can sense enemies nearby... My first challenge since my trial. <br> Guide me to victory, mother earth!", "Nomel", 6939, 2, 138},
+	[1] = {"Congratulations on your trial, Nomel. You are now officially a bard! <br> Remember your limits: your lives are scarce - but acknowledge your perks: new unique ways of controlling your mana to create and maintain life. <br> But not only this - as promised, you have unlocked two higher tier bard spells. Use them wisely. ", "The Bard", 1783, 0, 225},
+	[2] = {"I am grateful. The eastern winds whisper to me that four tribes defend this land. I must stand my ground.", "Nomel", 6939, 2, 138},
+	[3] = {"...", "Nomel", 6939, 2, 138},
+	[4] = {"Remember, your shaman will not reincarnate if you lose all your lives. <br> Bards can not charge land altering spells with mana, but they earn them occasionally, by killing enemies.", "Info", 173, 0, 160},
+	[5] = {"Enrage is a new spell you can charge as a bard. <br> It affects some of your units in a area, sending them into a frenzy. They will temporarily become stronger, but their health will decay until they perish.", "Info", 173, 0, 160},
+	[6] = {"Terra firma is the bard's destructive spell. <br> It calls upon mother earth, lowering and sinking the land in a great area, while lava gets expelled from the core. <br> You can read this spells info by using the encyclopaedia.", "Info", 173, 0, 160},
 }
 --for scaling purposes
 local user_scr_height = ScreenHeight();
