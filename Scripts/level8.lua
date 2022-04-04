@@ -664,7 +664,7 @@ function OnTurn() 														--LOG(_gsi.Players[player].SpellsCast[1])
 		if count_people_of_type_in_area(162,202,-1,player,3) > 0 then
 			if _gsi.Players[tribe1].NumPeopleOfType[M_PERSON_SUPER_WARRIOR] > 8 then
 				if _gsi.Players[tribe1].NumVehiclesOfType[M_VEHICLE_AIRSHIP_1] > 1 then
-					BOAT_PATROL(2,math.random(2,4),60,61,62,63,M_VEHICLE_AIRSHIP_1)
+					VEHICLE_PATROL(2,math.random(2,4),60,61,62,63,M_VEHICLE_AIRSHIP_1)
 				end
 			end
 		end
