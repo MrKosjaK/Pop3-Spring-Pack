@@ -335,7 +335,7 @@ include("CSequence.lua");
 local Engine = CSequence:createNew();
 local dialog_msgs = {
 	[0] = {"I can feel a dark mist flowing through me... I sense the ultimate power is emerging! <br> With the jewels reunited and the curse unleashed, all I have to do is kneel before the Gargoyle and sacrifice my tribe. I must get rid of any love or compassion left within me if I am to be worthy of this power.", "Ikani", 6881, 1, 219},
-	[1] = {"To unleash the witch's power upon Ikani, she must sacrifice her humanity - to do so, kneel before the garoyle once all your tribe's followers are dead and you have remaining huts. <br> (You can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
+	[1] = {"To unleash the witch's power upon Ikani, she must sacrifice her humanity - to do so, kneel before the gargoyle once all your tribe's followers are dead and you have remaining huts. <br> (You can perform a tribal suicide ritual by sending followers to the cemetery)", "Info", 173, 0, 160},
 	[2] = {"Huh!?..........! <br> .......... Did you hear that?!.......... It sounded like........... like.....", "villager #1", 1769, 0, 138},
 	[3] = {"The Earthquakes were the first warnings... and now that scream... I fear it has happened: The curse has been unleashed, once again, after so many centuries... We failed to protect the jewels... The culprit was that intruder, the Ikani!", "villager #2", 1770, 0, 146},
 	[4] = {"(!) <br> We will be doomed before long! But there is hope for us yet - the curse will be lifted and abandon the host if it continues to sense signs of life on the planet. <br> As long as one of us is alive by the end of the hunt, Ikani will perish. ", "Preacher #1", 1771, 0, 212},
@@ -1046,6 +1046,12 @@ function OnTurn()
 	end
 	
 	if everySeconds(8) then
+		--ez sulk if devil
+		if devil == 1 then
+			for k,v in ipairs(AItribes) do
+				if _gsi.Players[v].NumPeople < 24 then GIVE_UP_AND_SULK(v,TRUE) end
+			end
+		end
 		--send main attacks
 		if tribe1Atk1 < turn() then SendAttack(tribe1) end
 		if tribe2Atk1 < turn() then SendAttack(tribe2) end
