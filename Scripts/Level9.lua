@@ -29,6 +29,7 @@ sti[19].AvailableSpriteIdx = 408
 
 --includes
 include("CSequence.lua");
+include("assets.lua")
 
 --globals
 local gs = gsi();
@@ -103,20 +104,29 @@ local diff_beginner = 0;
 local diff_experienced = 1;
 local diff_veteran = 2;
 local diff_honour = 3;
+local player = TRIBE_BLUE;
 
+-------------------------------------------------------------------------------------------------------------------------------------------------
+include("CSequence.lua");
+local Engine = CSequence:createNew();
+local dialog_msgs = {
+	[0] = {"The Matak are here, and I can sense their anger. It clouds my mind and causes me to forget that which I once knew. I will have to study the vaults carefully and prepare for war.","Ikani", 6879, 1, 219},
+	[1] = {"Let us see how you fare with your powers stripped down to the core, Ikani, this is war in its purest form and I shall destroy you.","Matak",7023,1,227},
+	[2] = {"Retrieve the knowledge of the vaults and use their combined powers to defeat the Matak","Objective",174, 0, 128}
+}
 --for scaling purposes
 local user_scr_height = ScreenHeight();
 local user_scr_width = ScreenWidth();
-
 if (user_scr_height > 600) then
   Engine.DialogObj:setFont(3);
 end
+-------------------------------------------------------------------------------------------------------------------------------------------------
 
 function OnSave(save_data)
   --globals save
   save_data:push_int(current_game_difficulty);
 
-  if (getTurn() >= 12*30 and current_game_difficulty == diff_honour) then
+  if (getTurn() >= 12*20 + 600 and current_game_difficulty == diff_honour) then
     honour_saved_once = true;
   end
 
@@ -156,10 +166,6 @@ function OnTurn()
     set_player_cannot_cast(M_SPELL_GHOST_ARMY, TRIBE_BLUE);
     set_correct_gui_menu();
 
-    if (current_game_difficulty == diff_honour) then
-      Engine:addCommand_SetVar(1, 0, 4);
-      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
-    end
   else
     Engine:process();
 
@@ -170,17 +176,73 @@ function OnTurn()
       game_loaded = false;
 
       --yep.
-      if (game_loaded_honour and honour_saved_once) then
+      if (game_loaded_honour and honour_saved_once) and turn() > 600+12*20 then
         game_loaded_honour = false;
         ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
           damage_person(t, 8, 65535, TRUE);
           return true;
         end);
+		TRIGGER_LEVEL_LOST() ; SET_NO_REINC(player)
+		log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
 
         exit();
       end
     end
   end
+	if turn() == 600 then
+		if difficulty() == 3 then
+			Engine:addCommand_SetVar(1, 0, 4);
+			Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You now have 20 seconds to save (to avoid rewatching the intro). Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
+		end
+	elseif turn() == 12 then
+		FLYBY_CREATE_NEW()
+		FLYBY_ALLOW_INTERRUPT(FALSE)
+	
+		FLYBY_SET_EVENT_ZOOM (-30,1,40)
+		FLYBY_SET_EVENT_POS(152, 178, 1, 40)
+		FLYBY_SET_EVENT_ANGLE(250, 1, 40)
+		
+		FLYBY_SET_EVENT_ZOOM (-60,60,50)
+		FLYBY_SET_EVENT_POS(170, 146, 50, 50)
+		FLYBY_SET_EVENT_ANGLE(math.random(0,1999), 50, 50)
+		
+		FLYBY_SET_EVENT_ZOOM (-40,120,60)
+		FLYBY_SET_EVENT_POS(138, 52, 120, 60)
+		FLYBY_SET_EVENT_ANGLE(0, 120, 60)
+		
+		FLYBY_SET_EVENT_ZOOM (-20,200,50)
+		FLYBY_SET_EVENT_POS(74, 110, 200, 50)
+		FLYBY_SET_EVENT_ANGLE(500, 200, 50)
+		
+		FLYBY_SET_EVENT_ZOOM (0,260,40)
+		FLYBY_SET_EVENT_POS(154, 178, 260, 40)
+		FLYBY_SET_EVENT_ANGLE(250, 260, 40)
+		
+		FLYBY_START()
+	elseif turn() == 24 then
+		Engine:hidePanel()
+		Engine:addCommand_CinemaRaise(34)
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(7), 2);
+		Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 8, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 12*10);
+		Engine:addCommand_QueueMsg(dialog_msgs[1][1], dialog_msgs[1][2], 36, false, dialog_msgs[1][3], dialog_msgs[1][4], dialog_msgs[1][5], 12*15);
+		Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(8), 1);
+		Engine:addCommand_CinemaHide(8);
+		Engine:addCommand_ShowPanel(60);
+		Engine:addCommand_QueueMsg(dialog_msgs[2][1], dialog_msgs[2][2], 60, false, dialog_msgs[2][3], dialog_msgs[2][4], dialog_msgs[2][5], 12*1);
+	end
+end
+
+function OnPlayerDeath(pn)
+	if pn == player then
+		if (difficulty() == 3) then
+			Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
+		else
+			Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
+		end
+	else
+		Engine.DialogObj:queueMessage("This was war... beautiful and consuming... I die content...", "Matak", 36, false, 7568,1,227);
+		Engine.DialogObj:queueMessage("I have bested the Matak, but feel uneasy. Something seemed off about her, I must find the answers.", "Ikani", 36, false, 6879, 1, 219);
+	end
 end
 
 function OnFrame()
