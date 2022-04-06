@@ -183,7 +183,6 @@ function OnTurn()
 		FLYBY_SET_EVENT_ANGLE(1400, (12*11), 15*6);
 		FLYBY_SET_EVENT_ANGLE(525, (12*16), 15*6);
 		FLYBY_SET_EVENT_ANGLE(320, (12*24), 15*4);
-    --FLYBY_SET_EVENT_ANGLE(2000, 517, 12*5);
 
 		FLYBY_START();
 
@@ -229,7 +228,7 @@ function OnPlayerDeath(pn)
   end
 
 	if (pn == TRIBE_RED) then
-		Engine.DialogObj:queueMessage("Impossible, wherever I turn SHE is always there to stop us!", "Dakini", 36, false, 6903, 1, 245);
+		Engine.DialogObj:queueMessage("Impossible, wherever I turn SHE is always there to stop us!", "Dakini", 36, false, 7839, 1, 245);
 	end
 end
 

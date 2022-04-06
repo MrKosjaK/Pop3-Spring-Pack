@@ -158,6 +158,41 @@ function OnTurn()
     set_player_cannot_cast(M_SPELL_GHOST_ARMY, TRIBE_BLUE);
     set_correct_gui_menu();
 
+		--command system stuff
+    Engine:hidePanel();
+    Engine:addCommand_CinemaRaise(12*2);
+
+		Engine:addCommand_QueueMsg("I have arrived on this world chasing the Dakini once more, yet I sense even more tribes. It would appear we have arrived in the midst of an already brewing war.", "Ikani", 36, false, 6883, 1, 222, 12*5);
+		Engine:addCommand_QueueMsg("It will not be long before my tribe is pulled into this war, I have no choice but to defeat all three tribes here. I can sense overwhelming hostility.", "Ikani", 36, false, 6883, 1, 222, 12*5);
+		Engine:addCommand_QueueMsg("I will have to beware from attacks from all directions.", "Ikani", 36, false, 6883, 1, 222, 12*31);
+
+		Engine:addCommand_CinemaHide(15);
+    Engine:addCommand_ShowPanel(12*2);
+
+		Engine:addCommand_QueueMsg("Shaman, conquer all of your foes.", "Objective", 256, true, 174, 0, 128, 0);
+
+		FLYBY_CREATE_NEW();
+    FLYBY_ALLOW_INTERRUPT(FALSE);
+
+		FLYBY_SET_EVENT_POS(48, 54, 12, 12*5);
+		FLYBY_SET_EVENT_POS(22, 44, (12*8)-6, 12*5);
+		FLYBY_SET_EVENT_POS(4, 2, 12*12, 12*5);
+		FLYBY_SET_EVENT_POS(10, 230, 12*17, 12*5);
+		FLYBY_SET_EVENT_POS(208, 238, 12*21, 12*5);
+		FLYBY_SET_EVENT_POS(166, 236, 12*24, 12*5);
+	  FLYBY_SET_EVENT_POS(78, 6, 12*32, 12*5);
+
+		FLYBY_SET_EVENT_ANGLE(535, (12*3)-6, 12*7);
+		FLYBY_SET_EVENT_ANGLE(704, (12*8)-6, 12*5);
+		FLYBY_SET_EVENT_ANGLE(1304, (12*12)-6, 12*5);
+		FLYBY_SET_EVENT_ANGLE(1488, (12*18)-6, 12*5);
+		FLYBY_SET_EVENT_ANGLE(1722, (12*22)-6, 12*5);
+		FLYBY_SET_EVENT_ANGLE(1911, (12*25)-6, 12*5);
+		FLYBY_SET_EVENT_ANGLE(110, (12*28)-6, 12*5);
+		FLYBY_SET_EVENT_ANGLE(465, (12*33)-6, 12*6);
+
+		FLYBY_START();
+
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_SetVar(1, 0, 4);
       Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
@@ -183,6 +218,28 @@ function OnTurn()
       end
     end
   end
+end
+
+function OnPlayerDeath(pn)
+	if (pn == TRIBE_BLUE) then
+    if (current_game_difficulty == diff_honour) then
+      Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
+    else
+      Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
+    end
+  end
+
+	if (pn == TRIBE_RED) then
+		Engine.DialogObj:queueMessage("Again, I fall! To you no less...", "Dakini", 36, false, 7839, 1, 245);
+	end
+
+	if (pn == TRIBE_YELLOW) then
+		Engine.DialogObj:queueMessage("Where did you come from Ikani? That we should fall here...", "Chumara", 36, false, 7869, 1, 238);
+	end
+
+	if (pn == TRIBE_GREEN) then
+		Engine.DialogObj:queueMessage("Ikani! How dare you intefere where you are not welcome... I shall remember this", "Matak", 36, false, 7899, 1, 229);
+	end
 end
 
 function OnFrame()
