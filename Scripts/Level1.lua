@@ -127,7 +127,7 @@ local dialog_msgs = {
 	[7] = {"Then may The Gods help you in your quest. <br> It's time for me to leave, my tribe is in danger and I must protect it.", "Tiyao", 6883, 2, 146},
 	[8] = {"Forgive me for not staying with You.", "Tiyao", 6883, 2, 146},
 	[9] = {"Stay cautious, my friend.", "Tiyao", 6883, 2, 146},
-	[10] = {"Do not let Chumara and Ikani pass through a portal. Defeat your foes and hurry to Tiyao's aid. <br> Additionally, keep yourself alive.", "Objective", 174, 0, 128}
+	[10] = {"Do not let Chumara and Ikani pass through a portal. Defeat your foes and hurry to Tiyao's aid.", "Objective", 174, 0, 128}
 }
 
 --for scaling purposes
@@ -143,7 +143,6 @@ local current_game_difficulty = get_game_difficulty();
 local init = true;
 local contributed_braves = 0;
 local contributed_trained = 0;
-local contributed_shaman = false;
 local cyan_shaman_teleported = false;
 local death_stored_mana = 0;
 local death_counter = 0;
@@ -158,7 +157,6 @@ function OnSave(save_data)
   save_data:push_int(contributed_trained);
   save_data:push_int(current_game_difficulty);
   save_data:push_bool(init);
-  save_data:push_bool(contributed_shaman);
   save_data:push_bool(cyan_shaman_teleported);
   save_data:push_bool(death_initiated);
 
@@ -186,7 +184,6 @@ function OnLoad(load_data)
   honour_saved_once = load_data:pop_bool();
   death_initiated = load_data:pop_bool();
   cyan_shaman_teleported = load_data:pop_bool();
-  contributed_shaman = load_data:pop_bool();
   init = load_data:pop_bool();
   log("[INFO] Globals loaded.")
 
@@ -557,13 +554,6 @@ function OnTurn()
                     return true;
                   end
                 end
-
-                if (t.Model == M_PERSON_MEDICINE_MAN and (not contributed_shaman)) then
-                  contributed_shaman = true;
-                  createThing(T_EFFECT, M_EFFECT_SPHERE_EXPLODE_1, 8, t.Pos.D3, false, false);
-                  delete_thing_type(t);
-                  return true;
-                end
               end
               return true;
             end);
@@ -571,7 +561,7 @@ function OnTurn()
           return true;
         end);
 
-        if (contributed_braves >= 10 and contributed_trained >= 20 and contributed_shaman) then
+        if (contributed_braves >= 10 and contributed_trained >= 20) then
           Engine:setVar(4, 2);
           gns.GameParams.Flags2 = gns.GameParams.Flags2 & ~GPF2_GAME_NO_WIN;
           Engine:addCommand_ClearThingBuf(1, 12*1);
