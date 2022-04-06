@@ -116,7 +116,7 @@ function OnSave(save_data)
   --globals save
   save_data:push_int(current_game_difficulty);
 
-  if (getTurn() >= 12*30 and current_game_difficulty == diff_honour) then
+  if (getTurn() >= 12*60 and current_game_difficulty == diff_honour) then
     honour_saved_once = true;
   end
 
@@ -183,6 +183,9 @@ function OnTurn()
 		FLYBY_SET_EVENT_ANGLE(1400, (12*11), 15*6);
 		FLYBY_SET_EVENT_ANGLE(525, (12*16), 15*6);
 		FLYBY_SET_EVENT_ANGLE(320, (12*24), 15*4);
+
+		FLYBY_SET_EVENT_ZOOM(50, 12*16, 36);
+		FLYBY_SET_EVENT_ZOOM(0, 12*19, 24);
 
 		FLYBY_START();
 

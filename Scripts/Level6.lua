@@ -116,7 +116,7 @@ function OnSave(save_data)
   --globals save
   save_data:push_int(current_game_difficulty);
 
-  if (getTurn() >= 12*30 and current_game_difficulty == diff_honour) then
+  if (getTurn() >= 12*75 and current_game_difficulty == diff_honour) then
     honour_saved_once = true;
   end
 
