@@ -157,12 +157,47 @@ function OnTurn()
     set_player_cannot_cast(M_SPELL_GHOST_ARMY, TRIBE_BLUE);
     set_correct_gui_menu();
 
+		--command system stuff
+    Engine:hidePanel();
+    Engine:addCommand_CinemaRaise(12*3);
+
+		Engine:addCommand_QueueMsg("Ikani, you must help us! The Dakini have ambushed our shaman during her pilgrimage and ensnared her within a Magical Prison.", "Matak Warrior", 36, false, 1802, 0, 229, 12*4);
+		Engine:addCommand_QueueMsg("We need your assistance to set her free, please help us, we beg of you. We are lost without her guidance.", "Matak Warrior", 36, false, 1802, 0, 229, 12*4);
+		Engine:addCommand_QueueMsg("Worry not, I will lend you my aid. I have been pursuing Dakini throughout the system, so our interests align", "Ikani", 36, false, 6883, 1, 222, 12*14);
+		Engine:addCommand_QueueMsg("Shaman, you must work with the Matak Tribe to free their Shaman from her prison, with a combined assault, the Dakini shall crumble before you", "Objective", 256, true, 174, 0, 128, 12*3);
+
+		Engine:addCommand_CinemaHide(15);
+    Engine:addCommand_ShowPanel(12*2);
+
+
+		FLYBY_CREATE_NEW();
+    FLYBY_ALLOW_INTERRUPT(FALSE);
+
+		FLYBY_SET_EVENT_POS(120, 110, 12, 12*6);
+		FLYBY_SET_EVENT_POS(88, 128, (12*7), 12*6);
+		FLYBY_SET_EVENT_POS(26, 132, (12*12), 12*6);
+		FLYBY_SET_EVENT_POS(150, 156, (12*20), 12*6);
+
+		FLYBY_SET_EVENT_ANGLE(535, (12*3), 12*6);
+		FLYBY_SET_EVENT_ANGLE(799, (12*7), 12*6);
+		FLYBY_SET_EVENT_ANGLE(1400, (12*11), 15*6);
+		FLYBY_SET_EVENT_ANGLE(525, (12*16), 15*6);
+		FLYBY_SET_EVENT_ANGLE(320, (12*24), 15*4);
+    --FLYBY_SET_EVENT_ANGLE(2000, 517, 12*5);
+
+		FLYBY_START();
+
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_SetVar(1, 0, 4);
       Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
     end
   else
     Engine:process();
+
+		if (Engine:getVar(1) == 0 and IS_PRISON_ON_LEVEL() == 0) then
+			Engine.DialogObj:queueMessage("Thank you, Ikani! Now let these fools feel our combined wrath!", "Matak", 36, false, 6943, 1, 229);
+			Engine:setVar(1, 1);
+		end
 
     --handle any post-loading stuff
     if (game_loaded) then
@@ -182,6 +217,20 @@ function OnTurn()
       end
     end
   end
+end
+
+function OnPlayerDeath(pn)
+	if (pn == TRIBE_BLUE) then
+    if (current_game_difficulty == diff_honour) then
+      Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
+    else
+      Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
+    end
+  end
+
+	if (pn == TRIBE_RED) then
+		Engine.DialogObj:queueMessage("Impossible, wherever I turn SHE is always there to stop us!", "Dakini", 36, false, 6903, 1, 245);
+	end
 end
 
 function OnFrame()
