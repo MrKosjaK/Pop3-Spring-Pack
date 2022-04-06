@@ -29,6 +29,7 @@ sti[19].AvailableSpriteIdx = 408
 
 --includes
 include("CSequence.lua");
+include("assets.lua")
 
 --globals
 local gs = gsi();
@@ -103,14 +104,25 @@ local diff_beginner = 0;
 local diff_experienced = 1;
 local diff_veteran = 2;
 local diff_honour = 3;
+local player = TRIBE_BLUE;
 
+-------------------------------------------------------------------------------------------------------------------------------------------------
+include("CSequence.lua");
+local Engine = CSequence:createNew();
+local dialog_msgs = {
+	[0] = {"At last it has come to this, my investigation into why Matak had gone crazy has brought me to this world, and yet another home for the Dakini.","Ikani", 6879, 1, 219},
+	[1] = {"Ahah! Ikani, you have arrived, this planet is dangerous, the Dakini and the Matak have a long lasting alliance here.", "Chumara", 6919,1,239},
+	[2] = {"So I found out, Chumara. Ironic that after setting her free it would come to this.", "Ikani", 6879, 1, 219},
+	[3] = {"We must work together, and stop them before they wipe us both out. Share this island with me, build swiftly and prepare for war. Our combined efforts will break apart this alliance.","Chumara", 6919,1,239},
+	[4] = {"I know well what we must do, Chumara, may the Gods watch over us.","Ikani", 6879, 1, 219}
+}
 --for scaling purposes
 local user_scr_height = ScreenHeight();
 local user_scr_width = ScreenWidth();
-
 if (user_scr_height > 600) then
   Engine.DialogObj:setFont(3);
 end
+-------------------------------------------------------------------------------------------------------------------------------------------------
 
 function OnSave(save_data)
   --globals save
@@ -158,10 +170,6 @@ function OnTurn()
     set_player_cannot_cast(M_SPELL_GHOST_ARMY, TRIBE_BLUE);
     set_correct_gui_menu();
 
-    if (current_game_difficulty == diff_honour) then
-      Engine:addCommand_SetVar(1, 0, 4);
-      Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
-    end
   else
     Engine:process();
 
@@ -172,17 +180,91 @@ function OnTurn()
       game_loaded = false;
 
       --yep.
-      if (game_loaded_honour and honour_saved_once) then
+      if (game_loaded_honour and honour_saved_once) and turn() > 780+12*20 then
         game_loaded_honour = false;
         ProcessGlobalSpecialList(TRIBE_BLUE, PEOPLELIST, function(t)
           damage_person(t, 8, 65535, TRUE);
           return true;
         end);
+		TRIGGER_LEVEL_LOST() ; SET_NO_REINC(player)
+		log_msg(8,"WARNING:  You have loaded the game while playing in \"honour\" mode.")
 
         exit();
       end
     end
   end
+  if turn() == 780 then
+	if difficulty() == 3 then
+		Engine:addCommand_SetVar(1, 0, 4);
+		Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You now have 20 seconds to save (to avoid rewatching the intro). Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 0);
+	end
+  elseif turn() == 12 then
+	FLYBY_CREATE_NEW()
+	FLYBY_ALLOW_INTERRUPT(FALSE)
+
+	--start
+	FLYBY_SET_EVENT_POS(184, 124, 1, 50)
+	FLYBY_SET_EVENT_ANGLE(250, 1, 49)
+	
+	FLYBY_SET_EVENT_POS(162, 104, 100, 40)
+	FLYBY_SET_EVENT_ANGLE(1400, 100, 40)
+	
+	FLYBY_SET_EVENT_POS(156, 104, 145, 120)
+	FLYBY_SET_EVENT_ANGLE(100, 145, 120)
+	FLYBY_SET_EVENT_ZOOM (50,155,30)
+	
+	FLYBY_SET_EVENT_POS(186, 112, 270, 60)
+	FLYBY_SET_EVENT_ANGLE(1500, 270, 40)
+	FLYBY_SET_EVENT_ZOOM (0,220,30)
+	
+	FLYBY_SET_EVENT_POS(150, 102, 340, 80)
+	FLYBY_SET_EVENT_ANGLE(900, 340, 40)
+	
+	FLYBY_SET_EVENT_POS(98, 138, 425, 60)
+	FLYBY_SET_EVENT_ANGLE(1500, 425, 50)
+	FLYBY_SET_EVENT_ZOOM (-40,445,40)
+	
+	FLYBY_SET_EVENT_POS(194, 124, 490, 30)
+	FLYBY_SET_EVENT_ANGLE(700, 490, 28)
+	--
+	
+	FLYBY_START()
+  elseif turn() == 24 then
+	Engine:hidePanel()
+	Engine:addCommand_CinemaRaise(34)
+	Engine:addCommand_QueueMsg(dialog_msgs[0][1], dialog_msgs[0][2], 8, false, dialog_msgs[0][3], dialog_msgs[0][4], dialog_msgs[0][5], 8);
+	Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(8), 8);
+	Engine:addCommand_QueueMsg(dialog_msgs[1][1], dialog_msgs[1][2], 36, false, dialog_msgs[1][3], dialog_msgs[1][4], dialog_msgs[1][5], 12*14);
+	Engine:addCommand_QueueMsg(dialog_msgs[2][1], dialog_msgs[2][2], 36, false, dialog_msgs[2][3], dialog_msgs[2][4], dialog_msgs[2][5], 12*14);
+	Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(13), 1);
+	Engine:addCommand_QueueMsg(dialog_msgs[3][1], dialog_msgs[3][2], 36, false, dialog_msgs[3][3], dialog_msgs[3][4], dialog_msgs[3][5], 12*14);
+	Engine:addCommand_QueueMsg(dialog_msgs[4][1], dialog_msgs[4][2], 36, false, dialog_msgs[4][3], dialog_msgs[4][4], dialog_msgs[4][5], 12*1);
+	Engine:addCommand_MoveThing(getShaman(player).ThingNum, marker_to_coord2d_centre(12), 1);
+	Engine:addCommand_CinemaHide(12);
+	Engine:addCommand_ShowPanel(12);
+  end
+end
+
+function OnPlayerDeath(pn)
+	if pn == player then
+		if (difficulty() == 3) then
+			Engine.DialogObj:queueMessage("You're not ready for the challenge yet.", "Mission Failed", 512, true, nil, nil, 128);
+		else
+			Engine.DialogObj:queueMessage("You have been defeated.", "Mission Failed", 512, true, nil, nil, 128);
+		end
+	else
+		if pn == TRIBE_RED then
+			Engine.DialogObj:queueMessage("I planned for so long... it was not meant to end like this.", "Dakini", 36, false, 7843,1,243);
+			if GetPop(TRIBE_GREEN) == 0 then
+				Engine.DialogObj:queueMessage("At long last, my hunt for the Dakini has finally come to an end... yet, can I really trust the Chumara?", "Ikani", 36, false, 6879, 1, 219);
+			end
+		elseif pn == TRIBE_GREEN then
+			Engine.DialogObj:queueMessage("I placed my faith in the wrong Shaman...", "Matak", 36, false, 7568,1,227);
+			if GetPop(TRIBE_RED) == 0 then
+				Engine.DialogObj:queueMessage("At long last, my hunt for the Dakini has finally come to an end... yet, can I really trust the Chumara?", "Ikani", 36, false, 6879, 1, 219);
+			end
+		end
+	end
 end
 
 function OnFrame()

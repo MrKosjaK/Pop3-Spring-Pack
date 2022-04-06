@@ -1151,8 +1151,8 @@ function OnFrame()
 	if turn() < honorSaveTurnLimit and honorSaveTurnLimit ~= 0 and difficulty() == 3 then
 		PopSetFont(3)
 		local hstl = "WARNING (honour mode): You can save, to avoid rewatching the intro   "
-		LbDraw_Text(math.floor(w-2-(string_width("77:77:77 ")+string_width(tostring(hstl)))),2,tostring(hstl),0)
-		LbDraw_Text(math.floor(w-2-(string_width("77:77:77 "))),2,tostring(TurnsToClock(math.floor((honorSaveTurnLimit-turn())/12))),0)
+		LbDraw_Text(math.floor(w-2-(string_width("77:77:77 ")+string_width(tostring(hstl)))),2+32,tostring(hstl),0)
+		LbDraw_Text(math.floor(w-2-(string_width("77:77:77 "))),2+32,tostring(TurnsToClock(math.floor((honorSaveTurnLimit-turn())/12))),0)
 	end
 	
 	--bard lives
