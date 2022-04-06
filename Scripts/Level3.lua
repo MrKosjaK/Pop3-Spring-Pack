@@ -163,7 +163,7 @@ function OnTurn()
 
 		Engine:addCommand_QueueMsg("Ikani, you must help us! The Dakini have ambushed our shaman during her pilgrimage and ensnared her within a Magical Prison.", "Matak Warrior", 36, false, 1802, 0, 229, 12*4);
 		Engine:addCommand_QueueMsg("We need your assistance to set her free, please help us, we beg of you. We are lost without her guidance.", "Matak Warrior", 36, false, 1802, 0, 229, 12*4);
-		Engine:addCommand_QueueMsg("Worry not, I will lend you my aid. I have been pursuing Dakini throughout the system, so our interests align", "Ikani", 36, false, 6883, 1, 222, 12*14);
+		Engine:addCommand_QueueMsg("Worry not, I will lend you my aid. I have been pursuing Dakini throughout the system, so our interests align.", "Ikani", 36, false, 6883, 1, 222, 12*14);
 		Engine:addCommand_QueueMsg("Shaman, you must work with the Matak Tribe to free their Shaman from her prison, with a combined assault, the Dakini shall crumble before you", "Objective", 256, true, 174, 0, 128, 12*3);
 
 		Engine:addCommand_CinemaHide(15);
