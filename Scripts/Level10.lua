@@ -666,6 +666,13 @@ function OnTurn()
       end
     end
 
+		if (getTurn() > 120 and (getTurn() & (1 << 4)-1) == 0) then
+			if (getShaman(player_tribe) == nil and Engine:getVar(30) == 0) then
+				Engine:setVar(30, 1);
+				Engine.DialogObj:queueMessage("You can still continue playing level without a shaman.", "Info", 64, false, nil, nil, 128);
+			end
+		end
+
     --YELLOW CODE BRUH
     if (pp[ai_tribe_2].NumPeople > 0 and is_player_in_submit_mode(pp[ai_tribe_2]) == 0) then
       --gib down and sink

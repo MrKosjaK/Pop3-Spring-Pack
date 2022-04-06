@@ -458,7 +458,7 @@ function OnTurn()
     Engine:addCommand_QueueMsg("Alright, we should focus on our foes first. If you need your followers to be magical shielded, bring at least 6 of them near me.", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_QueueMsg("And note, it takes a while for me to actually accumulate enough mana to use one.", "Tiyao", 48, false, 6883, 2, 146, 12*4);
     Engine:addCommand_QueueMsg("Understood.", "Dakini", 48, false, 6903, 1, 245, 12*4);
-    Engine:addCommand_QueueMsg("Shaman. <bp> Tiyao will be willing to help your followers by magical shielding them. <bp> Group at least 6 units near her and she'll shield them, provided she has the mana. <br> Defeat your foes while keeping shamans alive.", "Objective", 256, true, 174, 0, 128, 0);
+    Engine:addCommand_QueueMsg("Shaman. <bp> Tiyao will be willing to help your followers by magical shielding them. <bp> Group at least 6 units near her and she'll shield them, provided she has the mana. <br> Defeat your foes.", "Objective", 256, true, 174, 0, 128, 0);
 
     if (current_game_difficulty == diff_honour) then
       Engine:addCommand_QueueMsg("Warning! You've chosen hardest difficulty possibly available which is Honour. You won't be allowed to save or load a little after initial intro in this mode. Enemies will have no mercy on you and Finish you in worst and saddest possible way. Are you brave enough for this suffering? You've been warned.", "Honour Mode", 256, true, 176, 0, 245, 1);
@@ -645,6 +645,13 @@ function OnTurn()
         end);
       end
     end
+
+		if (getTurn() > 120 and (getTurn() & (1 << 4)-1) == 0) then
+			if (getShaman(player_tribe) == nil and Engine:getVar(30) == 0) then
+				Engine:setVar(30, 1);
+				Engine.DialogObj:queueMessage("You can still continue playing level without a shaman.", "Info", 64, false, nil, nil, 128);
+			end
+		end
 
     if ((getTurn() & (1 << 2)-1) == 0 and Engine:getVar(2) == 1) then
       Engine.Magic:process(current_game_difficulty);

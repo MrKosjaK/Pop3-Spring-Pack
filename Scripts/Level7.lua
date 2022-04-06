@@ -601,6 +601,14 @@ function OnTurn()
       end
     end
 
+		if (getTurn() > 120 and (getTurn() & (1 << 4)-1) == 0) then
+			if (getShaman(player_tribe) == nil and Engine:getVar(30) == 0) then
+				Engine:setVar(30, 1);
+				Engine.DialogObj:queueMessage("You cannot continue playing level without a shaman.", "Info", 64, false, nil, nil, 128);
+				gns.Flags = gns.Flags | GNS_LEVEL_FAILED;
+			end
+		end
+
     --animate torches
     for i,t_thing in ipairs(torch_fire_process) do
       t_thing.DrawInfo.FrameNum = t_thing.DrawInfo.FrameNum + 1;
