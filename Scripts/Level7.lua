@@ -637,7 +637,8 @@ function OnTurn()
           return true;
         end);
 
-        bldg_const[M_BUILDING_SPY_TRAIN].ToolTipStrId2 = 944;
+				gns.Flags = gns.Flags | GNS_LEVEL_FAILED;
+        
         exit();
       end
     end

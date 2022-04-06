@@ -1090,6 +1090,8 @@ function OnTurn()
           return true;
         end);
 
+				gns.Flags = gns.Flags | GNS_LEVEL_FAILED;
+
         exit();
       end
     end
